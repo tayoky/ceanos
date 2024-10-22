@@ -13,9 +13,8 @@
 #include "keyboard.h"
 #include "osfunc.h"
 #include "io.h"
-#include "memory.h"
 #include "vga_types.h"
-
+#include "malloc.h"
 
 void main(void);
 
@@ -24,7 +23,6 @@ void main(void);
 static inline void init_all(void) {
     gdt_init();
         idt_init();
-        init_mem();
         timer_init();
     keyboard_init();
     
@@ -41,6 +39,9 @@ void main(void){
     print("ceanos~$ ");                          // initialize the shell
     
     set_screen_color(0x0F);                      // 0x0F = white on black
-   
+    
+    uint32_t mem;
+    uint32_t page=ceanoc(1000, 1, &mem);
+
     while(1);   
 }
