@@ -126,41 +126,17 @@ static void keyboardHandler(struct InterruptRegisters *regs){
 
     switch(scanCode){
         case 2: // 1
-            delp(press, "1");
-            break;
         case 3: // 2
-            delp(press, "2");
-            break;
         case 4: // 3
-            delp(press, "3");
-            break;
         case 5: // 4
-            delp(press, "4");
-            break;
         case 6: // 5
-            delp(press, "5");
-            break;
         case 7: // 6
-            delp(press, "6");
-            break;
         case 8: // 7
-            delp(press, "7");
-            break;
         case 9: // 8
-            delp(press, "8");
-            break;
         case 10: // 9
-            delp(press, "9");
-            break;
         case 11: // 0
-            delp(press, "0");
-            break;
         case 12:
-            delp(press, "-");
-            break;
         case 13:
-            delp(press, "=");
-            break;
         case 14:
             if (press == 0) { 
                 print("\b");
@@ -251,32 +227,13 @@ static void keyboardHandler(struct InterruptRegisters *regs){
           delp(press, " "); 
           break;
         case 39:
-          delp(press, ";");
-          break;
         case 40:
-          delp(press, "'");
-          break;
         case 41:
-          delp(press, "`");
-          break;
         case 43:
-          delp(press, "\\");
-          break;
-        case 51:
-          delp(press, ",");
-          break;
         case 52:
-          delp(press, ".");
-          break;
         case 53:
-          delp(press, "/");
-          break;
         case 74:
-          delp(press, "-");
-          break;
         case 78:
-          delp(press, "+");
-          break;
         case 56:
         case 59:
         case 60:

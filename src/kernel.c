@@ -47,9 +47,6 @@ void main(void){
     
     set_screen_color(0x0F);                      // 0x0F = white on black
     
-    uint32_t mem;
-    uint32_t page=ceanoc(1000, 1, &mem);
-    
     // test //
         /*char *ptr = (char *)0x00000000;
 
