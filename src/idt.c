@@ -86,7 +86,7 @@ void idt_init(){
     setIdtGate(177, (uint32_t)isr177, 0x08, 0x8E); //System calls
 
     idt_flush((uint32_t)&idt_ptr);
-
+    print("idt enabled \n");
 }
 
 void setIdtGate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags){

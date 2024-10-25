@@ -1,6 +1,6 @@
 #include "gdt.h"
 #include "util.h"
-
+#include "vga.h"
 
 extern void gdt_flush(uint32_t);
 extern void tss_flush();
@@ -21,8 +21,9 @@ void gdt_init(){
     writeTSS(5,0x10, 0x0);
 
     gdt_flush((uint32_t)&gdt_ptr);
+    print("gdt enabled\n");
     tss_flush();
-    
+    print("tss enabled\n"); 
 }
 
 void writeTSS(uint32_t num, uint16_t ss0, uint32_t esp0){

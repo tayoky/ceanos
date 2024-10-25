@@ -22,4 +22,13 @@ void timer_init(){
     outPortB(0x43,0x36);
     outPortB(0x40,(uint8_t)(divisor & 0xFF));
     outPortB(0x40,(uint8_t)((divisor >> 8) & 0xFF));
+
+    print("timer enabled\n");
+}
+
+void sleep(uint32_t milliseconds) {
+    uint64_t target_ticks = ticks + (milliseconds / 10); // 100 Hz => 10 ms per tick
+
+    while (ticks < target_ticks) {
+    }
 }

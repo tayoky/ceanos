@@ -2,10 +2,13 @@ CFLAGS = -m32 -fno-stack-protector -fno-builtin -I src/
 LDFLAGS = -m elf_i386
 
 all:
-	## bootloader ###
+	#### Assembly ####
+	# boot #
 	nasm -f elf32 src/boot.s -o build/boot.o
+	# other assembly #
 	nasm -f elf32 src/gdt.s -o build/gdts.o
 	nasm -f elf32 src/idt.s -o build/idt.o
+	as --32 -o build/page.o src/page.s
 	### Kernel #####
 	gcc $(CFLAGS) -c src/kernel.c -o build/kernel.o
 	gcc $(CFLAGS) -c src/stdlib/stdio.c -o build/stdio.o
@@ -22,7 +25,7 @@ all:
 	gcc $(CFLAGS) -c src/io.c -o build/io.o
 	gcc $(CFLAGS) -c src/malloc.c -o build/malloc.o
 	### else #####
-	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o 
+	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/page.o
 	mv kernel ceanos/boot/kernel
 	grub-mkrescue -o build/ceanos.iso ceanos/
 	qemu-system-i386 build/ceanos.iso

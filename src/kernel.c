@@ -23,11 +23,14 @@ void main(void);
 
 static inline void init_all(void) {
     gdt_init();
-        init_pager();    
+        init_pager();
     idt_init();
         timer_init();
     keyboard_init();
+        sleep(500);
      
+    Reset();
+
     // this disables the cursor
     outb(VGA_CRT_IC, 0x0A);              
     outb(VGA_CRT_DC, 0x20);       
@@ -35,9 +38,11 @@ static inline void init_all(void) {
 
 void main(void){
     init_all();
-
+    
     print("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
-    print("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and 
+         sleep(50);                                              
+    print("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
+         sleep(50);                                             
     print("ceanos~$ ");                          // initialize the shell
     
     set_screen_color(0x0F);                      // 0x0F = white on black
