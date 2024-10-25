@@ -8,6 +8,7 @@
 #include "util.h"
 #include "strings.h"
 #include "keyboard.h"
+#include "stdlib/stdio.h"
 
 static inline void process_cmd(const char *tex) {
     if (strcmp("clear", tex) != 0) {
@@ -37,6 +38,9 @@ static inline void process_cmd(const char *tex) {
         print("at: ");
         print(__TIME__);
         print("\n");
+    }
+    else if (strcmp("printf", tex) != 0) {
+        printf("printf function test");
     }
     else {
         print("bosh: unrecognized command \n");
