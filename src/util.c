@@ -22,6 +22,18 @@ char inPortB(uint16_t port){
     return rv;
 }
 
+void outw(unsigned short port, unsigned short value) {
+    asm volatile (
+        "outw %0, %1"
+        : // no output operands
+        : "a"(value), "Nd"(port)
+    );
+}
+
+void shutdown(uint16_t port, uint16_t value) {
+    outw(port, value); 
+}
+
 void insl(uint16_t port, void* addr, int count) {
     asm volatile ("cld; rep insl" 
                   : "=D" (addr), "=c" (count) 

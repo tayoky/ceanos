@@ -15,6 +15,7 @@
 #include "io.h"
 #include "vga_types.h"
 #include "malloc.h"
+#include "pager.h"
 
 void main(void);
 
@@ -22,10 +23,11 @@ void main(void);
 
 static inline void init_all(void) {
     gdt_init();
-        idt_init();
+        init_pager();    
+    idt_init();
         timer_init();
     keyboard_init();
-    
+     
     // this disables the cursor
     outb(VGA_CRT_IC, 0x0A);              
     outb(VGA_CRT_DC, 0x20);       
@@ -42,6 +44,13 @@ void main(void){
     
     uint32_t mem;
     uint32_t page=ceanoc(1000, 1, &mem);
+    
+    // test //
+        /*char *ptr = (char *)0x00000000;
+
+        *ptr = 'a';
+
+        printf("%c\n", *ptr); */
 
     while(1);   
 }

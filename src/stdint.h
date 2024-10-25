@@ -1,3 +1,6 @@
+#ifndef STDINT_H
+#define STDINT_H
+
 #define NULL ((void*)0)
 
 typedef signed char int8_t;
@@ -21,3 +24,5 @@ typedef long long intmax_t;
 typedef uint8_t bool;
 #define true 1
 #define false 0
+
+#endif

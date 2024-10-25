@@ -9,7 +9,7 @@
 #include "strings.h"
 #include "keyboard.h"
 
-void process_cmd(const char *tex) {
+static inline void process_cmd(const char *tex) {
     if (strcmp("clear", tex) != 0) {
         Reset();
     }
@@ -27,6 +27,7 @@ void process_cmd(const char *tex) {
     }
     else if (strcmp("shutdown", tex) != 0 ) {
         print("shutting down...\n");
+        shutdown(0xB004, 0x2000);
     }
     else if (strcmp("compdate", tex) != 0 ) {
         print("date: ");

@@ -9,6 +9,8 @@ void memset(void *dest, char val, uint32_t count);
 void outPortB(uint16_t Port, uint8_t Value);
 char inPortB(uint16_t port);
 void insl(uint16_t port, void* addr, int count); 
+void outw(unsigned short port, unsigned short value);
+void shutdown(uint16_t port, uint16_t value);
 
 struct InterruptRegisters{
     uint32_t cr2;
