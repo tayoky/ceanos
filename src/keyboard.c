@@ -11,8 +11,9 @@
 
 bool capsOn;
 bool capsLock;
+const uint32_t KEY_COUNT = 128;
 
-char text[100] = { 0 };
+char text[512];
 
 const uint32_t UNKNOWN = 0xFFFFFFFF;
 const uint32_t ESC = 0xFFFFFFFF - 1;
@@ -73,16 +74,14 @@ UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 const uint32_t val[128] = {'c'};
 
 void append(char *part) {
-  uint8_t i = 0;
-  uint8_t j = 0;
-  while(text[i] != '\0') {
-      i++;
-  }
-  while(part[j] != '\0') {
-    text[i] = part[j];
-    i++;
-    j++;
-  }
+    uint8_t i = 0;
+    while (text[i] != '\0' && i < sizeof(text) - 1) {
+        i++;
+    }
+    if (i < sizeof(text) - 1) {
+        text[i] = part[0]; 
+        text[i + 1] = '\0'; 
+    }
 }
 
 void rm() {
@@ -93,200 +92,84 @@ void rm() {
     text[--i] = '\0'; 
 }
 
-void clear() {
-  uint8_t p = 0;
-  while(text[p] != '\0') {
-      text[p] = '\0';
-      p++;
-  }
+static void clear() {
+    text[0] = '\0';
 }
 
-void delp(char p, char *t) {
-    if(p == 0) {
-      append(t);
-      print(t);
-    }
-}
 
 void parser(uint8_t code) {
     char buff[100];
     uint8_t i = 0;
-    while(text[i] != lowercase[code]) {
+
+    char expectedChar = lowercase[code]; 
+    while (text[i] != '\0' && text[i] != expectedChar) {
+        buff[i] = text[i];
         i++;
     }
-    for(uint8_t p = 0;p > i;p++) {
-        buff[p] = text[p];
+    buff[i] = '\0'; 
+
+    if (text[i] == expectedChar) {
+        print(buff); 
     }
-    print(buff);
 }
 
-static void keyboardHandler(struct InterruptRegisters *regs){
-    char scanCode = inPortB(0x60) & 0x7F; //What key is pressed
-    char press = inPortB(0x60) & 0x80; //Press down, or released
 
-    switch(scanCode){
-        case 2: // 1
-        case 3: // 2
-        case 4: // 3
-        case 5: // 4
-        case 6: // 5
-        case 7: // 6
-        case 8: // 7
-        case 9: // 8
-        case 10: // 9
-        case 11: // 0
-        case 12:
-        case 13:
-        case 14:
-            if (press == 0) { 
+static void updateTextBuffer(uint8_t code, uint8_t press) {
+    char charToAdd;
+    if (capsOn || capsLock) {
+        charToAdd = uppercase[code];
+    } else {
+        charToAdd = lowercase[code];
+    }
+
+    if (press == 0) { 
+        if (charToAdd == '\n') {
+            print("\n");
+            splitter(text);
+            clear(); 
+            print("\nceanos~$ ");
+        } else {
+            printf("%c", charToAdd);
+            append(&charToAdd); 
+        }
+    }
+}
+
+
+/* main keyboard handler function */
+static void keyboardHandler(struct InterruptRegisters *regs) {
+    uint8_t scanCode = inPortB(0x60) & 0x7F; 
+    uint8_t press = inPortB(0x60) & 0x80; 
+    
+    switch(scanCode) {
+        case 0x2A: case 0x36: 
+            capsOn = (press == 0); 
+            break;
+        case 0x3A: 
+            if (press == 0) {
+                capsLock = !capsLock;
+            }
+            break;
+        case 0x0E: 
+            if (press == 0) {
                 print("\b");
                 rm();
             }
             break;
-        case 15:
-        case 29:
-        case 16:
-          delp(press, "q");
-          break;
-        case 17:
-          delp(press, "w");
-          break;
-        case 18:
-          delp(press, "e");
-          break;
-        case 19:
-          delp(press, "r");
-          break;
-        case 20:
-          delp(press, "t");
-          break;
-        case 21:
-          delp(press, "y");
-          break;
-        case 22:
-          delp(press, "u");
-          break;
-        case 23:
-          delp(press, "i");
-          break;
-        case 24:
-          delp(press, "o");
-          break;
-        case 25:
-          delp(press, "p");
-          break;
-        case 30:
-          delp(press, "a");
-          break;
-        case 31:
-          delp(press, "s");
-          break;
-        case 32:
-          delp(press, "d");
-          break;
-        case 33:
-          delp(press, "f");
-          break;
-        case 34:
-          delp(press, "g");
-          break;
-        case 35:
-          delp(press, "h");
-          break;
-        case 36:
-          delp(press, "j");
-          break;
-        case 37:
-          delp(press, "k");
-          break;
-        case 38:
-          delp(press, "l");
-          break;
-        case 44:
-          delp(press, "z");
-          break;
-        case 45:
-          delp(press, "x");
-          break;
-        case 46:
-          delp(press, "c");
-          break;
-        case 47:
-          delp(press, "v");
-          break;
-        case 48:
-          delp(press, "b");
-          break;
-        case 49:
-          delp(press, "n");
-          break;
-        case 50:
-          delp(press, "m");
-          break;
-        case 57:
-          delp(press, " "); 
-          break;
-        case 39:
-        case 40:
-        case 41:
-        case 43:
-        case 52:
-        case 53:
-        case 74:
-        case 78:
-        case 56:
-        case 59:
-        case 60:
-        case 61:
-        case 62:
-        case 63:
-        case 64:
-        case 65:
-        case 66:
-        case 67:
-        case 68:
-        case 87:
-        case 88:
-            break;
-        case 42:
-            //shift key
-            if (press == 0){
-                capsOn = true;
-            }else{
-                capsOn = false;
-            }
-            break;
-        case 58:
-            if (!capsLock && press == 0){
-                capsLock = true;
-            }else if (capsLock && press == 0){
-                capsLock = false;
-            }
-            break;
         default:
-            if (press == 0){
-                if(lowercase[scanCode] == '\n') {
-                    print("\n");
-                    splitter(text);
-                    print("\nceanos~$ ");
-                    clear();
-                }
-                else {
-                  if (capsOn || capsLock){
-                    printf("%c", uppercase[scanCode]);
-                  }
-                  else{
-                    printf("%c", lowercase[scanCode]);
-                  } 
-                }
+            if (press == 0 && scanCode < KEY_COUNT) {
+                updateTextBuffer(scanCode, press);
             }
+            break;
     }
 }
+
 
 void keyboard_init(){
     capsOn = false;
     capsLock = false;
-    irq_install_handler(1,&keyboardHandler);
+    irq_install_handler(1, &keyboardHandler);
+    clear();
     print("keyboard enabled\n");
 }
 

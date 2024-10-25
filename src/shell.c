@@ -45,7 +45,6 @@ static inline void process_cmd(const char *tex) {
     else {
         print("bosh: unrecognized command \n");
     }
-    
 }
 
 void run_term(const char *tex) {

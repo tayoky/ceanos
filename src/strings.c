@@ -29,6 +29,21 @@ int strcmp(const char *first, const char *second) {
     }
 }
 
+// 0 is true
+// -1 is false
+int strncmp(const char *s1, const char *s2, int n) {
+    for (int i = 0; i < n; i++) {
+        // Check if one of strings is at the end
+        if (s1[i] == 0 || s2[i] == 0)
+          return -1;
+        // Check if the current chars are equal
+        if (s1[i] != s2[i])
+          return -1;
+    }
+
+    return 0;
+}
+
 char* strncpy(char* dest, const char* src, size_t n) {
     size_t i;
     for (i = 0; i < n && src[i] != '\0'; i++) {
