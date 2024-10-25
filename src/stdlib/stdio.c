@@ -4,8 +4,9 @@
 #include "../strings.h"
 #include "../util.h"
 
-void putc(char c){
-    print(&c);
+void putc(char c) {
+    char buffer[2] = {c, '\0'};  
+    print(buffer);                
 }
 
 void puts(const char* s){
