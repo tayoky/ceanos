@@ -1,4 +1,4 @@
-CFLAGS = -m32 -fno-stack-protector -fno-builtin -I src/
+CFLAGS = -m32 -fno-stack-protector -fno-builtin -w -I src/
 LDFLAGS = -m elf_i386
 
 all:

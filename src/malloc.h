@@ -10,5 +10,6 @@ void mem_copy(uint8_t *src, uint8_t *des, int bytes);
 void mem_set(uint8_t *dest, uint8_t val, uint32_t len);
 
 uint32_t ceanoc(uint32_t size, int align, uint32_t *paddr);
+void ceanoc_free(void *ptr, uint32_t size);
 
 #endif //malloc.h
