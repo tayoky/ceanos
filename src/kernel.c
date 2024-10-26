@@ -16,6 +16,7 @@
 #include "vga_types.h"
 #include "malloc.h"
 #include "pager.h"
+#include "ext5.h"
 
 void main(void);
 char prompt[2] = "$ ";   
@@ -28,8 +29,9 @@ static inline void init_all(void) {
     idt_init();
         timer_init();
     keyboard_init();
-        sleep(500);
-     
+        struct ext5_superblock sb;
+        init_ext5(sb);
+    sleep(500);
     Reset();
 
     // this disables the cursor
