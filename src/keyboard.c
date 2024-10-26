@@ -127,7 +127,7 @@ static void updateTextBuffer(uint8_t code, uint8_t press) {
             print("\n");
             splitter(text);
             clear(); 
-            print("\nceanos~$ ");
+            printf("\nceanos~$ ");
         } else {
             printf("%c", charToAdd);
             append(&charToAdd); 

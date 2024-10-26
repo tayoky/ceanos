@@ -18,6 +18,7 @@
 #include "pager.h"
 
 void main(void);
+char prompt[2] = "$ ";   
 
 // initialize all important stuff, like idt, gdt, etc
 
@@ -39,11 +40,11 @@ static inline void init_all(void) {
 void main(void){
     init_all();
     
-    print("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
+    printf("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
          sleep(50);                                              
-    print("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
+    printf("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
          sleep(50);                                             
-    print("ceanos~$ ");                          // initialize the shell
+    printf("ceanos~%s",prompt);                  // initialize the shell
     
     set_screen_color(0x0F);                      // 0x0F = white on black
     
