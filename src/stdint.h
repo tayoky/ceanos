@@ -1,6 +1,12 @@
 #ifndef STDINT_H
 #define STDINT_H
 
+#define BITMASK(x) (1<<(x))
+#define BIT_TEST(val, x) ((val) & BITMASK(x))
+#define BIT_SET(val, x) ((val) | BITMASK(x))
+#define BIT_CLEAR(val, x) ((val) & ~BITMASK(x))
+#define BIT_INVERT(val, x) ((val) ^ BITMASK(x))
+
 #define NULL ((void*)0)
 
 typedef signed char int8_t;

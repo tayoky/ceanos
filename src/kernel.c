@@ -15,19 +15,18 @@
 #include "io.h"
 #include "vga_types.h"
 #include "malloc.h"
-#include "pager.h"
+#include "ext2.h"
 
 void main(void);
 char prompt[2] = "$ ";   
-        
+       
 // initialize all important stuff, like idt, gdt, etc
 
 static inline void init_all(void) {
     gdt_init();
-        init_pager();
-    idt_init();
-        timer_init();
-    keyboard_init();
+        idt_init();
+    timer_init();
+        keyboard_init();
         sleep(500);
     Reset();
 
@@ -43,9 +42,9 @@ void main(void){
          sleep(50);                                              
     printf("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
          sleep(50);                                             
-    printf("ceanos~%s",prompt);                  // initialize the shell
+    printf("ceanos~%s", prompt);                  // initialize the shell
     
-    set_screen_color(0x0F);                      // 0x0F = white on black
+    set_screen_color(0x0F);                       // 0x0F = white on black
     
     // test //
         /*char *ptr = (char *)0x00000000;
