@@ -15,7 +15,7 @@
 #include "io.h"
 #include "vga_types.h"
 #include "malloc.h"
-#include "ext2.h"
+#include "paging.h"
 
 void main(void);
 char prompt[2] = "$ ";   
