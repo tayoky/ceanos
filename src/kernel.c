@@ -16,8 +16,10 @@
 #include "vga_types.h"
 #include "malloc.h"
 #include "paging.h"
+#include "multiboot.h"
+#include "mem.h"
 
-void main(void);
+void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "$ ";   
        
 // initialize all important stuff, like idt, gdt, etc
@@ -35,7 +37,7 @@ static inline void init_all(void) {
     outb(VGA_CRT_DC, 0x20);       
 }
 
-void main(void){
+void main(uint32_t magic, struct multiboot_info* boot){
     init_all();
     
     printf("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
@@ -45,7 +47,13 @@ void main(void){
     printf("ceanos~%s", prompt);                  // initialize the shell
     
     set_screen_color(0x0F);                       // 0x0F = white on black
-    
+   
+    uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);
+    uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
+
+    initMemory(boot->mem_upper * 1024, physicalAllocStart);
+    kmallocInit(0x1000);
+
     // test //
         /*char *ptr = (char *)0x00000000;
 

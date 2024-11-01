@@ -1,57 +1,35 @@
-#include "malloc.h"
 #include "stdint.h"
+#include "util.h"
+#include "mem.h"
+#include "malloc.h"
 
-uint32_t mem_start = 0x100000;   
-uint32_t mem_end = 0x200000;     
+static uint32_t heapStart;
+static uint32_t heapSize;
+static uint32_t threshold;
+static bool kmallocInitalized = false;
 
-typedef struct MemBlock {
-    uint32_t size;
-    struct MemBlock *next;
-} MemBlock;
+void kmallocInit(uint32_t initialHeapSize){
+    heapStart = KERNEL_MALLOC;
+    heapSize = 0;
+    threshold = 0;
+    kmallocInitalized = true;
 
-MemBlock *free_list = NULL;  
-
-void mem_copy(uint8_t *src, uint8_t *dest, int bytes) {
-    for (int i = 0; i < bytes; i++) {
-        *(dest + i) = *(src + i);
-    }
+    changeHeapSize(initialHeapSize);
+    *((uint32_t*)heapStart) = 0;
 }
 
-void mem_set(uint8_t *dest, uint8_t val, uint32_t len) {
-    uint8_t *temp = dest;
-    while (len--) *temp++ = val;
-}
+void changeHeapSize(int newSize){
+    int oldPageTop = CEIL_DIV(heapSize, 0x1000);
+    int newPageTop = CEIL_DIV(newSize, 0x1000);
 
-uint32_t ceanoc(uint32_t size, int align, uint32_t *paddr) {
-    if (align == 1 && (mem_start & 0xFFFFF000)) {
-        mem_start = (mem_start & 0xFFFFF000) + 0x1000;
-    }
+    if (newPageTop > oldPageTop){
+        int diff = newPageTop - oldPageTop;
 
-    MemBlock *prev = NULL, *curr = free_list;
-    while (curr != NULL) {
-        if (curr->size >= size) {
-            if (prev) prev->next = curr->next;
-            else free_list = curr->next;
-
-            if (paddr) *paddr = (uint32_t)curr;
-            return (uint32_t)curr;
+        for (int i = 0; i < diff; i++){
+            uint32_t phys = pmmAllocPageFrame();
+            memMapPage(KERNEL_MALLOC + oldPageTop * 0x1000 + i * 0x1000, phys, PAGE_FLAG_WRITE);
         }
-        prev = curr;
-        curr = curr->next;
     }
 
-    if (paddr) *paddr = mem_start;
-    uint32_t ret = mem_start;
-    mem_start += size;
-
-    return ret;
-}
-
-void ceanoc_free(void *ptr, uint32_t size) {
-    if (!ptr) return;
-
-    MemBlock *block = (MemBlock *)ptr;
-    block->size = size;
-    block->next = free_list;
-    free_list = block;
+    heapSize = newSize;
 }

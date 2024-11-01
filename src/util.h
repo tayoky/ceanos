@@ -5,6 +5,8 @@
 #ifndef UTIL_h
 #define UTIL_H
 
+#define CEIL_DIV(a,b) (((a + b) - 1)/b)
+
 void memset(void *dest, char val, uint32_t count);
 void* memmove(void* dest, const void* src, uint32_t len);
 void outPortB(uint16_t Port, uint8_t Value);

@@ -3,7 +3,7 @@
 
 uint16_t column = 0;
 uint16_t line = 0;
-uint16_t* const vga = (uint16_t* const) 0xB8000;
+uint16_t* const vga = (uint16_t* const) 0xC00B8000;
 const uint16_t defaultColor = (COLOR8_WHITE << 8) | (COLOR8_BLACK << 12);
 uint16_t currentColor = defaultColor;
 
@@ -84,7 +84,7 @@ void print(const char* s){
 }
 
 void set_screen_color(uint8_t color) {
-    uint8_t* video_memory = (uint8_t*)0xB8000;
+    uint8_t* video_memory = (uint8_t*)0xC00B8000;
     for (int i = 0; i < width * height * 2; i += 2) {
         video_memory[i + 1] = color; 
     }
