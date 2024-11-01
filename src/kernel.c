@@ -39,6 +39,7 @@ static inline void init_all(void)
 void main(uint32_t magic, struct multiboot_info* boot)
 {
     init_all();
+        //calculate physical memory start for kernel heap
         uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);
         uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 
