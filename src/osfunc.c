@@ -8,7 +8,8 @@
 extern char press;
 extern char text[100];
 
-inline void _term_help(){
+inline void _term_help()
+{
     print("Available commands:\n");
     print("  clear     - clears the screen\n");
     print("  help      - prints this message\n");
@@ -19,12 +20,13 @@ inline void _term_help(){
     print("  fetch     - display system information");
 }
 
-inline void _get_sysinfo() {
+inline void _get_sysinfo()
+{
     print("\nOS: CeanOS\n");
     print("Kernel version: 0xFDF4E3 \n");
     print("shell: bosh (bobo shell)\n");
     print("os bosh version: v0.1 \n");
-    
+
     print("build date: ");
     print(__DATE__);
     print("\n");
@@ -32,11 +34,13 @@ inline void _get_sysinfo() {
     print_cpuinfo();
 }
 
-void halt() {
+void halt()
+{
     asm("hlt");
 }
 
-void itoa(int value, char* str, int base) {
+void itoa(int value, char* str, int base)
+{
     char* ptr = str;
     char* ptr1 = str;
     char tmp_char;

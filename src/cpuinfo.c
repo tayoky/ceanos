@@ -2,7 +2,8 @@
 #include "vga.h"
 #include "stdlib/stdio.h"
 
-void get_cpu_info(CPUinfo* cpu_info) {
+void get_cpu_info(CPUinfo* cpu_info)
+{
     uint32_t eax, ebx, ecx, edx;
 
     asm volatile (
@@ -22,13 +23,14 @@ void get_cpu_info(CPUinfo* cpu_info) {
         : "a"(1)
     );
 
-    cpu_info->model = (eax >> 4) & 0xF;   
-    cpu_info->family = (eax >> 8) & 0xF;  
-}    
+    cpu_info->model = (eax >> 4) & 0xF;
+    cpu_info->family = (eax >> 8) & 0xF;
+}
 
-inline void print_cpuinfo() {
+inline void print_cpuinfo()
+{
     CPUinfo cpu_info;
     get_cpu_info(&cpu_info);
-    
-    printf("CPU: %s | M: %u | F: %u\n", cpu_info.vendor, cpu_info.model, cpu_info.family); 
+
+    printf("CPU: %s | M: %u | F: %u\n", cpu_info.vendor, cpu_info.model, cpu_info.family);
 }

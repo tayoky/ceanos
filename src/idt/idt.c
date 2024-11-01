@@ -8,7 +8,8 @@ struct idt_ptr_struct idt_ptr;
 
 extern void idt_flush(uint32_t);
 
-void idt_init(){
+void idt_init()
+{
     idt_ptr.limit = sizeof(struct idt_entry_struct) * 256 - 1;
     idt_ptr.base = (uint32_t) &idt_entries;
 
@@ -89,7 +90,8 @@ void idt_init(){
     print("idt enabled \n");
 }
 
-void setIdtGate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags){
+void setIdtGate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
+{
 
     idt_entries[num].base_low = base & 0xFFFF;
     idt_entries[num].base_high = (base >> 16) & 0xFFFF;
@@ -136,8 +138,9 @@ char* exception_messages[] = {
 };
 
 
-void isr_handler(struct InterruptRegisters* regs){
-    if (regs->int_no < 32){
+void isr_handler(struct InterruptRegisters* regs)
+{
+    if (regs->int_no < 32) {
         print(exception_messages[regs->int_no]);
         print("\n");
         print("exception! system halted\n");
@@ -150,24 +153,27 @@ void *irq_routines[16] = {
     0,0,0,0,0,0,0,0
 };
 
-void irq_install_handler (int irq, void (*handler)(struct InterruptRegisters *r)){
+void irq_install_handler (int irq, void (*handler)(struct InterruptRegisters *r))
+{
     irq_routines[irq] = handler;
 }
 
-void irq_uninstall_handler(int irq){
+void irq_uninstall_handler(int irq)
+{
     irq_routines[irq] = 0;
 }
 
-void irq_handler(struct InterruptRegisters* regs){
+void irq_handler(struct InterruptRegisters* regs)
+{
     void (*handler)(struct InterruptRegisters *regs);
 
     handler = irq_routines[regs->int_no - 32];
 
-    if (handler){
+    if (handler) {
         handler(regs);
     }
 
-    if (regs->int_no >= 40){
+    if (regs->int_no >= 40) {
         outPortB(0xA0, 0x20);
     }
 

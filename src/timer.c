@@ -1,17 +1,19 @@
 #include "stdint.h"
 #include "util.h"
-#include "idt.h"
+#include "idt/idt.h"
 #include "vga.h"
 #include "timer.h"
 
 uint64_t ticks;
 const uint32_t freq = 100;
 
-void onIrq0(struct InterruptRegisters *regs){
+void onIrq0(struct InterruptRegisters *regs)
+{
     ticks += 1;
 }
 
-void timer_init(){
+void timer_init()
+{
     ticks = 0;
     irq_install_handler(0,&onIrq0);
 
@@ -26,7 +28,8 @@ void timer_init(){
     print("timer enabled\n");
 }
 
-void sleep(uint32_t milliseconds) {
+void sleep(uint32_t milliseconds)
+{
     uint64_t target_ticks = ticks + (milliseconds / 10); // 100 Hz => 10 ms per tick
 
     while (ticks < target_ticks) {

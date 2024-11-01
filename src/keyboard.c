@@ -1,9 +1,9 @@
-/* keyboard */ 
+/* keyboard */
 /* Copyright (c) @asdasda3456 2024 - 2024 */
 
 #include "stdint.h"
 #include "util.h"
-#include "idt.h"
+#include "idt/idt.h"
 #include "stdlib/stdio.h"
 #include "keyboard.h"
 #include "vga.h"
@@ -50,71 +50,76 @@ const uint32_t ALTGR = 0xFFFFFFFF - 31;
 const uint32_t NUMLCK = 0xFFFFFFFF - 32;
 
 const uint32_t lowercase[128] = {
-UNKNOWN,ESC,'1','2','3','4','5','6','7','8',
-'9','0','-','=','\b','\t','q','w','e','r',
-'t','y','u','i','o','p','[',']','\n',CTRL,
-'a','s','d','f','g','h','j','k','l',';',
-'\'','`',LSHFT,'\\','z','x','c','v','b','n','m',',',
-'.','/',RSHFT,'*',ALT,' ',CAPS,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK,SCRLCK,HOME,UP,PGUP,'-',LEFT,UNKNOWN,RIGHT,
-'+',END,DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
+    UNKNOWN,ESC,'1','2','3','4','5','6','7','8',
+    '9','0','-','=','\b','\t','q','w','e','r',
+    't','y','u','i','o','p','[',']','\n',CTRL,
+    'a','s','d','f','g','h','j','k','l',';',
+    '\'','`',LSHFT,'\\','z','x','c','v','b','n','m',',',
+    '.','/',RSHFT,'*',ALT,' ',CAPS,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK,SCRLCK,HOME,UP,PGUP,'-',LEFT,UNKNOWN,RIGHT,
+    '+',END,DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+    UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+    UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+    UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 };
 const uint32_t uppercase[128] = {
     UNKNOWN,ESC,'!','@','#','$','%','^','&','*','(',')','_','+','\b','\t','Q','W','E','R',
-'T','Y','U','I','O','P','{','}','\n',CTRL,'A','S','D','F','G','H','J','K','L',':','"','~',LSHFT,'|','Z','X','C',
-'V','B','N','M','<','>','?',RSHFT,'*',ALT,' ',CAPS,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK,SCRLCK,HOME,UP,PGUP,'-',
-LEFT,UNKNOWN,RIGHT,'+',END,DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
-UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
+    'T','Y','U','I','O','P','{','}','\n',CTRL,'A','S','D','F','G','H','J','K','L',':','"','~',LSHFT,'|','Z','X','C',
+    'V','B','N','M','<','>','?',RSHFT,'*',ALT,' ',CAPS,F1,F2,F3,F4,F5,F6,F7,F8,F9,F10,NUMLCK,SCRLCK,HOME,UP,PGUP,'-',
+    LEFT,UNKNOWN,RIGHT,'+',END,DOWN,PGDOWN,INS,DEL,UNKNOWN,UNKNOWN,UNKNOWN,F11,F12,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+    UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+    UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,
+    UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN,UNKNOWN
 };
 
 const uint32_t val[128] = {'c'};
 
-void append(char *part) {
+void append(char *part)
+{
     uint8_t i = 0;
     while (text[i] != '\0' && i < sizeof(text) - 1) {
         i++;
     }
     if (i < sizeof(text) - 1) {
-        text[i] = part[0]; 
-        text[i + 1] = '\0'; 
+        text[i] = part[0];
+        text[i + 1] = '\0';
     }
 }
 
-void rm() {
+void rm()
+{
     uint8_t i = 0;
     while(text[i] != '\0') {
         i++;
     }
-    text[--i] = '\0'; 
+    text[--i] = '\0';
 }
 
-static void clear() {
+static void clear()
+{
     text[0] = '\0';
 }
 
 
-void parser(uint8_t code) {
+void parser(uint8_t code)
+{
     char buff[100];
     uint8_t i = 0;
 
-    char expectedChar = lowercase[code]; 
+    char expectedChar = lowercase[code];
     while (text[i] != '\0' && text[i] != expectedChar) {
         buff[i] = text[i];
         i++;
     }
-    buff[i] = '\0'; 
+    buff[i] = '\0';
 
     if (text[i] == expectedChar) {
-        print(buff); 
+        print(buff);
     }
 }
 
 
-static void updateTextBuffer(uint8_t code, uint8_t press) {
+static void updateTextBuffer(uint8_t code, uint8_t press)
+{
     char charToAdd;
     if (capsOn || capsLock) {
         charToAdd = uppercase[code];
@@ -122,50 +127,53 @@ static void updateTextBuffer(uint8_t code, uint8_t press) {
         charToAdd = lowercase[code];
     }
 
-    if (press == 0) { 
+    if (press == 0) {
         if (charToAdd == '\n') {
             print("\n");
             splitter(text);
-            clear(); 
+            clear();
             printf("\nceanos~$ ");
         } else {
             printf("%c", charToAdd);
-            append(&charToAdd); 
+            append(&charToAdd);
         }
     }
 }
 
 
 /* main keyboard handler function */
-static void keyboardHandler(struct InterruptRegisters *regs) {
-    uint8_t scanCode = inPortB(0x60) & 0x7F; 
-    uint8_t press = inPortB(0x60) & 0x80; 
-    
+static void keyboardHandler(struct InterruptRegisters *regs)
+{
+    uint8_t scanCode = inPortB(0x60) & 0x7F;
+    uint8_t press = inPortB(0x60) & 0x80;
+
     switch(scanCode) {
-        case 0x2A: case 0x36: 
-            capsOn = (press == 0); 
-            break;
-        case 0x3A: 
-            if (press == 0) {
-                capsLock = !capsLock;
-            }
-            break;
-        case 0x0E: 
-            if (press == 0) {
-                print("\b");
-                rm();
-            }
-            break;
-        default:
-            if (press == 0 && scanCode < KEY_COUNT) {
-                updateTextBuffer(scanCode, press);
-            }
-            break;
+    case 0x2A:
+    case 0x36:
+        capsOn = (press == 0);
+        break;
+    case 0x3A:
+        if (press == 0) {
+            capsLock = !capsLock;
+        }
+        break;
+    case 0x0E:
+        if (press == 0) {
+            print("\b");
+            rm();
+        }
+        break;
+    default:
+        if (press == 0 && scanCode < KEY_COUNT) {
+            updateTextBuffer(scanCode, press);
+        }
+        break;
     }
 }
 
 
-void keyboard_init(){
+void keyboard_init()
+{
     capsOn = false;
     capsLock = false;
     irq_install_handler(1, &keyboardHandler);
