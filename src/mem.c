@@ -1,6 +1,8 @@
 #include "util.h"
 #include "mem.h"
 #include "stdint.h"
+#include "stdlib/stdio.h"
+#include "timer.h"
 
 static uint32_t pageFrameMin; // minimum physical frame
 static uint32_t pageFrameMax; // maximum physical frame

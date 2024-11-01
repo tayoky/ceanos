@@ -25,16 +25,13 @@ char prompt[2] = "$ ";
 // initialize all important stuff, like idt, gdt, etc
 
 static inline void init_all(void) {
+    vga_disable_cursor();
     gdt_init();
         idt_init();
     timer_init();
         keyboard_init();
         sleep(500);
     Reset();
-
-    // this disables the cursor
-    outb(VGA_CRT_IC, 0x0A);              
-    outb(VGA_CRT_DC, 0x20);       
 }
 
 void main(uint32_t magic, struct multiboot_info* boot){
@@ -53,12 +50,6 @@ void main(uint32_t magic, struct multiboot_info* boot){
 
     initMemory(boot->mem_upper * 1024, physicalAllocStart);
     kmallocInit(0x1000);
-
-    // test //
-        /*char *ptr = (char *)0x00000000;
-
-        *ptr = 'a';
-
-        printf("%c\n", *ptr); */
+    
     while(1);   
 }

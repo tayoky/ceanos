@@ -1,5 +1,13 @@
 #include "vga.h"
+#include "vga_types.h"
 #include "stdint.h"
+
+struct VgaState
+{
+  uint32_t widthS, heightS;     //width state, height state
+};
+
+static struct VgaState vga_state = { 0 };
 
 uint16_t column = 0;
 uint16_t line = 0;
@@ -90,3 +98,18 @@ void set_screen_color(uint8_t color) {
     }
 }
 
+void vga_move_cursor (uint8_t x, uint8_t y)
+{
+  uint16_t pos = y * vga_state.widthS + x;
+
+  outPortB (0x3D4, 0x0F);
+  outPortB (0x3D5, (uint8_t)(pos & 0xFF));
+  outPortB (0x3D4, 0x0E);
+  outPortB (0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+}
+
+void vga_disable_cursor() {
+    // this disables the cursor
+    outb(VGA_CRT_IC, 0x0A);              
+    outb(VGA_CRT_DC, 0x20);       
+}
