@@ -1,4 +1,4 @@
-CFLAGS = -m32 -ffreestanding -w -g -I src/
+CFLAGS = -m32 -std=c23 -ffreestanding -w -g -I src/
 LDFLAGS = -m elf_i386
 
 all:
