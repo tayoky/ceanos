@@ -14,10 +14,10 @@
 #include "osfunc.h"
 #include "io.h"
 #include "vga_types.h"
-#include "malloc.h"
-#include "paging.h"
+#include "mm/malloc.h"
+#include "mm/paging.h"
 #include "multiboot.h"
-#include "mem.h"
+#include "mm/mem.h"
 
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "$ ";
