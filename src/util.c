@@ -1,9 +1,84 @@
 /* UTILS FOR CEANOS */
 
-#include "stdint.h"
-#include "util.h"
-#include "timer.h"
-#include "stdlib/stdio.h"
+#include <stdint.h>
+#include <util.h>
+#include <timer.h>
+#include <stdlib/stdio.h>
+
+void dump_registers()
+{
+    struct registers_for_dump regs;
+
+    asm volatile (
+        "mov %%eax, %[eax]\n\t"
+        "mov %%ebx, %[ebx]\n\t"
+        "mov %%ecx, %[ecx]\n\t"
+        "mov %%edx, %[edx]\n\t"
+        "mov %%esi, %[esi]\n\t"
+        "mov %%edi, %[edi]\n\t"
+        "mov %%ebp, %[ebp]\n\t"
+        "mov %%esp, %[esp]\n\t"
+        "pushf\n\t"               // Push flags onto the stack
+        "pop %[eflags]\n\t"       // Pop into eflags variable
+        "mov %%cs, %[cs]\n\t"     // This may require special handling
+        "mov %%ds, %[ds]\n\t"     // This may require special handling
+        "mov %%es, %[es]\n\t"     // This may require special handling
+        "mov %%fs, %[fs]\n\t"     // This may require special handling
+        "mov %%gs, %[gs]\n\t"     // This may require special handling
+        "mov %%ss, %[ss]\n\t"     // This may require special handling
+        : 
+        [eax] "=g" (regs.eax),
+        [ebx] "=g" (regs.ebx),
+        [ecx] "=g" (regs.ecx),
+        [edx] "=g" (regs.edx),
+        [esi] "=g" (regs.esi),
+        [edi] "=g" (regs.edi),
+        [ebp] "=g" (regs.ebp),
+        [esp] "=g" (regs.esp),
+        [eflags] "=g" (regs.eflags),
+        [cs] "=g" (regs.cs),
+        [ds] "=g" (regs.ds),
+        [es] "=g" (regs.es),
+        [fs] "=g" (regs.fs),
+        [gs] "=g" (regs.gs),
+        [ss] "=g" (regs.ss)
+        :
+        : "memory"
+    );
+                    
+    printf("\ndumping registers:\n");
+    printf("\teax: 0x%d\n", regs.eax);
+    printf("\tebx: 0x%d\n", regs.ebx);
+    printf("\tecx: 0x%d\n", regs.ecx);
+    printf("\tedx: 0x%d\n", regs.edx);
+    printf("\tesi: 0x%d\n", regs.esi);
+    printf("\tedi: 0x%d\n", regs.edi);
+    printf("\tebp: 0x%d\n", regs.ebp);
+    printf("\tesp: 0x%d\n", regs.esp);
+    printf("\teip: unavailable\n");
+    printf("\teflags: 0x%d\n", regs.eflags);
+    printf("\ts: 0x%d\n", regs.cs);
+    printf("\tds: 0x%d\n", regs.ds);
+    printf("\tes: 0x%d\n", regs.es);
+    printf("\tfs: 0x%d\n", regs.fs);
+    printf("\tgs: 0x%d\n", regs.gs);
+    printf("\tss: 0x%d\n", regs.ss);
+}
+
+uint32_t get_eip() {
+    uint32_t eip;
+    
+    asm volatile (
+        "call 1f\n\t"     
+        "1:\n\t"
+        "pop %0\n\t"       
+        : "=r" (eip)       
+        :                   
+        :                   
+    );
+
+    return eip; 
+}
 
 void memset(void *dest, char val, uint32_t count)
 {

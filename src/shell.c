@@ -1,14 +1,14 @@
 /* SHELL.C */
 /* Copyright (c) @asdasda3456 2024 - 2024 */
 
-#include "vga.h"
-#include "stdint.h"
-#include "osfunc.h"
-#include "cpuinfo.h"
-#include "util.h"
-#include "strings.h"
-#include "keyboard.h"
-#include "stdlib/stdio.h"
+#include <drivers/video/vga/vga.h>
+#include <stdint.h>
+#include <osfunc.h>
+#include <cpuinfo.h>
+#include <util.h>
+#include <strings.h>
+#include <drivers/keyboard/keyboard.h>
+#include <stdlib/stdio.h>
 
 static inline void process_cmd(const char *tex)
 {
@@ -34,7 +34,10 @@ static inline void process_cmd(const char *tex)
         print(__TIME__);
     } else if (strcmp("printf", tex) != 0) {
         printf("printf function test");
-    } else {
+    } else if (strcmp("dumpreg", tex) != 0) {
+        dump_registers();
+    }
+    else {
         printf("%s isn't a valid command", tex);
     }
 }

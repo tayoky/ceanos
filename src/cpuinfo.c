@@ -1,6 +1,5 @@
-#include "cpuinfo.h"
-#include "vga.h"
-#include "stdlib/stdio.h"
+#include <cpuinfo.h>
+#include <stdlib/stdio.h>
 
 void get_cpu_info(CPUinfo* cpu_info)
 {

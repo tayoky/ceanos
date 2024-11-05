@@ -3,21 +3,22 @@
 
 /* main entry point of the ceanos kernel */
 
-#include "vga.h"
-#include "stdint.h"
-#include "gdt/gdt.h"
-#include "idt/idt.h"
-#include "timer.h"
-#include "util.h"
-#include "stdlib/stdio.h"
-#include "keyboard.h"
-#include "osfunc.h"
-#include "io.h"
-#include "vga_types.h"
-#include "mm/malloc.h"
-#include "mm/paging.h"
-#include "multiboot.h"
-#include "mm/mem.h"
+#include <drivers/video/vga/vga.h>
+#include <stdint.h>
+#include <gdt/gdt.h>
+#include <idt/idt.h>
+#include <timer.h>
+#include <util.h>
+#include <stdlib/stdio.h>
+#include <drivers/keyboard/keyboard.h>
+#include <osfunc.h>
+#include <io.h>
+#include <drivers/video/vga/vga_types.h>
+#include <mm/malloc.h>
+#include <mm/paging.h>
+#include <multiboot.h>
+#include <mm/mem.h>
+#include <fs/fat.h>
 
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "$ ";
@@ -31,9 +32,13 @@ static inline void init_all(void)
     idt_init();
         timer_init();
     keyboard_init();
-
+    dump_registers();
     sleep(500);
     Reset();
+}
+
+void trigger_panic() {
+    asm volatile ("ud2");  
 }
 
 void main(uint32_t magic, struct multiboot_info* boot)
@@ -50,7 +55,7 @@ void main(uint32_t magic, struct multiboot_info* boot)
     printf("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
         sleep(50);
     printf("ceanos~%s", prompt);                  // initialize the shell
-
+  
     set_screen_color(0x0F);                       // 0x0F = white on black
 
     while(1);

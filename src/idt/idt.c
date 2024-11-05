@@ -1,6 +1,6 @@
-#include "stdint.h"
-#include "util.h"
-#include "vga.h"
+#include <stdint.h>
+#include <util.h>
+#include <drivers/video/vga/vga.h>
 #include "idt.h"
 
 struct idt_entry_struct idt_entries[256];
@@ -92,35 +92,33 @@ void idt_init()
 
 void setIdtGate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
 {
-
     idt_entries[num].base_low = base & 0xFFFF;
     idt_entries[num].base_high = (base >> 16) & 0xFFFF;
     idt_entries[num].sel = sel;
     idt_entries[num].always0 = 0;
     idt_entries[num].flags = flags | 0x60;
-
 }
 
 
 char* exception_messages[] = {
-    "division by zero ):",
+    "division by zero ",
     "debug",
-    "non maskable interrupt ):",
-    "breakpoint ):",
-    "into detected overflow ):",
-    "out of bounds ):",
-    "invalid opcode ):",
-    "no coprocessor ):",
-    "double fault ):",
-    "coprocessor segment overrun ):",
-    "bad tss ):",
-    "segment not present ):",
-    "stack fault ):",
-    "general protection fault ):",
-    "page fault ):",
-    "unknown interrupt ):",
-    "coprocessor fault ):",
-    "alignment fault ):",
+    "non maskable interrupt ",
+    "breakpoint ",
+    "into detected overflow ",
+    "out of bounds ",
+    "invalid opcode ",
+    "no coprocessor ",
+    "double fault ",
+    "coprocessor segment overrun ",
+    "bad tss ",
+    "segment not present ",
+    "stack fault ",
+    "general protection fault ",
+    "page fault ",
+    "unknown interrupt ",
+    "coprocessor fault ",
+    "alignment fault ",
     "machine check ",
     "reserved ):",
     "reserved ):",
@@ -137,14 +135,18 @@ char* exception_messages[] = {
     "reserved ):"
 };
 
-
 void isr_handler(struct InterruptRegisters* regs)
 {
+    Reset();
+    set_screen_color(1);
     if (regs->int_no < 32) {
-        print(exception_messages[regs->int_no]);
-        print("\n");
-        print("exception! system halted\n");
-        for (;;);
+        uint32_t instruction_pointer = get_eip();
+        printf("an exception occurred at 0x%d\n", instruction_pointer);
+        printf("error code/type: ");
+        printf(exception_messages[regs->int_no]);
+        printf("\n");
+        dump_registers();
+        asm("cli\n hlt"); 
     }
 }
 

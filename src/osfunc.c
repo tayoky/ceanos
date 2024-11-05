@@ -1,35 +1,45 @@
-#include "osfunc.h"
-#include "stdint.h"
-#include "vga.h"
-#include "keyboard.h"
-#include "cpuinfo.h"
-#include "util.h"
+#include <osfunc.h>
+#include <stdint.h>
+#include <drivers/keyboard/keyboard.h>
+#include <cpuinfo.h>
+#include <util.h>
 
 extern char press;
 extern char text[100];
 
-inline void _term_help()
+void _term_help()
 {
-    print("Available commands:\n");
-    print("  clear     - clears the screen\n");
-    print("  help      - prints this message\n");
-    print("  version   - displays os version\n");
-    print("  exit      - exits the operating system\n");
-    print("  shutdown  - shuts down the system.\n");
-    print("  compdate  - displays the compilation date.\n");
-    print("  fetch     - display system information");
+    printf("commands:\n");
+
+    printf("====================\n");
+    printf("=     GENERIC      =\n");
+    printf("====================\n");
+
+    printf("  clear     - clears the screen\n");
+    printf("  help      - prints this message\n");
+    printf("  version   - displays os version\n");
+    printf("  exit      - exits the operating system\n");
+    printf("  shutdown  - shuts down the system.\n");
+    
+    printf("====================\n");
+    printf("=     DEBUG        =\n");
+    printf("====================\n");
+    
+    printf("  compdate  - displays the compilation date.\n");
+    printf("  fetch     - display system information\n");
+    printf("  dumpreg   - dump current state of the registers ");
 }
 
 inline void _get_sysinfo()
 {
-    print("\nOS: CeanOS\n");
-    print("Kernel version: 0xFDF4E3 \n");
-    print("shell: bosh (bobo shell)\n");
-    print("os bosh version: v0.1 \n");
+    printf("\nOS: CeanOS\n");
+    printf("Kernel version: 0xFDF4E3 \n");
+    printf("shell: bosh (bobo shell)\n");
+    printf("os bosh version: v0.1 \n");
 
-    print("build date: ");
-    print(__DATE__);
-    print("\n");
+    printf("build date: ");
+    printf(__DATE__);
+    printf("\n");
 
     print_cpuinfo();
 }

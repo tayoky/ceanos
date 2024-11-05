@@ -1,8 +1,6 @@
-#pragma once
+#include <stdint.h>
 
-#include "stdint.h"
-
-#ifndef UTIL_h
+#ifndef UTIL_H
 #define UTIL_H
 
 #define CEIL_DIV(a,b) (((a + b) - 1)/b)
@@ -14,6 +12,27 @@ char inPortB(uint16_t port);
 void insl(uint16_t port, void* addr, int count); 
 void outw(unsigned short port, unsigned short value);
 void shutdown(uint16_t port, uint16_t value);
+void dump_registers();
+uint32_t get_eip();
+
+struct registers_for_dump {
+    uint32_t eax;
+    uint32_t ebx;
+    uint32_t ecx;
+    uint32_t edx;
+    uint32_t esi;
+    uint32_t edi;
+    uint32_t ebp;
+    uint32_t esp;
+    uint32_t eip;
+    uint32_t eflags;
+    uint32_t cs;
+    uint32_t ds;
+    uint32_t es;
+    uint32_t fs;
+    uint32_t gs;
+    uint32_t ss;
+}__attribute__((packed));
 
 struct InterruptRegisters{
     uint32_t cr2;

@@ -1,7 +1,6 @@
 #pragma once 
 
-#include "vga.h"
-#include "stdint.h"
+#include <stdint.h>
 
 typedef struct {
     char vendor[30];

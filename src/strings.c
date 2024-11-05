@@ -1,13 +1,12 @@
 /* STRINGS.C */
 /* Copyright (c) @asdasda3456 2024 - 2024 */
 
-#include "vga.h"
-#include "stdint.h"
-#include "cpuinfo.h"
-#include "osfunc.h"
-#include "shell.h"
+#include <stdint.h>
+#include <cpuinfo.h>
+#include <osfunc.h>
+#include <shell.h>
 
-#include "stdlib/stdio.h"
+#include <stdlib/stdio.h>
 
 int strcmp(const char *first, const char *second)
 {

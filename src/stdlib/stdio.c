@@ -1,8 +1,8 @@
-#include "../stdint.h"
+#include <stdint.h>
 #include "stdio.h"
-#include "../vga.h"
-#include "../strings.h"
-#include "../util.h"
+#include <drivers/video/vga/vga.h>
+#include <strings.h>
+#include <util.h>
 
 void putc(char c) {
     char buffer[2] = {c, '\0'};  
@@ -15,6 +15,7 @@ void puts(const char* s){
         s++;
     }
 }
+
 
 void printf(const char* fmt, ...){
     int* argp = (int*) &fmt;
@@ -188,5 +189,3 @@ int * printf_number(int* argp, int length, bool sign, int radix){
 
     return argp;
 }
-
-

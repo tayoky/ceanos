@@ -1,8 +1,8 @@
-#include "stdint.h"
-#include "util.h"
-#include "idt/idt.h"
-#include "vga.h"
-#include "timer.h"
+#include <stdint.h>
+#include <util.h>
+#include <idt/idt.h>
+#include <drivers/video/vga/vga.h>
+#include <timer.h>
 
 uint64_t ticks;
 const uint32_t freq = 100;
@@ -35,3 +35,12 @@ void sleep(uint32_t milliseconds)
     while (ticks < target_ticks) {
     }
 }
+
+void wait(uint32_t sec)
+{
+    uint64_t target_ticks = ticks + (sec * 1000);
+
+    while (ticks < target_ticks) {
+    }
+}
+
