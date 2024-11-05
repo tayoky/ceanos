@@ -18,7 +18,7 @@
 #include <mm/paging.h>
 #include <multiboot.h>
 #include <mm/mem.h>
-#include <fs/fat.h>
+//#include <fs/ext2.h>
 
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "$ ";
