@@ -1,7 +1,7 @@
-#include <stdint.h>
-
 #ifndef UTIL_H
 #define UTIL_H
+
+#include <stdint.h>
 
 #define CEIL_DIV(a,b) (((a + b) - 1)/b)
 
@@ -10,10 +10,12 @@ void* memmove(void* dest, const void* src, uint32_t len);
 void outPortB(uint16_t Port, uint8_t Value);
 char inPortB(uint16_t port);
 void insl(uint16_t port, void* addr, int count); 
-void outw(unsigned short port, unsigned short value);
+inline void outw(unsigned short port, unsigned short value);
+inline uint16_t inw(unsigned short port);
 void shutdown(uint16_t port, uint16_t value);
 void dump_registers();
 uint32_t get_eip();
+int memcmp(const void *ptr1, const void *ptr2, size_t num); 
 
 struct registers_for_dump {
     uint32_t eax;

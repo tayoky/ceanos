@@ -19,6 +19,7 @@
 #include <multiboot.h>
 #include <mm/mem.h>
 //#include <fs/ext2.h>
+#include <drivers/generic/acpi.h>
 
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "$ ";
@@ -32,13 +33,9 @@ static inline void init_all(void)
     idt_init();
         timer_init();
     keyboard_init();
-    dump_registers();
+        dump_registers();
     sleep(500);
     Reset();
-}
-
-void trigger_panic() {
-    asm volatile ("ud2");  
 }
 
 void main(uint32_t magic, struct multiboot_info* boot)

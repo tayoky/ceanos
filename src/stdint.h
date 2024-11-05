@@ -8,6 +8,7 @@
 #define BIT_INVERT(val, x) ((val) ^ BITMASK(x))
 
 #define NULL ((void*)0)
+#define nullptr ((void *)0)
 
 typedef signed char int8_t;
 typedef unsigned char uint8_t;
@@ -26,6 +27,10 @@ typedef unsigned int size_t;
 typedef unsigned long uintptr_t;
 typedef long ptrdiff_t; 
 typedef long long intmax_t;
+
+typedef unsigned char byte;      // 8-bit
+typedef unsigned short word;     // 16-bit
+typedef unsigned int dword;      // 32-bit
 
 typedef uint8_t bool;
 #define true 1

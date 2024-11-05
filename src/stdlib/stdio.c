@@ -122,7 +122,7 @@ void printf(const char* fmt, ...){
 
 const char possibleChars[] = "0123456789abcdef";
 
-int * printf_number(int* argp, int length, bool sign, int radix){
+int * printf_number(int* argp, int length, uint8_t sign, int radix){
     char buffer[32] = "";
     uint32_t number;
     int number_sign = 1;

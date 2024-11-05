@@ -1,3 +1,5 @@
+#pragma once
+
 /* 
  *
  * THOSE ARE COPIED FROM LINUX SOURCE CODE

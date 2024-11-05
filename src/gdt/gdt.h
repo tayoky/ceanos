@@ -1,4 +1,6 @@
-#include "stdint.h"
+#pragma once
+
+#include <stdint.h>
 
 struct gdt_entry_struct{
     uint16_t limit;

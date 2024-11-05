@@ -1,7 +1,6 @@
-#include <stdint.h>
+#pragma once
 
-#ifndef __VGA_H__
-#define __VGA_H__
+#include <stdint.h>
 
 #define COLOR8_BLACK 0
 #define COLOR8_BLUE 1
@@ -31,5 +30,5 @@ void scrollUp();
 void newLine();
 void Reset();
 void set_screen_color(uint8_t color);
+void vga_disable_cursor();
 
-#endif

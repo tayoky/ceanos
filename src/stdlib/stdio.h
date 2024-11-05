@@ -1,3 +1,8 @@
+#include <stdint.h>
+
+#ifndef __STDIO_H__
+#define __SDTIO_H__
+
 void putc(char c);
 void puts(const char* str);
 void printf(const char* fmt, ...);
@@ -16,3 +21,5 @@ extern void x86_div64_32(uint64_t, uint32_t, uint64_t*, uint32_t*);
 #define PRINTF_LENGTH_SHORT 2
 #define PRINTF_LENGTH_LONG 3
 #define PRINTF_LENGTH_LONG_LONG 4
+
+#endif

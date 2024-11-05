@@ -3,6 +3,7 @@
 #include <drivers/keyboard/keyboard.h>
 #include <cpuinfo.h>
 #include <util.h>
+#include <stdlib/stdio.h>
 
 extern char press;
 extern char text[100];
@@ -27,7 +28,8 @@ void _term_help()
     
     printf("  compdate  - displays the compilation date.\n");
     printf("  fetch     - display system information\n");
-    printf("  dumpreg   - dump current state of the registers ");
+    printf("  dumpreg   - dump current state of the registers\n");
+    printf("  testpanic - invalid opcode test panic ");
 }
 
 inline void _get_sysinfo()

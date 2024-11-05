@@ -1,6 +1,8 @@
 #include "vga.h"
 #include "vga_types.h"
-#include "stdint.h"
+#include <stdint.h>
+#include <util.h>
+#include <io.h>
 
 struct VgaState {
     uint32_t widthS, heightS;     //width state, height state

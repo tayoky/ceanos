@@ -80,6 +80,22 @@ uint32_t get_eip() {
     return eip; 
 }
 
+int memcmp(const void *ptr1, const void *ptr2, size_t num)
+{
+    unsigned char *p = ptr1;
+    unsigned char *q = ptr2;
+
+    while (num > 0)
+    {
+        if (*p != *q)
+            return (*p - *q);
+        num--;
+        p++;
+        q++;
+    }
+    return 0;
+}
+
 void memset(void *dest, char val, uint32_t count)
 {
     char *temp = (char*) dest;
@@ -151,7 +167,7 @@ char inPortB(uint16_t port)
     return rv;
 }
 
-void outw(unsigned short port, unsigned short value)
+inline void outw(unsigned short port, unsigned short value)
 {
     asm volatile (
         "outw %0, %1"
@@ -160,9 +176,14 @@ void outw(unsigned short port, unsigned short value)
     );
 }
 
-void shutdown(uint16_t port, uint16_t value)
-{
-    outw(port, value);
+inline uint16_t inw(unsigned short port) {
+    uint16_t result;
+    __asm__ volatile (
+        "inw %1, %0"
+        : "=a" (result)    
+        : "Nd" (port)      
+    );
+    return result;
 }
 
 void insl(uint16_t port, void* addr, int count)

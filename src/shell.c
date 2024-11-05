@@ -10,6 +10,10 @@
 #include <drivers/keyboard/keyboard.h>
 #include <stdlib/stdio.h>
 
+static inline void trigger_test_panic() {
+    asm volatile ("ud2");  
+}
+
 static inline void process_cmd(const char *tex)
 {
     if (strcmp("clear", tex) != 0) {
@@ -26,16 +30,11 @@ static inline void process_cmd(const char *tex)
         print("shutting down...\n");
         print("not actually doing that\n");
     } else if (strcmp("compdate", tex) != 0 ) {
-        print("date: ");
-        print(__DATE__);
-        print("\n");
-
-        print("at: ");
-        print(__TIME__);
-    } else if (strcmp("printf", tex) != 0) {
-        printf("printf function test");
-    } else if (strcmp("dumpreg", tex) != 0) {
+        printf("date: " __DATE__ "\nat: " __TIME__);
+    }else if (strcmp("dumpreg", tex) != 0) {
         dump_registers();
+    }else if (strcmp("testpanic", tex) != 0) {
+        trigger_test_panic();
     }
     else {
         printf("%s isn't a valid command", tex);

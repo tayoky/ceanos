@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <util.h>
 #include <drivers/video/vga/vga.h>
+#include <stdlib/stdio.h>
+#include <timer.h>
 #include "idt.h"
 
 struct idt_entry_struct idt_entries[256];
@@ -135,20 +137,29 @@ char* exception_messages[] = {
     "reserved ):"
 };
 
-void isr_handler(struct InterruptRegisters* regs)
-{
-    Reset();
-    set_screen_color(1);
-    if (regs->int_no < 32) {
+void page_fault_handler(struct InterruptRegisters* regs) {
+    uint64_t faulting_address;
+    __asm__ volatile("mov %%cr2, %0" : "=r"(faulting_address));
+    
+    printf("page fault at address: %p\n", (void*)faulting_address);
+
+    asm("cli\n hlt");
+}
+
+void isr_handler(struct InterruptRegisters* regs) {
+    if (regs->int_no == 14) {  
+        page_fault_handler(regs);
+    } else if (regs->int_no < 32) {
+        Reset();
+        set_screen_color(1);
         uint32_t instruction_pointer = get_eip();
-        printf("an exception occurred at 0x%d\n", instruction_pointer);
-        printf("error code/type: ");
-        printf(exception_messages[regs->int_no]);
-        printf("\n");
+        printf("an exception occurred at 0x%x\n", instruction_pointer);
+        printf("error code/type: %s\n", exception_messages[regs->int_no]);
         dump_registers();
-        asm("cli\n hlt"); 
+        asm("cli\n hlt");
     }
 }
+
 
 void *irq_routines[16] = {
     0,0,0,0,0,0,0,0,
