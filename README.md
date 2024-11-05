@@ -1,5 +1,4 @@
 # CeanOS
-
 ![GitHub top language](https://img.shields.io/github/languages/top/asdasda3456/CeanOS)
 ![Contributors](https://img.shields.io/github/contributors/asdasda3456/CeanOS)
 ![Commits](https://img.shields.io/github/commit-activity/m/asdasda3456/CeanOS)
@@ -14,6 +13,9 @@ The CeanOS kernel is a monolithic x86 one. I am also planning to port it to x86_
 
 ## Other Information
 The file `vga_types.h` contains macros taken from the Linux source code, which can be found [here](https://github.com/torvalds/linux/blob/42f7652d3eb527d03665b09edac47f85fb600924/include/video/vga.h).
+
+## Warning !
+I am not sure if im really going to implement FAT32 and VFS . Keep that in mind .
 
 ## Goals
 - **Kernel**
