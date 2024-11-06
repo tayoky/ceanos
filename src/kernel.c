@@ -51,23 +51,9 @@ static inline void init_all(void)
     Reset();
 }
 
-void main(uint32_t magic, struct multiboot_info* boot)
+void enable_default()
 {
-    struct multiboot_info *mbi = (struct multiboot_info *) boot;
-
-    check_boot_params(mbi);
-
-    if (safe_mode == 1) {
-        printf("safe mode is enabled !\n"); 
-    }
-    
     init_all();
-        //calculate physical memory start for kernel heap
-        uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);
-        uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
-
-        initMemory(boot->mem_upper * 1024, physicalAllocStart);
-        kmallocInit(0x1000);
     printf("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
         sleep(50);
     printf("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
@@ -75,6 +61,39 @@ void main(uint32_t magic, struct multiboot_info* boot)
     printf("ceanos~%s", prompt);                  // initialize the shell
   
     set_screen_color(0x0F);                       // 0x0F = white on black
+}
+
+void enable_safe()
+{
+    init_all();
+
+    printf("##welcome to ceanos##\n");        
+    printf("SAFE MODE\n");
+    printf("current os version: v0.0.3-alpha\n"); 
+    printf("safemode~%s", prompt);                  
+  
+    set_screen_color(0x0F);                       
+}
+    
+void main(uint32_t magic, struct multiboot_info* boot)
+{
+    struct multiboot_info *mbi = (struct multiboot_info *) boot;
+
+    check_boot_params(mbi);
+
+    if (safe_mode == 1) {
+        printf("safe mode is enabled !\n");
+        enable_safe();
+    }
+    else {
+        enable_default();
+    }
+    
+    //calculate physical memory start for kernel heap
+    uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);
+    uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
+    initMemory(boot->mem_upper * 1024, physicalAllocStart);
+    kmallocInit(0x1000);
 
     while(1);
 }

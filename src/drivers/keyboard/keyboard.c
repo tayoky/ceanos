@@ -9,6 +9,8 @@
 #include <drivers/video/vga/vga.h>
 #include <strings.h>
 
+extern int safe_mode;
+
 bool capsOn;
 bool capsLock;
 const uint32_t KEY_COUNT = 128;
@@ -132,7 +134,12 @@ static void updateTextBuffer(uint8_t code, uint8_t press)
             print("\n");
             splitter(text);
             clear();
-            printf("\nceanos~$ ");
+            if (safe_mode) {
+                printf("\nsafemode~$ ");
+            }
+            else {
+                printf("\nceanos~$ ");
+            }
         } else {
             printf("%c", charToAdd);
             append(&charToAdd);
