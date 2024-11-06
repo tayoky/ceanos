@@ -24,8 +24,10 @@ all:
 	gcc $(CFLAGS) -c src/io.c -o build/io.o
 	gcc $(CFLAGS) -c src/mm/malloc.c -o build/malloc.o
 	gcc $(CFLAGS) -c src/mm/mem.c -o build/mem.o
+	gcc $(CFLAGS) -c src/drivers/storage/ahci.c -o build/ahci.o
+	gcc $(CFLAGS) -c src/drivers/generic/acpi.c -o build/acpi.o
 	### else #####
-	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o 
+	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o build/ahci.o build/acpi.o
 	mv kernel ceanos/boot/kernel
 	grub-mkrescue -o build/ceanos.iso ceanos/
 	qemu-system-x86_64 -drive format=raw,file=build/ceanos.iso 
