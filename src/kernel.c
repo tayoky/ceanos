@@ -21,8 +21,21 @@
 //#include <fs/ext2.h>
 #include <drivers/generic/acpi.h>
 
+
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "$ ";
+int safe_mode = 0;
+
+
+void check_boot_params(struct multiboot_info *mbi) {
+    if (mbi->flags & 0x00000002) { 
+        char *cmdline = (char *) mbi->cmdline; 
+        if (strstr(cmdline, "safe_mode=1")) {
+            safe_mode = 1;
+        }
+    }
+}
+
 
 // initialize all important stuff, like idt, gdt, etc
 
@@ -40,6 +53,14 @@ static inline void init_all(void)
 
 void main(uint32_t magic, struct multiboot_info* boot)
 {
+    struct multiboot_info *mbi = (struct multiboot_info *) boot;
+
+    check_boot_params(mbi);
+
+    if (safe_mode == 1) {
+        printf("safe mode is enabled !\n"); 
+    }
+    
     init_all();
         //calculate physical memory start for kernel heap
         uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);

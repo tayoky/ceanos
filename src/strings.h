@@ -9,5 +9,6 @@ void strcpy(char *dest, const char* src);
 void strcat(char *dest, const char* src);
 size_t strlen(const char* str);
 void splitter(const char *tex);
+char *strstr(const char *haystack, const char *needle);
 
 #endif // string_h
