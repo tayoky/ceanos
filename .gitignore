@@ -1,4 +1,6 @@
 *.swp
 *.o
-*.iso 
+*.iso
+*.swo
+*.orig
 ceanos/kernel/
