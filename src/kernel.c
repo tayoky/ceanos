@@ -1,6 +1,6 @@
 /* KERNEL.C */
 /* Copyright (c) @asdasda3456 2024 - 2024 */
-
+        
 /* main entry point of the ceanos kernel */
 
 #include <drivers/video/vga/vga.h>
@@ -90,7 +90,7 @@ void main(uint32_t magic, struct multiboot_info* boot)
 	} else {
 		enable_default();
 	}
-
+    
 	//calculate physical memory start for kernel heap
 	uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;

@@ -14,6 +14,8 @@ The CeanOS kernel is a monolithic x86 one. I am also planning to port it to x86_
 ## Other Information
 The file `vga_types.h` contains macros taken from the Linux source code, which can be found [here](https://github.com/torvalds/linux/blob/42f7652d3eb527d03665b09edac47f85fb600924/include/video/vga.h).
 
+The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepad/cavOS/blob/2ad71233123bf610188cc6d4d3cda30d8e275909/src/kernel/drivers/) location(malwarepad/cavOS) with some modifications to integrate into CeanOS . 
+
 ## Warning !
 I am not sure if im really going to implement FAT32 and VFS . Keep that in mind .
 
