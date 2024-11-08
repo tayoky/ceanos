@@ -26,9 +26,10 @@ all:
 	gcc $(CFLAGS) -c src/mm/mem.c -o build/mem.o
 	gcc $(CFLAGS) -c src/drivers/storage/ahci.c -o build/ahci.o
 	gcc $(CFLAGS) -c src/drivers/ata.c -o build/ata.o
+	gcc $(CFLAGS) -c src/sys/syscall.c -o build/syscall.o
 	#gcc $(CFLAGS) -c src/drivers/generic/acpi.c -o build/acpi.o
 	### else #####
-	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o build/ahci.o build/ata.o # build/acpi.o
+	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o build/ahci.o build/ata.o build/syscall.o # build/acpi.o
 	mv kernel ceanos/boot/kernel
 	dd if=/dev/zero of=ceanos.iso bs=1M count=100
 	mkfs.fat -F32 ceanos.iso

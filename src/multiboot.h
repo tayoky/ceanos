@@ -1,3 +1,6 @@
+#pragma once
+
+#include <stdint.h>
 
 struct multiboot_aout_symbol_table
 {
