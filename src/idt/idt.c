@@ -86,7 +86,7 @@ void idt_init()
 	setIdtGate(47, (uint32_t)irq15, 0x08, 0x8E);
 
 
-	setIdtGate(128, (uint32_t)syscall_int, 0x08, 0x8E); //system calls 0x80
+	setIdtGate(128, (uint32_t)isr128, 0x08, 0x8E); //system calls 0x80
 	setIdtGate(177, (uint32_t)isr177, 0x08, 0x8E); //system calls 0xB1
 
 	idt_flush((uint32_t)&idt_ptr);

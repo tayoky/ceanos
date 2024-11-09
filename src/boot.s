@@ -21,10 +21,20 @@ ALIGN 4
     DD 32
 
 SECTION .bss
+global kernel_stack_bottom
+global kernel_stack_top
+
+global user_stack_bottom
+global user_stack_top
+
 ALIGN 16
-stack_bottom:
+kernel_stack_bottom:
     RESB 16384 * 8
-stack_top:
+kernel_stack_top:
+
+user_stack_bottom:
+    RESB 16384 * 8
+user_stack_top:
 
 section .boot
 
@@ -46,7 +56,7 @@ _start:
 section .text
 
 higher_half:
-    MOV esp, stack_top
+    MOV esp, kernel_stack_top
     PUSH ebx
     PUSH eax
     XOR ebp, ebp

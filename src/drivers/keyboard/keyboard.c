@@ -8,6 +8,7 @@
 #include "keyboard.h"
 #include <drivers/video/vga/vga.h>
 #include <strings.h>
+#include <fs/vfs.h>
 
 extern int safe_mode;
 

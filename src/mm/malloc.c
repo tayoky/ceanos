@@ -10,28 +10,48 @@ static bool kmallocInitalized = false;
 
 void kmallocInit(uint32_t initialHeapSize)
 {
-	heapStart = KERNEL_MALLOC;
+	heapStart = KERNEL_MALLOC;   
 	heapSize = 0;
 	threshold = 0;
 	kmallocInitalized = true;
 
 	changeHeapSize(initialHeapSize);
-	*((uint32_t*)heapStart) = 0;
+	*((uint32_t*)heapStart) = 0; 
 }
 
 void changeHeapSize(int newSize)
 {
-	int oldPageTop = CEIL_DIV(heapSize, 0x1000);
+	int oldPageTop = CEIL_DIV(heapSize, 0x1000); 
 	int newPageTop = CEIL_DIV(newSize, 0x1000);
 
 	if (newPageTop > oldPageTop) {
 		int diff = newPageTop - oldPageTop;
 
 		for (int i = 0; i < diff; i++) {
-			uint32_t phys = pmmAllocPageFrame();
-			memMapPage(KERNEL_MALLOC + oldPageTop * 0x1000 + i * 0x1000, phys, PAGE_FLAG_WRITE);
+			uint32_t phys = pmmAllocPageFrame();  
+			memMapPage(KERNEL_MALLOC + oldPageTop * 0x1000 + i * 0x1000, phys, PAGE_FLAG_WRITE); 
 		}
 	}
 
-	heapSize = newSize;
+	heapSize = newSize; 
+}
+
+void* kmalloc(uint32_t size)
+{
+	uint32_t alignedSize = CEIL_DIV(size, 4) * 4;
+
+	if (heapSize < (heapStart + alignedSize)) {
+		changeHeapSize(heapSize + alignedSize); 
+	}
+
+	void* allocPointer = (void*)heapStart;
+
+	heapStart += alignedSize;
+
+	return allocPointer;
+}
+
+void kfree(void* ptr)
+{
+        /* TO-DO : implement this */
 }

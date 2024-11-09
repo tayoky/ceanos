@@ -16,6 +16,7 @@ void shutdown(uint16_t port, uint16_t value);
 void dump_registers();
 uint32_t get_eip();
 int memcmp(const void *ptr1, const void *ptr2, size_t num); 
+void* memcpy(void* dest, const void* src, size_t n);
 
 struct registers_for_dump {
     uint32_t eax;

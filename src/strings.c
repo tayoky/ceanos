@@ -5,6 +5,7 @@
 #include <cpuinfo.h>
 #include <osfunc.h>
 #include <shell.h>
+#include <fs/vfs.h>
 
 #include <stdlib/stdio.h>
 
@@ -54,19 +55,24 @@ char *strstr(const char *haystack, const char *needle)
 
 // 0 is true
 // -1 is false
-int strncmp(const char *s1, const char *s2, int n)
-{
-	for (int i = 0; i < n; i++) {
-		// Check if one of strings is at the end
-		if (s1[i] == 0 || s2[i] == 0)
-			return -1;
-		// Check if the current chars are equal
-		if (s1[i] != s2[i])
-			return -1;
+
+int strncmp(const char* str1,const char* str2, size_t n ){
+        int val=0;
+	
+	if (*str1+n > *str2+n) {
+		val = 1;
 	}
 
-	return 0;
+	else if (*str1+n < *str2+n) {
+		val = -1;
+	}
+	else {
+		val = 0;
+	}
+
+	return val;
 }
+
 
 char* strncpy(char* dest, const char* src, size_t n)
 {
@@ -106,6 +112,21 @@ void strcat(char* dest, const char* src)
 	while (*dest) dest++;
 	while (*src) *dest++ = *src++;
 	*dest = '\0';
+}
+
+char *strchr(const char *str, int c) {
+    while (*str != '\0') {
+        if (*str == (char)c) {
+            return (char *)str;
+        }
+        str++;  
+    }
+    
+    if (c == '\0') {
+        return (char *)str;
+    }
+
+    return NULL;
 }
 
 void splitter(const char *tex)

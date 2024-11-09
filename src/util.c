@@ -81,6 +81,17 @@ uint32_t get_eip()
 	return eip;
 }
 
+void* memcpy(void* dest, const void* src, size_t n) {
+    unsigned char* d = dest;
+    const unsigned char* s = src;
+
+    while (n--) {
+        *d++ = *s++;
+    }
+    
+    return dest;
+}
+
 int memcmp(const void *ptr1, const void *ptr2, size_t num)
 {
 	unsigned char *p = ptr1;

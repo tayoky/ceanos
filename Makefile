@@ -28,9 +28,12 @@ all:
 	gcc $(CFLAGS) -c src/drivers/storage/ahci.c -o build/ahci.o
 	gcc $(CFLAGS) -c src/drivers/ata.c -o build/ata.o
 	gcc $(CFLAGS) -c src/sys/syscall.c -o build/syscall.o
+	gcc $(CFLAGS) -c src/sys/context.c -o build/context.o
+	gcc $(CFLAGS) -c src/fs/vfs.c -o build/vfs.o
+	gcc $(CFLAGS) -c src/fs/fat.c -o build/fat.o
 	#gcc $(CFLAGS) -c src/drivers/generic/acpi.c -o build/acpi.o
 	### else #####
-	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o build/ahci.o build/ata.o build/syscall.o build/syscall_asm.o 
+	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o build/ahci.o build/ata.o build/syscall.o build/syscall_asm.o build/vfs.o build/fat.o 
 	mv kernel ceanos/boot/kernel
 	dd if=/dev/zero of=ceanos.iso bs=1M count=100
 	mkfs.fat -F32 ceanos.iso
@@ -40,6 +43,8 @@ all:
 	sudo grub-install --force --target=i386-pc --boot-directory=/mnt/disk/boot/ /dev/loop0
 	cp -r ceanos/boot/kernel /mnt/disk/boot/
 	sudo cp ceanos/boot/grub/grub.cfg /mnt/disk/boot/grub
+	mkdir /mnt/disk/usr
+	mkdir /mnt/disk/bin
 	sudo umount /mnt/disk
 	sudo losetup -d /dev/loop0
 	rm -rf /mnt/disk	

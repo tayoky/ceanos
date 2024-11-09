@@ -53,6 +53,7 @@
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "# ";
 int safe_mode = 0;
+VFS *virtual_fs;
 
 void check_boot_params(struct multiboot_info *mbi)
 {
@@ -80,14 +81,14 @@ static void init_mm(struct multiboot_info* boot)
 static void init_all(struct multiboot_info* boot)
 {
 	vga_disable_cursor();
-
 	gdt_init();
 	        idt_init();
 	timer_init();
 	        keyboard_init();
         init_mm(boot);
-
-	sleep(1000);
+                init_fat();
+        debugf("[ceanos] everything done ! booting shortly...\n");
+                sleep(60000);
 	Reset();
 }
 
@@ -128,3 +129,4 @@ void main(uint32_t magic, struct multiboot_info* boot)
                 
 	while(1);
 }
+

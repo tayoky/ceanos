@@ -9,6 +9,9 @@
 #include <strings.h>
 #include <drivers/keyboard/keyboard.h>
 #include <stdlib/stdio.h>
+#include <fs/vfs.h>
+
+extern VFS *virtual_fs;
 
 static inline void trigger_test_panic()
 {
@@ -17,26 +20,44 @@ static inline void trigger_test_panic()
 
 static inline void process_cmd(const char *tex)
 {
-	if (strcmp("clear", tex) != 0) {
+	if (strcmp("clear", tex) != 0) 
+        {
 		Reset();
-	} else if (strcmp("help", tex) != 0) {
+	}
+        else if (strcmp("help", tex) != 0) 
+        {
 		_term_help();
-	} else if (strcmp("version", tex) != 0 || strcmp("ver", tex) != 0) {
+	}
+        else if (strcmp("version", tex) != 0 || strcmp("ver", tex) != 0) 
+        {
 		print("CeanOS version: 0.0.3-alpha\n");
-	} else if (strcmp("fetch", tex) != 0) {
+	}
+        else if (strcmp("fetch", tex) != 0) 
+        {
 		_get_sysinfo();
-	} else if (strcmp("exit", tex) != 0) {
+	}
+        else if (strcmp("exit", tex) != 0) 
+        {
 		halt();
-	} else if (strcmp("shutdown", tex) != 0 ) {
+	}
+        else if (strcmp("shutdown", tex) != 0 ) 
+        {
 		print("shutting down...\n");
 		print("not actually doing that\n");
-	} else if (strcmp("compdate", tex) != 0 ) {
+	}
+        else if (strcmp("compdate", tex) != 0 ) 
+        {
 		printf("date: " __DATE__ "\nat: " __TIME__);
-	} else if (strcmp("dumpreg", tex) != 0) {
+	}
+        else if (strcmp("dumpreg", tex) != 0) 
+        {
 		dump_registers();
-	} else if (strcmp("testpanic", tex) != 0) {
+	}
+        else if (strcmp("testpanic", tex) != 0) 
+        {
 		trigger_test_panic();
-	} else {
+	}
+        else {
 		printf("%s isn't a valid command", tex);
 	}
 }
