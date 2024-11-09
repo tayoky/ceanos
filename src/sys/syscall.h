@@ -1,8 +1,7 @@
 #pragma once
 
-#define SYSCALL_PRINT 1
-#define SYSCALL_EXIT  2
+// syscalls
+#define sys_write_code 0 
 
-
-#define MAX_SYSCALLS 256
+#define MAX_SYSCALLS 32 
 

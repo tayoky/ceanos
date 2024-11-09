@@ -43,7 +43,7 @@ all:
 	sudo umount /mnt/disk
 	sudo losetup -d /dev/loop0
 	rm -rf /mnt/disk	
-	qemu-system-x86_64 -drive format=raw,file=build/ceanos.iso 
+	qemu-system-x86_64 -drive format=raw,file=ceanos.iso 
 debug:
 	qemu-system-x86_64 build/ceanos.iso -d int,cpu_reset -no-reboot -no-shutdown
 debug_no_dump:

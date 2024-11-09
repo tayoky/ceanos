@@ -135,9 +135,9 @@ static void updateTextBuffer(uint8_t code, uint8_t press)
 			splitter(text);
 			clear();
 			if (safe_mode) {
-				printf("\nsafemode~$ ");
+				printf("\nroot@safemode# ");
 			} else {
-				printf("\nceanos~$ ");
+				printf("\nroot@ceanos# ");
 			}
 		} else {
 			printf("%c", charToAdd);
