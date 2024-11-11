@@ -73,6 +73,21 @@ int strncmp(const char* str1,const char* str2, size_t n ){
 	return val;
 }
 
+char *strncat(char *dest, const char *src, size_t n) {
+    char *dest_ptr = dest;
+    while (*dest_ptr) {
+        dest_ptr++;  
+    }
+
+    size_t i;
+    for (i = 0; i < n && src[i] != '\0'; i++) {
+        dest_ptr[i] = src[i];  
+    }
+
+    dest_ptr[i] = '\0';
+
+    return dest;
+}
 
 char* strncpy(char* dest, const char* src, size_t n)
 {

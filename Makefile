@@ -45,6 +45,8 @@ all:
 	sudo cp ceanos/boot/grub/grub.cfg /mnt/disk/boot/grub
 	mkdir /mnt/disk/usr
 	mkdir /mnt/disk/bin
+	cp -r ceanos/test.txt /mnt/disk/usr
+	cp -r ceanos/test.txt /mnt/disk/
 	sudo umount /mnt/disk
 	sudo losetup -d /dev/loop0
 	rm -rf /mnt/disk	
