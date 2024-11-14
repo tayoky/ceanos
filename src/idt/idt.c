@@ -173,12 +173,12 @@ void *irq_routines[16] = {
 	0,0,0,0,0,0,0,0
 };
 
-void irq_install_handler (int irq, void (*handler)(struct InterruptRegisters *r))
+void idt_install(int irq, void (*handler)(struct InterruptRegisters *r))
 {
 	irq_routines[irq] = handler;
 }
 
-void irq_uninstall_handler(int irq)
+void idt_uninstall(int irq)
 {
 	irq_routines[irq] = 0;
 }

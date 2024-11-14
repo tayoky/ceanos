@@ -33,8 +33,8 @@ all:
 	gcc $(CFLAGS) -c src/fs/fat.c -o build/fat.o
 	#gcc $(CFLAGS) -c src/drivers/generic/acpi.c -o build/acpi.o
 	### else #####
-	ld -m elf_i386 -T linker.ld -o kernel build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o build/ahci.o build/ata.o build/syscall.o build/syscall_asm.o build/vfs.o build/fat.o 
-	mv kernel ceanos/boot/kernel
+	ld -m elf_i386 -T linker.ld -o vmcean build/boot.o build/kernel.o build/vga.o build/gdts.o build/gdt.o build/idts.o build/idt.o build/util.o build/timer.o build/stdio.o build/keyboard.o build/cpuinfo.o build/strings.o build/osfunc.o build/shell.o build/io.o build/malloc.o build/mem.o build/ahci.o build/ata.o build/syscall.o build/syscall_asm.o build/vfs.o build/fat.o 
+	mv vmcean ceanos/boot/kernel
 	dd if=/dev/zero of=ceanos.iso bs=1M count=100
 	mkfs.fat -F32 ceanos.iso
 	sudo losetup /dev/loop0 ceanos.iso
@@ -49,8 +49,8 @@ all:
 	cp -r ceanos/test.txt /mnt/disk/
 	sudo umount /mnt/disk
 	sudo losetup -d /dev/loop0
-	rm -rf /mnt/disk	
-	qemu-system-x86_64 -drive format=raw,file=ceanos.iso 
+	rm -rf /mnt/disk
+	qemu-system-x86_64 -drive format=raw,file=ceanos.iso
 debug:
 	qemu-system-x86_64 build/ceanos.iso -d int,cpu_reset -no-reboot -no-shutdown
 debug_no_dump:

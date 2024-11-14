@@ -80,18 +80,29 @@ static void init_mm(struct multiboot_info* boot)
         debugf("[mm] memory done!\n");
 }
 
+char string[33] = "Hello world, from syscalls !";
+
 static void init_all(struct multiboot_info* boot)
 {
-        vga_disable_cursor();
+                vga_disable_cursor();
 	gdt_init();
 	        idt_init();
 	timer_init();
 	        keyboard_init();
         init_mm(boot);
                 read_boot_sector(0, &bs);
+        init_syscalls();
+        asm volatile(
+                "mov $0, %%eax;"       
+                "mov %0, %%ebx;"          
+                "int $0x80"
+                :
+                : "r"(string)           
+                : "eax", "ebx"
+        ); 
         debugf("[ceanos] everything done ! booting shortly...\n");
-                sleep(600);
-	Reset();
+        sleep(60000);
+	        Reset();
 }
 
 void enable_default(struct multiboot_info* boot)
@@ -99,7 +110,7 @@ void enable_default(struct multiboot_info* boot)
 	init_all(boot);
 	printf("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
 	printf("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
-	printf("root@ceanos~%s", prompt);                  // initialize the shell
+	printf("root@ceanos~%s", prompt);             // initialize the shell
 
 	set_screen_color(0x0F);
 }

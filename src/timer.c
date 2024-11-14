@@ -15,7 +15,7 @@ void onIrq0(struct InterruptRegisters *regs)
 void timer_init()
 {
 	ticks = 0;
-	irq_install_handler(0,&onIrq0);
+	idt_install(0,&onIrq0);
 
 	//119318.16666 Mhz
 	uint32_t divisor = 1193180/freq;

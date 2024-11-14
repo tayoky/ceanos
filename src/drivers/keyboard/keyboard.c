@@ -183,7 +183,7 @@ void keyboard_init()
 {
 	capsOn = false;
 	capsLock = false;
-	irq_install_handler(1, &keyboardHandler);
+	idt_install(1, &keyboardHandler);
 	clear();
 	print("keyboard enabled\n");
 }
