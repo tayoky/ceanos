@@ -101,7 +101,7 @@ static void init_all(struct multiboot_info* boot)
                 : "eax", "ebx"
         ); 
         debugf("[ceanos] everything done ! booting shortly...\n");
-        sleep(60000);
+        sleep(300);
 	        Reset();
 }
 
