@@ -77,10 +77,9 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x1000);
+        init_heap(KERNEL_MALLOC, 0x600000);
         debugf("[mm] memory done!\n");
 }
-
-char string[33] = "Hello world, from syscalls !";
 
 static void init_all(struct multiboot_info* boot)
 {
@@ -90,17 +89,7 @@ static void init_all(struct multiboot_info* boot)
 	timer_init();
 	        keyboard_init();
         init_mm(boot);
-                read_boot_sector(0, &bs);
-        init_syscalls();
-        asm volatile(
-                "mov $0, %%eax;"       
-                "mov %0, %%ebx;"          
-                "int $0x80"
-                :
-                : "r"(string)           
-                : "eax", "ebx"
-        ); 
-        debugf("[ceanos] everything done ! booting shortly...\n");
+                debugf("[ceanos] everything done ! booting shortly...\n");
         sleep(300);
 	        Reset();
 }

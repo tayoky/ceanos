@@ -7,6 +7,9 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/ceanvalds/CeanOS)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/ceanvalds/ceanos/latest?include_prereleases)
 
+  > CeanOS is a UNIX-like operating system . The goal is to create a lightweight, efficient OS with a custom kernel and a user-friendly interface. This project is built with C and assembly using no standard libraries .
+
+<br>
 
 ![image](https://github.com/user-attachments/assets/d020d976-7440-4d49-8e8b-25f0f7a2cdd4)
 
@@ -17,9 +20,6 @@ The CeanOS kernel is a monolithic x86 one. I am also planning to port it to x86_
 The file `vga_types.h` contains macros taken from the Linux source code, which can be found [here](https://github.com/torvalds/linux/blob/42f7652d3eb527d03665b09edac47f85fb600924/include/video/vga.h).
 
 The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepad/cavOS/blob/2ad71233123bf610188cc6d4d3cda30d8e275909/src/kernel/drivers/) location(malwarepad/cavOS) with some modifications to integrate into CeanOS . 
-
-## Warning !
-I am not sure if im really going to implement FAT32 and VFS . Keep that in mind .
 
 ## Goals
 - **Kernel**
@@ -47,6 +47,7 @@ I am not sure if im really going to implement FAT32 and VFS . Keep that in mind 
 - **Graphics**
   - [x] VGA text mode
   - [ ] Framebuffer, GUI, idk?
+  - [ ] cwm (cean windows manager) (maybe WIP)
 
 ## Compiling
 Everything about it can be found in `docs/build.md` or [here](docs/build.md)
