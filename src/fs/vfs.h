@@ -19,18 +19,18 @@ typedef inode;
 #define VFS_NODE_TYPE_MOUNT_POINT 0x04
 
 //functions
-typedef ssize_t (*read_type_t) (vfs_node *,  off_t, size_t, uint8_t *);
-typedef ssize_t (*write_type_t) (vfs_node *, off_t, size_t, uint8_t *);
-typedef void (*open_type_t) (vfs_node *);
-typedef void (*close_type_t) (vfs_node *);
-typedef int (*create_type_t) (vfs_node *, char *name, mode_t permission);
-typedef int (*unlink_type_t) (vfs_node *, char *name);
-typedef int (*mkdir_type_t) (vfs_node *, char *name, mode_t permission);
-typedef int (*chmod_type_t) (vfs_node *, mode_t mode);
-typedef int (*chown_type_t) (vfs_node *, uid_t, gid_t);
-typedef int (*set_size_type_t) (vfs_node *,size_t);
-typedef struct dirent *(*readdir_type_t) (vfs_node *, uint32_t);
-typedef struct vfs_node_struct *(*finddir_type_t) (vfs_node *, char *name);
+typedef ssize_t (*read_type_t) (struct vfs_node_struct *,  off_t, size_t, void *);
+typedef ssize_t (*write_type_t) (struct vfs_node_struct *, off_t, size_t, void *);
+typedef int (*open_type_t) (struct vfs_node_struct *);
+typedef void (*close_type_t) (struct vfs_node_struct *);
+typedef int (*create_type_t) (struct vfs_node_struct *, char *name, mode_t permission);
+typedef int (*unlink_type_t) (struct vfs_node_struct *, char *name);
+typedef int (*mkdir_type_t) (struct vfs_node_struct *, char *name, mode_t permission);
+typedef int (*chmod_type_t) (struct vfs_node_struct *, mode_t mode);
+typedef int (*chown_type_t) (struct vfs_node_struct *, uid_t, gid_t);
+typedef int (*set_size_type_t) (struct vfs_node_struct *,size_t);
+typedef struct dirent *(*readdir_type_t) (struct vfs_node_struct *, uint32_t);
+typedef struct vfs_node_struct *(*finddir_type_t) (struct vfs_node_struct *, char *name);
 
 typedef struct vfs_node_struct {
     char name[256];
@@ -39,6 +39,7 @@ typedef struct vfs_node_struct {
     size_t size;
     inode inode;
     uint32_t childreen_count;
+    struct vfs_node_struct *child;
     struct vfs_node_struct *parent;
     struct vfs_node_struct *brother;
     time_t create_time;
