@@ -9,8 +9,10 @@
 #define STATUS_DRQ 0x08
 #define STATUS_DF 0x20
 #define STATUS_ERR 0x01
+
 static void ATA_wait_BSY();
 static void ATA_wait_DRQ();
+
 #define ATA_MASTER_BASE 0x1F0
 #define ATA_SLAVE_BASE 0x170
 #define ATA_MASTER 0xE0
@@ -82,7 +84,7 @@ static void ATA_wait_BSY() // Wait for bsy to be 0
 	while (inb(0x1F7) & STATUS_BSY)
 		;
 }
-static void ATA_wait_DRQ() // Wait fot drq to be 1
+static void ATA_wait_DRQ() // Wait for drq to be 1
 {
 	while (!(inb(0x1F7) & STATUS_RDY))
 		;
