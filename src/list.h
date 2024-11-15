@@ -1,4 +1,4 @@
-//@file lsit.h
+//@file list.h
 //@brief simple list function
 //@author Tayoky4848
 
@@ -20,8 +20,8 @@ typedef struct {
 
 List *create_list();
 void delete_list(List *list);
-void list_append(List *list,void *value);
-void list_set(List *list,void *value,uint64_t index);
-void list_remove(List *list,uint64_t index);
-void list_insert(List *list,void *value,uint64_t index);
-void *list_get(List *list,uint64_t index);
+void list_append(List *list, void *value);
+void list_set(List *list, void *value, uint64_t index);
+void list_remove(List *list, uint64_t index);
+void list_insert(List *list, void *value, uint64_t index);
+void *list_get(List *list, uint64_t index);
