@@ -3,6 +3,8 @@
 #define MAX_FILES 100
 #define MAX_FILE_SIZE 1024
 #define MAX_FILE_NAME 32
+#define VFS_SPECIAL_PATH_SELF "."
+#define VFS_SPECIAL_PATH_PARENT "..'
 
 #include <stdint.h>
 #include <util.h>
@@ -13,10 +15,13 @@
 struct vfs_node_struct ;
 typedef inode;
 
-//type falf
+//type of nodes
 #define VFS_NODE_TYPE_FILE 0x01
 #define VFS_NODE_TYPE_FOLDER 0x02
 #define VFS_NODE_TYPE_MOUNT_POINT 0x04
+#define VFS_NODE_TYPE_PIPE 0x08
+#define VFS_NODE_TYPE_SYMLINK 0x10
+#define VFS_NODE_TYPE_CHAR_DEVICE 0x20
 
 //functions
 typedef ssize_t (*read_type_t) (struct vfs_node_struct *,  off_t, size_t, void *);
