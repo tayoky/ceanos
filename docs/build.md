@@ -9,6 +9,8 @@ This document provides instructions on how to build the CeanOS operating system 
 - **Make**
 - **QEMU**
 - **Git**
+- **Grub**
+- **Xorriso**
 
 ### Installation
 
@@ -32,13 +34,19 @@ This document provides instructions on how to build the CeanOS operating system 
 # - Clone the repo
 
 ```bash
-git clone https://github.com/asdasda3456/CeanOS
-cd CeanOS
+git clone https://github.com/ceanvalds/ceanos
+cd ceanos
 ```
 
 # - Compile
 
 ```bash
+make
+```
+## recompile
+
+```bash
+make clean 
 make
 ```
 
@@ -56,7 +64,7 @@ If you encounter a bug, create a new issue on the github page, or if you know ho
 
 # - Contribuiting
 
-If you are interseted in contribuiting to the development of CeanOS, dm me on discord: `asdasda123_` . 
+If you are interested in contribuiting to the development of CeanOS, dm me on discord: `asdasda123_` . 
 
 ### License
 This project is licensed under GPL v3 (GNU General Public License v3.0). For more information go to the [LICENSE](LICENSE) file.
