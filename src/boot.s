@@ -24,17 +24,10 @@ SECTION .bss
 global kernel_stack_bottom
 global kernel_stack_top
 
-global user_stack_bottom
-global user_stack_top
-
 ALIGN 16
 kernel_stack_bottom:
     RESB 16384 * 8
 kernel_stack_top:
-
-user_stack_bottom:
-    RESB 16384 * 8
-user_stack_top:
 
 section .boot
 
