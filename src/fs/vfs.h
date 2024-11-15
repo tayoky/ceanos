@@ -13,6 +13,11 @@
 struct vfs_node_struct ;
 typedef inode;
 
+//type falf
+#define VFS_NODE_TYPE_FILE 0x01
+#define VFS_NODE_TYPE_FOLDER 0x02
+#define VFS_NODE_TYPE_MOUNT_POINT 0x04
+
 //functions
 typedef ssize_t (*read_type_t) (vfs_node *,  off_t, size_t, uint8_t *);
 typedef ssize_t (*write_type_t) (vfs_node *, off_t, size_t, uint8_t *);
@@ -24,36 +29,45 @@ typedef int (*mkdir_type_t) (vfs_node *, char *name, mode_t permission);
 typedef int (*chmod_type_t) (vfs_node *, mode_t mode);
 typedef int (*chown_type_t) (vfs_node *, uid_t, gid_t);
 typedef int (*set_size_type_t) (vfs_node *,size_t);
+typedef struct dirent *(*readdir_type_t) (vfs_node *, uint32_t);
+typedef struct vfs_node_struct *(*finddir_type_t) (vfs_node *, char *name);
 
 typedef struct vfs_node_struct {
-        char name[256];
-        uid_t owner;
-        gid_t group_owner;
-        size_t size;
-        inode inode;
-        struct vfs_node_struct *parent;
-        struct vfs_node_struct *brother;
-        time_t create_time;
-        time_t acces_time;
-        time_t modify_time;
-        int32_t ref_count;
-        int32_t driver;
-        read_type_t read;
-        write_type_t write;
-        open_type_t open;
-        close_type_t close;
-        create_type_t create;
-        mkdir_type_t mkdir;
-        unlink_type_t unlink;
-        set_size_type_t set_size;
-        chown_type_t chown;
-        chmod_type_t chmod;
+    char name[256];
+    uid_t owner;
+    gid_t group_owner;
+    size_t size;
+    inode inode;
+    uint32_t childreen_count;
+    struct vfs_node_struct *parent;
+    struct vfs_node_struct *brother;
+    time_t create_time;
+    time_t acces_time;
+    time_t modify_time;
+    int32_t ref_count;
+    int32_t driver;
+    read_type_t read;
+    write_type_t write;
+    open_type_t open;
+    close_type_t close;
+    create_type_t create;
+    mkdir_type_t mkdir;
+    unlink_type_t unlink;
+    set_size_type_t set_size;
+    chown_type_t chown;
+    chmod_type_t chmod;
+    readdir_type_t readdir;
+    finddir_type_t finddir;
+    mode_t permmision;
+    uint8_t type;
 } vfs_node ;
 
 extern vfs_node *vfs_root_node;
 
 int vfs_int();
 
+struct dirrent *vfs_readdir(vfs_node *node,uint32_t index);
+struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name);
 ssize_t vfs_read(vfs_node *node,off_t offset,size_t count,void *buffer);
 ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer);
 int vfs_open(vfs_node *node);
