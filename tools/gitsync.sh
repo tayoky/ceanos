@@ -19,6 +19,6 @@ done
 
 git commit -m "$commit_message"
 
-git push origin main
+git push origin master
 
 echo "Changes synced with remote repository!"
