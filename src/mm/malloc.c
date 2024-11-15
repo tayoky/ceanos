@@ -9,8 +9,8 @@ static uint32_t threshold;
 static bool kmallocInitalized = false;
 
 typedef struct memory_block {
-    bool free;               
-    uint64_t size;          
+    bool free;                
+    uint64_t size;            
     struct memory_block *next; 
 } memory_block;
 
@@ -23,8 +23,7 @@ void init_heap(void *heap_start, size_t heap_size) {
     free_list->next = NULL;
 }
 
-void kmallocInit(uint32_t initialHeapSize)
-{
+void kmallocInit(uint32_t initialHeapSize) {
     heapStart = KERNEL_MALLOC;   
     heapSize = 0;
     threshold = 0;
@@ -34,8 +33,7 @@ void kmallocInit(uint32_t initialHeapSize)
     *((uint32_t*)heapStart) = 0; 
 }
 
-void changeHeapSize(int newSize)
-{
+void changeHeapSize(int newSize) {
     int oldPageTop = CEIL_DIV(heapSize, 0x1000); 
     int newPageTop = CEIL_DIV(newSize, 0x1000);
 
@@ -51,14 +49,22 @@ void changeHeapSize(int newSize)
     heapSize = newSize; 
 }
 
-void* kmalloc(size_t size)
-{
+void* kmalloc(size_t size) {
     memory_block *current = free_list;
     while (current) {
         if (current->free && current->size >= size) {
+            if (current->size > size + sizeof(memory_block)) {
+                memory_block *new_block = (memory_block *)((uint32_t)(current + 1) + size);
+                new_block->free = true;
+                new_block->size = current->size - size - sizeof(memory_block); 
+                new_block->next = current->next;
+
+                current->size = size;
+                current->next = new_block;
+            }
+
             current->free = false;
             
-            // Allocate physical pages if necessary
             uint32_t requiredPages = CEIL_DIV(size, 0x1000);
             uint32_t currentAddr = (uint32_t)(current + 1);
 
@@ -74,8 +80,7 @@ void* kmalloc(size_t size)
     return NULL; 
 }
 
-void kfree(void* ptr)
-{
+void kfree(void* ptr) {
     if (!ptr) return;
     
     memory_block *block = (memory_block *)ptr - 1;
@@ -92,20 +97,19 @@ void kfree(void* ptr)
     memory_block *current = free_list;
     while (current && current->next) {
         if (current->free && current->next->free) {
-            current->size += current->next->size;  
+            current->size += current->next->size + sizeof(memory_block);  
             current->next = current->next->next;
         }
         current = current->next;
     }
 }
 
-void memUnmapPage(uint32_t virtualAddr)
-{
+void memUnmapPage(uint32_t virtualAddr) {
     uint32_t* pageDir = memGetCurrentPageDir();
     uint32_t pdIndex = virtualAddr >> 22;
     uint32_t ptIndex = (virtualAddr >> 12) & 0x3FF;
 
     uint32_t* pt = REC_PAGETABLE(pdIndex);
-    pt[ptIndex] = 0;  
+    pt[ptIndex] = 0;
     invalidate(virtualAddr); 
 }
