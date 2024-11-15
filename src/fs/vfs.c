@@ -60,7 +60,16 @@ struct dirrent *vfs_readdir(vfs_node *node,uint32_t index){
 }
 
 struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
-    //let check in node adready in memory
+    //first check for special path
+    //the self path
+    if(!strcmp(name,VFS_SPECIAL_PATH_SELF))>
+        return node;
+    }
+    //the parent path
+    if(!strcmp(name,VFS_SPECIAL_PATH_PARENT){
+        return node->parent;
+    }
+    //let check if node is adready in memory
 
     vfs_node *current_node = node->child;
     for(uint32_t i=0;i < node->childreen_count;i++){
