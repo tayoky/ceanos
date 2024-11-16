@@ -17,6 +17,7 @@ void _term_help()
 	printf("====================\n");
 
 	printf("  clear     - clears the screen\n");
+        printf("  cls       - same as 'clear'\n");
 	printf("  help      - prints this message\n");
 	printf("  version   - displays os version\n");
 	printf("  exit      - exits the operating system\n");

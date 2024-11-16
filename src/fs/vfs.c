@@ -96,14 +96,14 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
 
     return ret;
 }
-size_t vfs_read(vfs_node *node,off_t offset,size_t count,void *buffer){
+ssize_t vfs_read(vfs_node *node,off_t offset,size_t count,void *buffer){
     if(node->read){
         return node->read(node,offset,count,buffer);
     } else  {
         return ERR_CANT_READ;
     }
 }
-size_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
+ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
     if(node->write){
         return node->write(node,offset,count,buffer);
     } else  {

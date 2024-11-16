@@ -11,13 +11,14 @@
 #include <list.h>
 #include <types.h>
 
-
-struct vfs_node_struct ;
 #ifndef VFS_DRIVER
 struct inode_struct {
     int inode;
 };
 #endif
+
+struct vfs_node_struct;
+typedef inode;
 
 //type of nodes
 #define VFS_NODE_TYPE_FILE 0x01

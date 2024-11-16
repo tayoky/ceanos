@@ -12,9 +12,6 @@
 #include <fs/vfs.h>
 #include <fs/fat.h>
 
-extern VFS *virtual_fs;
-extern BootSector bs;
-
 static inline void trigger_test_panic()
 {
 	asm volatile ("ud2");
@@ -22,7 +19,7 @@ static inline void trigger_test_panic()
 
 static inline void process_cmd(const char *tex)
 {
-	if (strcmp("clear", tex) != 0) 
+	if (strcmp("clear", tex) != 0 || strcmp("cls", tex) != 0) 
         {
 		Reset();
 	}
@@ -59,10 +56,6 @@ static inline void process_cmd(const char *tex)
         {
 		trigger_test_panic();
 	}
-        else if (strcmp("lsroot", tex) != 0)
-        {
-                printf("\nunder development\n");
-        }
         else {
 		printf("%s isn't a valid command", tex);
 	}
