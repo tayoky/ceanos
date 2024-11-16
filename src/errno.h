@@ -27,3 +27,4 @@
 #define ERR_READONLY -19
 #define ERR_AREADY_MOUNT -20
 #define ERR_FATAL -21
+#define ERR_NOT_EMPTY

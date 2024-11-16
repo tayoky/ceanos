@@ -37,6 +37,7 @@ int vfs_int(){
     //if you're on linux try cd / and cd ..
     vfs_root_node->parent = vfs_root_node;
     vfs_root_node->brother = NULL;
+    vfs_root_node->ref_count = 0;
 
     vfs_root_node->read = NULL;
     vfs_root_node->write = NULL;
@@ -63,11 +64,11 @@ struct dirrent *vfs_readdir(vfs_node *node,uint32_t index){
 struct vfs_node_struct *vfs_finddir(vfs_node *node, char *name) {
     //first check for special path
     //the self path
-    if(!strcmp(name, VFS_SPECIAL_PATH_SELF)) { 
+    if(!strcmp(name,VFS_SPECIAL_PATH_SELF)){
         return node;
     }
     //the parent path
-    if(!strcmp(name, VFS_SPECIAL_PATH_PARENT)) {
+    if(!strcmp(name,VFS_SPECIAL_PATH_PARENT)){
         return node->parent;
     }
     //let check if node is adready in memory
@@ -91,7 +92,12 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node, char *name) {
 
     vfs_node *ret = node->finddir(node,name);
     if((ret != NULL )&& (node->ref_count != -1)){
+        node->childreen_count ++;
+        ret->parent = node;
+        ret->brother = node->child;
+        node->child = ret;
         node->ref_count ++;
+        //add in the childreen
     }
 
     return ret;
@@ -115,6 +121,7 @@ ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
 
 int vfs_open(vfs_node *node){
     if(node->open){
+        if(node->ref_count != -1)
         node->ref_count ++;
         return node->open(node);
     } else  {
@@ -147,9 +154,20 @@ int vfs_close(vfs_node *node){
         kfree(node);
     }
 }
-
-int vfs_create(vfs_node *node,char *name,mode_t permission);
-int vfs_mkdir(vfs_node *node,char *name,mode_t permission);
+int vfs_create(vfs_node *node,char *name,mode_t permission){
+    if(node->mkdir){
+        return node->create(node,name,permission);
+    } else {
+        return ERR_NOT_A_DIRECTORY;
+    }
+}
+int vfs_mkdir(vfs_node *node,char *name,mode_t permission){
+    if(node->mkdir){
+        return node->mkdir(node,name,permission);
+    } else {
+        return ERR_NOT_A_DIRECTORY;
+    }
+}
 int vfs_unlink(vfs_node *node,char *name);
 int vfs_set_size(vfs_node *node,size_t new_size);
 int vfs_chown(vfs_node *node,uid_t user,gid_t group);
@@ -215,12 +233,12 @@ int vfs_mount(char *path,vfs_node *node){
     
     //if null error
     if(dest == NULL){
-        return ERR_UNKNOW;
+        return ERR_NO_FILE_OR_DIRECTORY;
     }
     
     //if it has child you can't mount
     if(dest->childreen_count){
-        return ERR_UNKNOW;
+        return ERR_NOT_EMPTY;
     }
 
     //if it used we can't mount
@@ -229,7 +247,7 @@ int vfs_mount(char *path,vfs_node *node){
     }
     
     //set the new node
-    str(node->name,dest->name);
+    strcpy(node->name,dest->name);
     node->parent = dest->parent;
     node->brother = NULL;
     node->ref_count = -1;

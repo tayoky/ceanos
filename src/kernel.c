@@ -34,7 +34,8 @@
 /* FILE SYSTEMS*/
 
 #include <fs/fat.h>
-#include <fs/virtual/vfs.h>
+#include <fs/vfs.h>
+#include <fs/tmpfs.h>
 
 /* STDLIB */
 
@@ -88,6 +89,7 @@ static void init_all(struct multiboot_info* boot)
         init_mm(boot);
                 debugf("[ceanos] everything done ! booting shortly...\n");
         sleep(300);
+		init_tmpfs();
 	        Reset();
 }
 
