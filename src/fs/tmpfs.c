@@ -1,4 +1,3 @@
-#include <fs/vfs.h>
 #include <mm/malloc.h>
 typedef struct{
     char name[256];
@@ -8,6 +7,9 @@ typedef struct{
     int size;
     int type;
 }inode;
+
+#define VFS_DRIVER
+#include <fs/vfs.h>
 
 int init_tmpfs(){
     //create node
