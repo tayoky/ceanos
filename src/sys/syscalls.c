@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include <stdlib/stdio.h>
 #include <idt/idt.h>
+#include <errno.h>
 
 void init_syscalls()
 {
@@ -15,8 +16,8 @@ int sys_write(char *str)
         return 0; 
 }
 
-void invalid_syscall()
+int invalid_syscall()
 {
         printf("\ninvalid syscall!\n");
-        for(;;);
+        return ERR_BAD_SYSCALL;
 }
