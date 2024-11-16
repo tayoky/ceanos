@@ -19,8 +19,7 @@ int init_tmpfs(){
     root = tmpfs_create_dir(NULL);
     //mount as root
 }
-vfs_node *
- tmpfs_create_dir(inode *parent){
+vfs_node *tmpfs_create_dir(inode *parent){
     vfs_node *node=kmalloc(sizeof(vfs_node));
     node->inode = kmalloc(sizeof(inode));
     node->permmision = 0777;
@@ -38,17 +37,17 @@ vfs_node *
 }
 
 
-int tmpfs_mkdir(vfs_node node,char *name){
+int tmpfs_mkdir(vfs_node *node,char *name){
     vfs_node *dir =tmpfs_create_dir(node->inode);
     strcpy(dir->inode->name,name);
     return 0;
 }
 
-int tmpfs_open(vfs_node node){
+int tmpfs_open(vfs_node *node){
     return 0;
 }
 
-int tmpfs_close(vfs_node node){
+int tmpfs_close(vfs_node *node){
     kfree(node->inode);
 }
 

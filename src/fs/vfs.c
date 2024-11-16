@@ -63,11 +63,11 @@ struct dirrent *vfs_readdir(vfs_node *node,uint32_t index){
 struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
     //first check for special path
     //the self path
-    if(!strcmp(name,VFS_SPECIAL_PATH_SELF))>
+    if(!strcmp(name,VFS_SPECIAL_PATH_SELF)){
         return node;
     }
     //the parent path
-    if(!strcmp(name,VFS_SPECIAL_PATH_PARENT){
+    if(!strcmp(name,VFS_SPECIAL_PATH_PARENT)){
         return node->parent;
     }
     //let check if node is adready in memory
@@ -135,7 +135,7 @@ int vfs_close(vfs_node *node){
             kfree(node);
         }
         //now remove the node from the chain
-        current_node = node->parent->child;
+        vfs_node *current_node = node->parent->child;
         while(current_node->child != node){
             current_node = current_node->child;
         }
@@ -218,12 +218,12 @@ int vfs_mount(char *path,vfs_node *node){
     }
 
     //if it used we can't mount
-    if(dest->refcount != 1){
+    if(dest->ref_count != 1){
         return ERR_UNKNOW ;
     }
     
     //set the new node
-    str(node->name,dest->name);
+    strcpy(node->name,dest->name);
     node->parent = dest->parent;
     node->brother = NULL;
     node->ref_count = -1;

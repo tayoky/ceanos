@@ -4,7 +4,7 @@
 #define MAX_FILE_SIZE 1024
 #define MAX_FILE_NAME 32
 #define VFS_SPECIAL_PATH_SELF "."
-#define VFS_SPECIAL_PATH_PARENT "..'
+#define VFS_SPECIAL_PATH_PARENT ".."
 
 #include <stdint.h>
 #include <util.h>
