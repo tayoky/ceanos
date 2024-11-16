@@ -101,21 +101,21 @@ ssize_t vfs_read(vfs_node *node,off_t offset,size_t count,void *buffer){
     if(node->read){
         return node->read(node,offset,count,buffer);
     } else  {
-        return ERR_NO_EVAL;
+        return ERR_CANT_READ;
     }
 }
 ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
     if(node->write){
         return node->write(node,offset,count,buffer);
     } else  {
-        return ERR_NO_EVAL;
+        return ERR_CANT_WRITE;
     }
 }
 int vfs_open(vfs_node *node){
     if(node->open){
         return node->open(node);
     } else  {
-        return ERR_NO_EVAL;
+        return ERR_CANT_OPEN;
     }
 }
 int vfs_close(vfs_node *node){
