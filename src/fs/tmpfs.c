@@ -1,4 +1,5 @@
 #include <fs/vfs.h>
+#include <mm/malloc.h>
 typedef struct{
     char name[256];
     inode *parent;
