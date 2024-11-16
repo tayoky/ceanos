@@ -120,14 +120,12 @@ ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
 }
 
 int vfs_open(vfs_node *node){
-    if(node->open){
-        if(node->ref_count != -1)
-        node->ref_count ++;
-        return node->open(node);
-    } else  {
-        return ERR_CANT_OPEN;
-    }
+    if(!node)
+    return ERR_BAD_INPUT ;
+    if(node->ref_count != -1)
     node->ref_count ++;
+    if(node->open)
+    return node->open(node);
 }
 
 int vfs_close(vfs_node *node){
