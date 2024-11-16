@@ -2,6 +2,7 @@
 #include <util.h>
 #include "mem.h"
 #include "malloc.h"
+#include <errno.h>
 
 static uint32_t heapStart;
 static uint32_t heapSize;
@@ -80,8 +81,8 @@ void* kmalloc(size_t size) {
     return NULL; 
 }
 
-void kfree(void* ptr) {
-    if (!ptr) return;
+int kfree(void* ptr) {
+    if (!ptr) return ERR_BAD_INPUT;
     
     memory_block *block = (memory_block *)ptr - 1;
     block->free = true;
