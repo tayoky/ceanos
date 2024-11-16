@@ -8,7 +8,7 @@
 
 vfs_node *vfs_root_node = NULL;
 
-int vfs_int(){
+int vfs_init(){
     if(vfs_root_node !=NULL){
         printf("vfs aready INIT !!!!\n");
         return -1;
