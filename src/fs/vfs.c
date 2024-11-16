@@ -112,6 +112,7 @@ ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
 }
 int vfs_open(vfs_node *node){
     if(node->open){
+        node->ref_count ++;
         return node->open(node);
     } else  {
         return ERR_CANT_OPEN;
@@ -130,6 +131,15 @@ int vfs_close(vfs_node *node){
         if(node->close){
             node->close(node);
         }
+        if(node == vfs_root_node){
+            kfree(node);
+        }
+        //now remove the node from the chain
+        current_node = node->parent->child;
+        while(current_node->child != node){
+            current_node = current_node->child;
+        }
+        kfree(node);
     }
 }
 int vfs_create(vfs_node *node,char *name,mode_t permission);
@@ -187,7 +197,9 @@ vfs_node *kopen(char *path){
         current = vfs_finddir(current,path_array[i]);
     }
     kfree(path_array);
-
+    if(current != NULL){
+        vfs_open(current);
+    }
     return current;
 }
    
@@ -204,20 +216,35 @@ int vfs_mount(char *path,vfs_node *node){
     if(dest->childreen_count){
         return ERR_UNKNOW;
     }
+
+    //if it used we can't mount
+    if(dest->refcount != 1){
+        return ERR_UNKNOW ;
+    }
     
     //set the new node
     str(node->name,dest->name);
     node->parent = dest->parent;
-    node->brother = dest->brother;
+    node->brother = NULL;
     node->ref_count = -1;
     node->type |= VFS_NODE_TYPE_MOUNT_POINT;
-    
-   if(!close(dest)){
-       return ERR_UNKNOW;
-   }
+
+   //now close the old node
+   vfs_close(dest);
+   
 
    //special case we set root
    if(path[1] == '/0'){
        vfs_root_node = node;
+       return 0;
    }
+
+   //now make the last child pint to us
+   vfs_node *current_node = node->parent->child;
+   while(current_node != NULL){
+       current_node = current_node->brother;
+    }
+    current_node->brother = node;
+
+   return 0;
 }
