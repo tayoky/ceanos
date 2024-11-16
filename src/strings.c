@@ -1,11 +1,7 @@
-/* STRINGS.C */
-/* Copyright (c) @asdasda3456 2024 - 2024 */
-
 #include <stdint.h>
 #include <cpuinfo.h>
 #include <osfunc.h>
 #include <shell.h>
-#include <fs/vfs.h>
 
 #include <stdlib/stdio.h>
 
