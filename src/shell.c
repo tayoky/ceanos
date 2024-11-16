@@ -9,7 +9,7 @@
 #include <strings.h>
 #include <drivers/keyboard/keyboard.h>
 #include <stdlib/stdio.h>
-#include <fs/vfs.h>
+#include <fs/virtual/vfs.h>
 #include <fs/fat.h>
 
 static inline void trigger_test_panic()

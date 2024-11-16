@@ -1,4 +1,5 @@
 #include <mm/malloc.h>
+
 struct inode_struct;
 typedef struct inode_struct{
     char name[256];
@@ -13,16 +14,19 @@ typedef struct inode_struct{
 #define TMPFS_TYPE_FILE 2
 
 #define VFS_DRIVER
+
 #include "tmpfs.h"
 #include <fs/vfs.h>
 
 int init_tmpfs(){
-    //create node
+    // create node
     vfs_node *root;
     root = tmpfs_create_dir(NULL);
+
     //mount as root
     vfs_mount("/",root);
 }
+
 vfs_node *tmpfs_create_dir(inode *parent){
     vfs_node *node=tmpfs_create_file(parent);
 
@@ -42,6 +46,7 @@ vfs_node *tmpfs_create_file(inode *parent){
     node->inode->child = NULL;
     node->inode->brother = NULL;
     node->inode->size = 0;
+    
     node->size = 0;
     if(parent){
         node->inode->brother = parent->child;
@@ -50,7 +55,7 @@ vfs_node *tmpfs_create_file(inode *parent){
 }
 
 int tmpfs_mkdir(vfs_node *node,char *name){
-    vfs_node *dir =tmpfs_create_dir(node->inode);
+    vfs_node *dir = tmpfs_create_dir(node->inode);
     strcpy(dir->inode->name,name);
     return 0;
 }
@@ -61,6 +66,8 @@ int tmpfs_open(vfs_node *node){
 
 int tmpfs_close(vfs_node *node){
     kfree(node->inode);
+    kfree(node);  
+    return 0;
 }
 
 struct dirrent tmpsfs_readdir(vfs_node *node,uint32_t index){

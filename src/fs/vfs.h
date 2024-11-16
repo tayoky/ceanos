@@ -12,13 +12,20 @@
 #include <types.h>
 
 #ifndef VFS_DRIVER
+// this part should only be defined when VFS_DRIVER is NOT defined
 struct inode_struct {
     int inode;
+    char name[256];
+    struct inode_struct *parent;
+    struct inode_struct *child;
+    struct inode_struct *brother;
+    int size;
+    int type;
 };
 #endif
 
 struct vfs_node_struct;
-typedef inode;
+typedef struct inode_struct inode;
 
 //type of nodes
 #define VFS_NODE_TYPE_FILE 0x01
@@ -71,7 +78,7 @@ typedef struct vfs_node_struct {
     finddir_type_t finddir;
     mode_t permmision;
     uint8_t type;
-} vfs_node ;
+} vfs_node;
 
 extern vfs_node *vfs_root_node;
 

@@ -33,7 +33,7 @@ int vfs_int(){
     vfs_root_node->permmision = 0777;
     vfs_root_node->type =0;
     
-    //weird but on unix OS the parent of root is root
+    //weird but on unix-like OS's the parent of root is root
     //if you're on linux try cd / and cd ..
     vfs_root_node->parent = vfs_root_node;
     vfs_root_node->brother = NULL;
@@ -61,7 +61,7 @@ struct dirrent *vfs_readdir(vfs_node *node,uint32_t index){
     }
 }
 
-struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
+struct vfs_node_struct *vfs_finddir(vfs_node *node, char *name) {
     //first check for special path
     //the self path
     if(!strcmp(name,VFS_SPECIAL_PATH_SELF)){
@@ -77,7 +77,7 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
     for(uint32_t i=0;i < node->childreen_count;i++){
         //check the name
         if(!strcmp(current_node->name,name)){
-            //we find it ! just return it
+            //we found it ! just return it
             return current_node;
         }
 
@@ -85,7 +85,7 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
         current_node = current_node->brother;
     }
 
-    //it isen't in memory so 
+    //it isn't in memory so 
     if(!node->finddir){
         return NULL;
     }
@@ -102,6 +102,7 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
 
     return ret;
 }
+
 ssize_t vfs_read(vfs_node *node,off_t offset,size_t count,void *buffer){
     if(node->read){
         return node->read(node,offset,count,buffer);
@@ -109,6 +110,7 @@ ssize_t vfs_read(vfs_node *node,off_t offset,size_t count,void *buffer){
         return ERR_CANT_READ;
     }
 }
+
 ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
     if(node->write){
         return node->write(node,offset,count,buffer);
@@ -116,6 +118,7 @@ ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
         return ERR_CANT_WRITE;
     }
 }
+
 int vfs_open(vfs_node *node){
     if(node->open){
         if(node->ref_count != -1)
@@ -124,14 +127,16 @@ int vfs_open(vfs_node *node){
     } else  {
         return ERR_CANT_OPEN;
     }
+    node->ref_count ++;
 }
+
 int vfs_close(vfs_node *node){
     if(node->ref_count == -1){
-        //it's lock don't do anything
+        //it's locked so don't do anything
         return 0;
     }
 
-    node->ref_count --;
+    node->ref_count--;
     if(node->ref_count == 0){
        //now the child don't use the parent 
         vfs_close(node->parent);
@@ -172,7 +177,7 @@ char **parse_path(char *path){
     //first count the number of depth
     uint32_t path_depth = 0;
     for(int i =0;path[i];i++){
-        //only if a path separator
+        //only if its a path separator
         if(path[i] != '/'){
             continue;
         }
