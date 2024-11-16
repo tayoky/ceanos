@@ -76,6 +76,8 @@ typedef struct vfs_node_struct {
 extern vfs_node *vfs_root_node;
 
 int vfs_int();
+vfs_node *kopen(char *path);
+int vfs_mount(char *path,vfs_node *node);
 
 struct dirrent *vfs_readdir(vfs_node *node,uint32_t index);
 struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name);
