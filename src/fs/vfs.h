@@ -13,7 +13,9 @@
 
 
 struct vfs_node_struct ;
+#ifndef VFS_DRIVER
 typedef inode;
+#endif
 
 //type of nodes
 #define VFS_NODE_TYPE_FILE 0x01
