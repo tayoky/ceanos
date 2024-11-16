@@ -37,6 +37,7 @@ int vfs_int(){
     //if you're on linux try cd / and cd ..
     vfs_root_node->parent = vfs_root_node;
     vfs_root_node->brother = NULL;
+    vfs_root_node->ref_count = 0;
 
     vfs_root_node->read = NULL;
     vfs_root_node->write = NULL;
@@ -91,7 +92,12 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node,char *name){
 
     vfs_node *ret = node->finddir(node,name);
     if((ret != NULL )&& (node->ref_count != -1)){
+        node->childreen_count ++;
+        ret->parent = node;
+        ret->brother = node->child;
+        node->child = ret;
         node->ref_count ++;
+        //add in the childreen
     }
 
     return ret;
@@ -143,7 +149,13 @@ int vfs_close(vfs_node *node){
         kfree(node);
     }
 }
-int vfs_create(vfs_node *node,char *name,mode_t permission);
+int vfs_create(vfs_node *node,char *name,mode_t permission){
+    if(node->mkdir){
+        return node->create(node,name,permission);
+    } else {
+        return ERR_NOT_A_DIRECTORY;
+    }
+}
 int vfs_mkdir(vfs_node *node,char *name,mode_t permission){
     if(node->mkdir){
         return node->mkdir(node,name,permission);
@@ -216,12 +228,12 @@ int vfs_mount(char *path,vfs_node *node){
     
     //if null error
     if(dest == NULL){
-        return ERR_UNKNOW;
+        return ERR_NO_FILE_OR_DIRECTORY;
     }
     
     //if it has child you can't mount
     if(dest->childreen_count){
-        return ERR_UNKNOW;
+        return ERR_NOT_EMPTY;
     }
 
     //if it used we can't mount
