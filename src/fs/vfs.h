@@ -14,7 +14,9 @@
 
 struct vfs_node_struct ;
 #ifndef VFS_DRIVER
-typedef inode;
+struct inode_struct {
+    int inode;
+};
 #endif
 
 //type of nodes
@@ -44,7 +46,7 @@ typedef struct vfs_node_struct {
     uid_t owner;
     gid_t group_owner;
     size_t size;
-    inode inode;
+    struct inode_struct *inode;
     uint32_t childreen_count;
     struct vfs_node_struct *child;
     struct vfs_node_struct *parent;
