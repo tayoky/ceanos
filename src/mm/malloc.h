@@ -1,5 +1,7 @@
 #ifndef MALLOC_H
 #define MALLOC_H
+#include <types.h>
+#include <stdint.h>
 
 void kmallocInit(uint32_t heapSize);
 void changeHeapSize(int newSize);

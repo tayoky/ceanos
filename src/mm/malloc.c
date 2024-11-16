@@ -2,6 +2,7 @@
 #include <util.h>
 #include "mem.h"
 #include "malloc.h"
+#include <errno.h>
 
 static uint32_t heapStart;
 static uint32_t heapSize;
