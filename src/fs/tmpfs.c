@@ -1,5 +1,4 @@
 #include <mm/malloc.h>
-#include "tmpfs.h"
 struct inode_struct;
 typedef struct inode_struct{
     char name[256];
@@ -11,6 +10,7 @@ typedef struct inode_struct{
 }inode;
 
 #define VFS_DRIVER
+#include "tmpfs.h"
 #include <fs/vfs.h>
 
 int init_tmpfs(){
