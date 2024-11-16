@@ -81,8 +81,8 @@ void* kmalloc(size_t size) {
     return NULL; 
 }
 
-int kfree(void* ptr) {
-    if (!ptr) return ERR_BAD_INPUT;
+void kfree(void* ptr) {
+    if (!ptr) return;
     
     memory_block *block = (memory_block *)ptr - 1;
     block->free = true;
