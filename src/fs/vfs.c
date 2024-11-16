@@ -112,6 +112,7 @@ ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
 }
 int vfs_open(vfs_node *node){
     if(node->open){
+        if(node->ref_count != -1)
         node->ref_count ++;
         return node->open(node);
     } else  {
@@ -143,7 +144,13 @@ int vfs_close(vfs_node *node){
     }
 }
 int vfs_create(vfs_node *node,char *name,mode_t permission);
-int vfs_mkdir(vfs_node *node,char *name,mode_t permission);
+int vfs_mkdir(vfs_node *node,char *name,mode_t permission){
+    if(node->mkdir){
+        return node->mkdir(node,name,permission);
+    } else {
+        return ERR_NOT_A_DIRECTORY;
+    }
+}
 int vfs_unlink(vfs_node *node,char *name);
 int vfs_set_size(vfs_node *node,size_t new_size);
 int vfs_chown(vfs_node *node,uid_t user,gid_t group);
