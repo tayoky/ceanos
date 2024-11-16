@@ -140,27 +140,21 @@ char* exception_messages[] = {
 
 void page_fault_handler(struct InterruptRegisters* regs)
 {
-	uint64_t faulting_address;
+	uint32_t faulting_address;
 	__asm__ volatile("mov %%cr2, %0" : "=r"(faulting_address));
 
 	printf("page fault at address: %p\n", (void*)faulting_address);
-
-	asm("cli\n hlt");
 }
 
 void isr_handler(struct InterruptRegisters* regs)
 {
-        uint32_t instruction_pointer = get_eip();
-	
         if (regs->int_no == 14) {
-		printf("an exception occurred at 0x%x\n", instruction_pointer);
 		printf("error code/type: %s\n", exception_messages[regs->int_no]);
                 page_fault_handler(regs);
 		dump_registers();
 	} else if (regs->int_no < 32) {
 		Reset();
 		set_screen_color(1);
-		printf("an exception occurred at 0x%x\n", instruction_pointer);
 		printf("error code/type: %s\n", exception_messages[regs->int_no]);
 		dump_registers();
 		asm("cli\n hlt");

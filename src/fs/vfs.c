@@ -10,7 +10,7 @@ void init_vfs(VFS *vfs)
         debugf("[vfs] virtual fs done!\n");
 }
 
-void create_file(VFS *vfs, const char *filename, const char *data)
+uint32_t create_file(VFS *vfs, const char *filename, const char *data)
 {
         if (vfs->file_count > MAX_FILES) {
                 return -1;

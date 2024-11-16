@@ -20,6 +20,6 @@ typedef struct {
 
 
 void init_vfs(VFS *vfs);
-void create_file(VFS *vfs, const char *filename, const char *data);
+uint32_t create_file(VFS *vfs, const char *filename, const char *data);
 const char* read_file(VFS* vfs, const char *filename);
 void delete_file(VFS *vfs, const char *filename);

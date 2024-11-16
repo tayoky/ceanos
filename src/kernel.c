@@ -47,15 +47,13 @@
 #include <util.h>
 #include <osfunc.h>
 #include <io.h>
+#include <strings.h>
 
 // actual code
 
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "# ";
 int safe_mode = 0;
-
-VFS *virtual_fs;
-BootSector bs;
 
 void check_boot_params(struct multiboot_info *mbi)
 {
@@ -77,7 +75,7 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x1000);
-        init_heap(KERNEL_MALLOC, 0x600000);
+        init_heap((int*)KERNEL_MALLOC, 0x600000);
         debugf("[mm] memory done!\n");
 }
 
