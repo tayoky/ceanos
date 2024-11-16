@@ -33,8 +33,10 @@ int vfs_int(){
 
     vfs_root_node->permmision = 0777;
     vfs_root_node->type =0;
-
-    vfs_root_node->parent = NULL;
+    
+    //weird but on unix OS the parent of root is root
+    //if you're on linux try cd / and cd ..
+    vfs_root_node->parent = vfs_root_node;
     vfs_root_node->brother = NULL;
 
     vfs_root_node->read = NULL;
