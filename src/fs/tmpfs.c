@@ -1,4 +1,6 @@
 #include <mm/malloc.h>
+#include <errno.h>
+#include <strings.h>
 
 struct inode_struct;
 typedef struct inode_struct{
@@ -6,6 +8,7 @@ typedef struct inode_struct{
     struct inode_struct *parent;
     struct inode_struct *child;
     struct inode_struct *brother;
+    uint32_t childreen_count;
     int size;
     int type;
 }inode;
@@ -21,43 +24,36 @@ typedef struct inode_struct{
 int init_tmpfs(){
     // create node
     vfs_node *root;
-    root = tmpfs_create_dir(NULL);
-
+    root = new_tmpfs();
     //mount as root
     vfs_mount("/",root);
 }
 
-vfs_node *tmpfs_create_dir(inode *parent){
-    vfs_node *node=tmpfs_create_file(parent);
-
-    node->mkdir = tmpfs_mkdir;
-    node->type = VFS_NODE_TYPE_FOLDER;
-    node->inode->type = TMPFS_TYPE_DIRECTORY;
-    return node;
+vfs_node *new_tmpfs(){
+    inode *root_inode = tmpfs_new_inode(); 
+    root_inode->type = TMPFS_TYPE_DIRECTORY;
+    return tmpfs_inode_to_node(root_inode);
 }
 
-vfs_node *tmpfs_create_file(inode *parent){
-    vfs_node *node=kmalloc(sizeof(vfs_node));
-    node->inode = kmalloc(sizeof(inode));
-    node->permmision = 0777;
+int tmpfs_mkdir(vfs_node *node,char *name,mode_t perm){
+    //TODO: check if aready exist
     
-    node->inode->type = TMPFS_TYPE_FILE;
-    node->inode->parent = parent;
-    node->inode->child = NULL;
-    node->inode->brother = NULL;
-    node->inode->size = 0;
-    
-    node->size = 0;
-    if(parent){
-        node->inode->brother = parent->child;
-        parent->child = node->inode;
-    }
-}
-
-int tmpfs_mkdir(vfs_node *node,char *name){
-    vfs_node *dir = tmpfs_create_dir(node->inode);
-    strcpy(dir->inode->name,name);
+    inode *folder_inode = tmpfs_new_inode();
+    folder_inode->type = TMPFS_TYPE_DIRECTORY;
+    folder_inode->parent = node->inode;
+    folder_inode->brother = node->inode->child;
+    node->inode->child = folder_inode;
+    node->inode->childreen_count ++;
     return 0;
+}
+
+int tmpfs_create(vfs_node *node,char name,mode_t perm){
+    inode *file_inode = tmpfs_new_inode();
+    file_inode->type = TMPFS_TYPE_FILE;
+    file_inode->parent = node->inode;
+    file_inode->brother = node->inode->child;
+    node->inode->child = file_inode;
+    node->inode->childreen_count ++;
 }
 
 int tmpfs_open(vfs_node *node){
@@ -65,26 +61,73 @@ int tmpfs_open(vfs_node *node){
 }
 
 int tmpfs_close(vfs_node *node){
-    kfree(node->inode);
-    kfree(node);  
     return 0;
 }
 
-struct dirrent tmpsfs_readdir(vfs_node *node,uint32_t index){
+struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     //first the . path
     if(index == 0){
         struct dirrent *ret = kmalloc(sizeof(struct dirrent));
         strcpy(ret->name,VFS_SPECIAL_PATH_SELF);
+        return ret;
     }
 
     //first the .. path
     if(index == 1){
         struct dirrent *ret = kmalloc(sizeof(struct dirrent));
         strcpy(ret->name,VFS_SPECIAL_PATH_PARENT);
+        return ret;
     }
 
     index -= 2;
+    inode *current = node->inode->child;
     for(uint32_t i=0;i<index;i++){
-        
+        if(current == NULL) return NULL;
+        current = current->brother;
     }
+
+    struct dirrent *ret = kmalloc(sizeof(struct dirrent));
+    strcpy(ret->name,current->name);
+}
+
+vfs_node *tmpfs_finddir(vfs_node *node,char *name){
+    //first let find the good inode
+    inode *current = node->inode->child;
+    while (strcmp(current->name,name))
+    {
+        if(current = NULL) return NULL;
+        current = current->brother;
+    }
+
+    return tmpfs_inode_to_node(current);
+}
+
+vfs_node *tmpfs_inode_to_node(inode *og_inode){
+    vfs_node *node = kmalloc(sizeof(vfs_node));
+    
+    node->inode = og_inode;
+    node->permmision = 0777;
+    node->childreen_count = 0;
+    
+    if(og_inode->type == TMPFS_TYPE_FILE){
+        node->type= VFS_NODE_TYPE_FILE;
+        node->open = tmpfs_open;
+        node->close = tmpfs_close;
+    } else if(og_inode->type == TMPFS_TYPE_DIRECTORY){
+        node->type = VFS_NODE_TYPE_FOLDER;
+        node->readdir = tmpsfs_readdir;
+        node->finddir = tmpfs_finddir;
+        node->create =tmpfs_create;
+        node->mkdir = tmpfs_mkdir;
+    }
+}
+
+inode *tmpfs_new_inode(){
+    inode *node = kmalloc(sizeof(node));
+    node->brother = NULL;
+    node->child = NULL;
+    node->parent = NULL;
+    node->name[0] = '\0';
+    node->childreen_count = 0;
+    return node;
 }

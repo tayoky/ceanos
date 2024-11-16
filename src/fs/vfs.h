@@ -82,7 +82,7 @@ typedef struct vfs_node_struct {
 
 extern vfs_node *vfs_root_node;
 
-int vfs_int();
+int vfs_init();
 vfs_node *kopen(char *path);
 int vfs_mount(char *path,vfs_node *node);
 
