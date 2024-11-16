@@ -10,8 +10,6 @@ void* memmove(void* dest, const void* src, uint32_t len);
 void outPortB(uint16_t Port, uint8_t Value);
 char inPortB(uint16_t port);
 void insl(uint16_t port, void* addr, int count); 
-inline void outw(unsigned short port, unsigned short value);
-inline uint16_t inw(unsigned short port);
 void shutdown(uint16_t port, uint16_t value);
 void dump_registers();
 uint32_t get_eip();

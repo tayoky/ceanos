@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <stdlib/stdio.h>
 #include <mm/malloc.h>
+#include <drivers/ata.h>
+#include <util.h>
 
 void read_boot_sector(uint32_t LBA, BootSector *boot_sector) {
     uint8_t boot_sector_data[512];

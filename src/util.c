@@ -94,8 +94,8 @@ void* memcpy(void* dest, const void* src, size_t n) {
 
 int memcmp(const void *ptr1, const void *ptr2, size_t num)
 {
-	unsigned char *p = ptr1;
-	unsigned char *q = ptr2;
+	const unsigned char *p = ptr1;
+	const unsigned char *q = ptr2;
 
 	while (num > 0) {
 		if (*p != *q)
