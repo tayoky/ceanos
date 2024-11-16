@@ -34,7 +34,7 @@
 /* FILE SYSTEMS*/
 
 #include <fs/fat.h>
-#include <fs/vfs.h>
+#include <fs/virtual/vfs.h>
 
 /* STDLIB */
 

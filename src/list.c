@@ -2,7 +2,7 @@
 #include <mm/malloc.h>
 
 List *create_list(){
-    List * listptr = kmalloc(sizeof(List));
+    List* listptr = kmalloc(sizeof(List));
     listptr->first = NULL;
     listptr->count = 0;
     return listptr;
@@ -26,7 +26,7 @@ struct listElement *list_find_index(List *list,uint64_t index){
     }
 }
 
-void list_append(List *list,void *value){
+void list_append(List *list, void *value){
     struct listElement *current = list->first;
     for(uint64_t i;i < list->count - 1; i++){
         current = current->next;
@@ -39,12 +39,12 @@ void list_append(List *list,void *value){
     list->count ++;
 }
 
-void list_set(List *list,void *value,uint64_t index){
+void list_set(List *list, void *value,uint64_t index){
     struct listElement *element = list_find_index(list,index);
     element->value = value;
 }
 
-void list_remove(List *list,uint64_t index){
+void list_remove(List *list, uint64_t index){
     struct listElement *element = list_find_index(list,index);
     if(element->prev){
         element->prev->next = element->next;
@@ -62,7 +62,7 @@ void list_remove(List *list,uint64_t index){
     list->count --;
 }
 
-void list_insert(List *list,void *value,uint64_t index){
+void list_insert(List *list, void *value, uint64_t index){
     struct listElement *element = list_find_index(list,index);
     struct listElement *new = kmalloc(sizeof(struct listElement));
     //special case we try to set the first 
@@ -79,7 +79,7 @@ void list_insert(List *list,void *value,uint64_t index){
     list->count ++;
 }
 
-void *list_get(List *list,uint64_t index){
+void *list_get(List *list, uint64_t index){
     struct listElement *element = list_find_index(list,index);
     return element->value;
 }
