@@ -126,6 +126,8 @@ int vfs_close(vfs_node *node){
 
     node->ref_count --;
     if(node->ref_count == 0){
+       //now the child don't use the parent 
+        vfs_close(node->parent);
         if(node->close){
             node->close(node);
         }
@@ -137,3 +139,56 @@ int vfs_unlink(vfs_node *node,char *name);
 int vfs_set_size(vfs_node *node,size_t new_size);
 int vfs_chown(vfs_node *node,uid_t user,gid_t group);
 int vfs_chmod(vfs_node *node,mode_t permission);
+
+char **parse_path(char *path){
+    //first count the number of depth
+    uint32_t path_depth = 0;
+    for(int i =0;path[i];i++){
+        //only if a path separator
+        if(path[i] != '/'){
+            continue;
+        }
+        path[i] == '/0';
+        if(path[i+1]){
+            path_depth ++;
+        }
+    }
+    
+    //alocate space for the array
+    char **path_array = kmalloc(sizeof(char) *( path_depth + 1));
+    path_array[path_depth] = NULL;
+
+    int j = 0;
+    for(int i=0;i<path_depth;i++){
+        while(path[j]){
+            j++;
+        }
+        path_array[i] = j + 1;
+    }
+    return path_array;
+}
+
+vfs_node *kopen(char *path){
+    //let open any file
+    //check open is an abosulte path
+    if(path[1] != '/'){
+        //not an abosulte path
+        return NULL;
+    }
+    //parse the path
+    char **path_array = parse_path(path);
+    
+    vfs_node *current = vfs_root_node;
+    for(int i=0;path_array[i]!=NULL;i++){
+        //if null it's an error
+        if(current == NULL){
+            kfree(path_array);
+            return NULL;
+        }
+        current = vfs_finddir(current,path_array[i]);
+    }
+    kfree(path_array);
+
+    return current;
+}
+   
