@@ -7,11 +7,11 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/ceanvalds/CeanOS)
 ![GitHub commits since latest release](https://img.shields.io/github/commits-since/ceanvalds/ceanos/latest?include_prereleases)
 
-  > CeanOS is a UNIX-like operating system . The goal is to create a lightweight, efficient OS with a custom kernel and a user-friendly interface. This project is built with C and assembly using no standard libraries .
+  > CeanOS is a UNIX-like operating system . The goal is to create a lightweight, efficient OS with a custom kernel and a user-friendly interface. This project is built with C and assembly using no standard libraries . 
 
 <br>
 
-![image](https://github.com/user-attachments/assets/d020d976-7440-4d49-8e8b-25f0f7a2cdd4)
+![image](res/screenshot.png)
 
 ## Kernel Status
 The CeanOS kernel is a monolithic x86 one. I am also planning to port it to x86_64 and arm after im done with x86 .

@@ -5,7 +5,7 @@ if git diff-index --quiet HEAD --; then
     exit 0
 fi
 
-git pull origin master
+git pull
 
 git add .
 
@@ -19,6 +19,6 @@ done
 
 git commit -m "$commit_message"
 
-git push origin master
+git push
 
 echo "Changes synced with remote repository!"

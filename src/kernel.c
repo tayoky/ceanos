@@ -1,7 +1,6 @@
-/* KERNEL.C */
-/* Copyright (c) @asdasda3456 2024 - 2024 */
-        
-/* main entry point of the ceanos kernel */
+//@file kernel.c
+//@brief entry point of ceanos kernel
+//@author ceanvalds
 
 /* SYS */
 
@@ -75,7 +74,7 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x1000);
-        init_heap((int*)KERNEL_MALLOC, 0x600000);
+	init_heap((int*)KERNEL_MALLOC, 0x600000);
         debugf("[mm] memory done!\n");
 }
 
@@ -97,7 +96,7 @@ void enable_default(struct multiboot_info* boot)
 	init_all(boot);
 	printf("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
 	printf("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
-	printf("root@ceanos~%s", prompt);             // initialize the shell
+	printf("ceanos%s", prompt);                   // initialize the shell
 
 	set_screen_color(0x0F);
 }
@@ -109,7 +108,7 @@ void enable_safe(struct multiboot_info* boot)
 	printf("##welcome to ceanos##\n");
 	printf("SAFE MODE\n");
 	printf("current os version: v0.0.3-alpha\n");
-	printf("root@safemode~%s", prompt);
+	printf("safemode%s", prompt);
 
 	set_screen_color(0x0F);
 }

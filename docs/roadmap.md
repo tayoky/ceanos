@@ -17,7 +17,7 @@
 2. VGA driver
 3. Other drivers
 
-# Other
+# Ports
 
 1. **Porting to amd64**
 2. **Porting to arm**

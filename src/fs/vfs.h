@@ -10,7 +10,7 @@
 #include <types.h>
 
 
-struct vfs_node_struct ;
+struct vfs_node_struct;
 typedef inode;
 
 //type falf
