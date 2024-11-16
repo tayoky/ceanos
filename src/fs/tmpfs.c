@@ -35,9 +35,25 @@ vfs_node *new_tmpfs(){
     return tmpfs_inode_to_node(root_inode);
 }
 
-int tmpfs_mkdir(vfs_node *node,char *name){
-    node->inode->childreen_count;
+int tmpfs_mkdir(vfs_node *node,char *name,mode_t perm){
+    //TODO: check if aready exist
+    
+    inode *folder_inode = tmpfs_new_inode();
+    folder_inode->type = TMPFS_TYPE_DIRECTORY;
+    folder_inode->parent = node->inode;
+    folder_inode->brother = node->inode->child;
+    node->inode->child = folder_inode;
+    node->inode->childreen_count ++;
     return 0;
+}
+
+int tmpfs_create(vfs_node *node,char name,mode_t perm){
+    inode *file_inode = tmpfs_new_inode();
+    file_inode->type = TMPFS_TYPE_FILE;
+    file_inode->parent = node->inode;
+    file_inode->brother = node->inode->child;
+    node->inode->child = file_inode;
+    node->inode->childreen_count ++;
 }
 
 int tmpfs_open(vfs_node *node){
@@ -100,6 +116,9 @@ vfs_node *tmpfs_inode_to_node(inode *og_inode){
     } else if(og_inode->type == TMPFS_TYPE_DIRECTORY){
         node->type = VFS_NODE_TYPE_FOLDER;
         node->readdir = tmpsfs_readdir;
+        node->finddir = tmpfs_finddir;
+        node->create =tmpfs_create;
+        node->mkdir = tmpfs_mkdir;
     }
 }
 
