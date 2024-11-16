@@ -27,7 +27,6 @@ int vfs_int(){
     vfs_root_node->group_owner = 0;
 
     vfs_root_node->childreen_count = 0;
-    vfs_root_node->ref_count -1;
 
     vfs_root_node->driver = 0;
 
@@ -192,3 +191,33 @@ vfs_node *kopen(char *path){
     return current;
 }
    
+int vfs_mount(char *path,vfs_node *node){
+    //first let open the folder
+    vfs_node *dest = kopen(path);
+    
+    //if null error
+    if(dest == NULL){
+        return ERR_UNKNOW;
+    }
+    
+    //if it has child you can't mount
+    if(dest->childreen_count){
+        return ERR_UNKNOW;
+    }
+    
+    //set the new node
+    str(node->name,dest->name);
+    node->parent = dest->parent;
+    node->brother = dest->brother;
+    node->ref_count = -1;
+    node->type |= VFS_NODE_TYPE_MOUNT_POINT;
+    
+   if(!close(dest)){
+       return ERR_UNKNOW;
+   }
+
+   //special case we set root
+   if(path[1] == '/0'){
+       vfs_root_node = node;
+   }
+}
