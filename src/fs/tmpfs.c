@@ -1,9 +1,11 @@
 #include <mm/malloc.h>
-typedef struct{
+#include "tmpfs.h"
+struct inode_struct;
+typedef struct inode struct{
     char name[256];
-    inode *parent;
-    inode *child;
-    inode *brother;
+    struct inode_struct *parent;
+    struct inode_struct *child;
+    struct inode_struct *brother;
     int size;
     int type;
 }inode;
