@@ -24,8 +24,8 @@ vfs_node *
     node->permmision = 0777;
     
     node->inode->parent = parent;
-    node->inode->child = NULL
-    node->inode->brother = NULL
+    node->inode->child = NULL;
+    node->inode->brother = NULL;
     if(parent){
         node->inode->brother = parent->child;
         parent->child = node->inode;
