@@ -3,10 +3,13 @@ on: [push]
 jobs:
   build-image:
     runs-on: ubuntu-latest
+
     steps:
       - name: check code
       uses: actions/checkout@v2
+
       - name: install every software
       run: sudo apt -y install nasm xorriso
+
       - name: compile
       run: make
