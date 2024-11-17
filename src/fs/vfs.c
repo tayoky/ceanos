@@ -11,7 +11,7 @@ vfs_node *vfs_root_node;
 
 int vfs_init(){
     if(vfs_root_node != NULL) {
-        printf("vfs aready INIT !!!!\n");
+        printf("vfs is already INIT !!!!\n");
         return -1;
     }
 
@@ -36,7 +36,7 @@ int vfs_init(){
 
     vfs_root_node->driver = 0;
 
-    vfs_root_node->permmision = 0777;
+    vfs_root_node->permission = 0777;
     vfs_root_node->type =0;
     
     //weird but on unix-like OS's the parent of root is root
@@ -141,7 +141,7 @@ int vfs_close(vfs_node *node){
 
     node->ref_count--;
     if(node->ref_count == 0){
-       //now the child don't use the parent 
+        //now the child don't use the parent 
         vfs_close(node->parent);
         if(node->close){
             node->close(node);

@@ -39,9 +39,7 @@ void kmallocInit(uint32_t initialHeapSize) {
     first_memory_segment->next = NULL;
     first_memory_segment->length = heapSize - sizeof(kmalloc_header);
     first_memory_segment->prev = NULL;
-
-    // initial value of the heap
-    *((uint32_t*)heapStart) = 0; 
+    first_memory_segment->flag = TYPE_FREE;
 
     kmallocInitialized = true;
 }
@@ -70,19 +68,19 @@ void* kmalloc(size_t size)
         while ((current_segment->flag  == TYPE_ALLOCATED ) || (current_segment->length < size)) {
 
             //if last segment we need to make kernel space bigger
-            //TODO implent this for the moment let just say there isn't enought memory
+            //TODO: implement this
+            //for the moment lets just say there isn't enought memory
             if(!current_segment->next) {
-                debugf("not enough memory ! todo: make kernel space bigger\n");
-                return NULL;
+                die("not enough memory ! todo: make kernel space bigger", ERR_NOT_ENOUGH_MEMORY);
             }
             current_segment = current_segment->next;
         }
 
         //now we have found a good segement
-        //if the segement is big then we cut it
+        //if the segment is big then we cut it
         if(current_segment->length > size + sizeof(kmalloc_header)){
             kmalloc_header *new_segment;
-            new_segment = current_segment + size + sizeof(kmalloc_header);
+            new_segment = (kmalloc_header *)((uintptr_t)current_segment + size + sizeof(kmalloc_header));
 
             //set the lenght
             new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
@@ -98,7 +96,7 @@ void* kmalloc(size_t size)
             if(new_segment->next) new_segment->next->prev = new_segment;
         }
 
-        //now mark as used
+        //mark as used
         current_segment->flag = TYPE_ALLOCATED;
 
         //now return the pointer

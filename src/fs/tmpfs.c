@@ -108,7 +108,7 @@ vfs_node *tmpfs_inode_to_node(inode *og_inode){
     vfs_node *node = kmalloc(sizeof(vfs_node));
     
     node->inode = og_inode;
-    node->permmision = 0777;
+    node->permission = 0777;
     node->childreen_count = 0;
     
     if(og_inode->type == TMPFS_TYPE_FILE){
