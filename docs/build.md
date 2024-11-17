@@ -11,19 +11,20 @@ This document provides instructions on how to build the CeanOS operating system 
 - **Git**
 - **Grub**
 - **Xorriso**
+- **dosfstools** and **mtools**
 
 ### Installation
 
 - On **Arch Linux**, you can install the necessary packages using:
 
   ```bash
-  sudo pacman -S base-devel qemu git gcc nasm make
+  sudo pacman -S base-devel qemu git gcc nasm make mtools dosfstools
   ```
 
 - On **Ubuntu**, you can install the necessary packages using:
 
   ```bash
-  sudo apt install base-devel qemu git gcc nasm make
+  sudo apt install base-devel qemu git gcc nasm make mtools dosfstools
   ```
 - On **Windows**, use WSL2 to compile
 
