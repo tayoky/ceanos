@@ -2,7 +2,7 @@ name: build ceanos iso
 on: [push]
 jobs:
   build-image:
-    runs-on: ubuntu-latest
+    runs-on: "ubuntu-20.04"
     steps:
       - name: check code
       uses: actions/checkout@v2
