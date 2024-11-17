@@ -5,7 +5,8 @@
 #include <stdlib/stdio.h>
 #include <mm/malloc.h>
 #include <errno.h>
-    
+#include <kernel.h>
+
 vfs_node *vfs_root_node;
 
 int vfs_init(){
@@ -238,23 +239,23 @@ vfs_node *kopen(char *path){
         return current;
 }
    
-int vfs_mount(char *path, vfs_node *node){
+int vfs_mount(char *path, vfs_node *node) {
     //first let open the folder
     vfs_node *dest = kopen(path);
     
     //if null error
     if(dest == NULL){
-        return ERR_NO_FILE_OR_DIRECTORY;
+        die("error: no such file or directory", ERR_NO_FILE_OR_DIRECTORY);
     }
     
     //if it has child you can't mount
     if(dest->childreen_count){
-        return ERR_NOT_EMPTY;
+        die("error: not empty", ERR_NOT_EMPTY);
     }
 
     //if it used we can't mount
     if(dest->ref_count != 1){
-        return ERR_UNKNOW ;
+        die("unknown error", ERR_UNKNOW);
     }
     
     //set the new node
