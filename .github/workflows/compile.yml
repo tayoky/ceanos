@@ -1,0 +1,24 @@
+name: build ceanos iso
+on:
+  push:
+    branches:
+      - deploy
+jobs:
+  build-image:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: check code
+        uses: actions/checkout@v2
+
+      - name: install every software
+        run: sudo apt -y install nasm xorriso
+
+      - name: compile
+        run: make ceanos.iso
+
+      - name: Upload Image
+        uses: actions/upload-artifact@v4
+        with:
+          name: build
+          path: |
+            ceanos.iso
