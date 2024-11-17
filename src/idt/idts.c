@@ -143,21 +143,16 @@ void page_fault_handler(struct InterruptRegisters* regs)
 {
 	uint32_t faulting_address;
 	asm volatile("mov %%cr2, %0" : "=r"(faulting_address));
-
 	printf("page fault at address: %p\n", (void*)faulting_address);
-	dump_registers();
 	for(;;);
 }
 
 void isr_handler(struct InterruptRegisters* regs)
 {
         if (regs->int_no == 14) {
-		Reset();
 		printf("error code/type: %s\n", exception_messages[regs->int_no]);
                 page_fault_handler(regs);
 	} else if (regs->int_no < 32) {
-		Reset();
-		set_screen_color(1);
 		printf("error code/type: %s\n", exception_messages[regs->int_no]);
 		dump_registers();
 		asm("cli\n hlt");

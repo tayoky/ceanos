@@ -11,17 +11,14 @@ vfs_node *vfs_root_node;
 
 int vfs_init(){
     if(vfs_root_node != NULL) {
-        printf("vfs is already INIT !!!!\n");
+        printf("vfs is already initialized !\n");
         return -1;
     }
 
     //allocate space for the root node
     vfs_root_node = kmalloc(sizeof(vfs_node));
-
-    if (vfs_root_node == NULL) {
-        debugf("the vfs node 'vfs_root_node' is NULL !!!\n");
-        return -1;
-    }
+    printf("[vfs] allocated space for 'vfs_root_node'!\n");
+    sleep(300);
 
     //i don't belive there is any kind of time in the kernel for the moment so
     vfs_root_node->create_time = 0;
@@ -58,6 +55,8 @@ int vfs_init(){
 
     strcmp("root", vfs_root_node->name);
     
+    printf("[vfs] done!\n");
+    sleep(100);
     return SUCCESS;
 }
 
@@ -105,7 +104,7 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
         ret->brother = node->child;
         node->child = ret;
         node->ref_count ++;
-        //add in the childreen
+        //add in the children
     }
 
     return ret;
@@ -135,21 +134,27 @@ int vfs_open(vfs_node *node){
 
 int vfs_close(vfs_node *node){
     if(node->ref_count == -1){
-        //it's locked so don't do anything
+        // it's locked so don't do anything
         return 0;
     }
 
     node->ref_count--;
     if(node->ref_count == 0){
-        //now the child don't use the parent 
-        vfs_close(node->parent);
-        if(node->close){
+        // check if the node's parent is not the root before recursively closing it
+        if (node->parent != vfs_root_node) {
+            vfs_close(node->parent);
+        }
+
+        if(node->close) {
             node->close(node);
         }
-        if(node == vfs_root_node){
+        
+        if(node == vfs_root_node) {
             kfree(node);
+            return 0;
         }
-        //now remove the node from the chain
+        
+        // now remove the node from the chain
         vfs_node *current_node = node->parent->child;
         while(current_node->child != node){
             current_node = current_node->child;
@@ -158,7 +163,7 @@ int vfs_close(vfs_node *node){
     }
 }
 
-int vfs_create(vfs_node *node,char *name,mode_t permission){
+int vfs_create(vfs_node *node, char *name, mode_t permission){
     if(node->mkdir){
         return node->create(node,name,permission);
     } else {
@@ -166,7 +171,7 @@ int vfs_create(vfs_node *node,char *name,mode_t permission){
     }
 }
 
-int vfs_mkdir(vfs_node *node,char *name,mode_t permission){
+int vfs_mkdir(vfs_node *node, char *name, mode_t permission){
     if(node->mkdir){
         return node->mkdir(node,name,permission);
     } else {
@@ -174,31 +179,31 @@ int vfs_mkdir(vfs_node *node,char *name,mode_t permission){
     }
 }
 
-int vfs_unlink(vfs_node *node,char *name);
-int vfs_set_size(vfs_node *node,size_t new_size);
-int vfs_chown(vfs_node *node,uid_t user,gid_t group);
-int vfs_chmod(vfs_node *node,mode_t permission);
+int vfs_unlink(vfs_node *node, char *name);
+int vfs_set_size(vfs_node *node, size_t new_size);
+int vfs_chown(vfs_node *node, uid_t user, gid_t group);
+int vfs_chmod(vfs_node *node, mode_t permission);
 
 char **parse_path(char *path){
     //first count the number of depth
     uint32_t path_depth = 0;
-    for(int i =0;path[i];i++){
+    for(int i = 0; path[i] ; i++){
         //only if its a path separator
-        if(path[i] != '/'){
+        if(path[i] != '/') {
             continue;
         }
         path[i] = '/0';
-        if(path[i+1]){
-            path_depth ++;
+        if(path[i + 1]) {
+            path_depth++;
         }
     }
-    
+
     //alocate space for the array
     char **path_array = kmalloc(sizeof(char) *( path_depth + 1));
     path_array[path_depth] = NULL;
 
     int j = 0;
-    for(int i=0;i<path_depth;i++){
+    for(int i = 0;i < path_depth; i++){
         while(path[j]){
             j++;
         }
@@ -212,6 +217,7 @@ vfs_node *kopen(char *path){
         //check open is an abosulte path
         if(path[0] != '/'){
             //not an abosulte path
+            printf("not an absolute path!\n");
             return NULL;
         }
 
@@ -228,9 +234,10 @@ vfs_node *kopen(char *path){
             //if null it's an error
             if(current == NULL){
                 kfree(path_array);
+                die("path_array is null\n", ERR_UNKNOW);
                 return NULL;
             }
-            current = vfs_finddir(current,path_array[i]);
+            current = vfs_finddir(current, path_array[i]);
         }
         kfree(path_array);
         if(current != NULL){
@@ -242,7 +249,8 @@ vfs_node *kopen(char *path){
 int vfs_mount(char *path, vfs_node *node) {
     //first let open the folder
     vfs_node *dest = kopen(path);
-    
+    printf("[vfs mount] node succesfully opened!\n");
+
     //if null error
     if(dest == NULL){
         die("error: no such file or directory", ERR_NO_FILE_OR_DIRECTORY);
