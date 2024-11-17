@@ -259,17 +259,17 @@ int vfs_mount(char *path, vfs_node *node) {
     debugf("[vfs mount] node [%p] succesfully opened!\n",dest);
 
     //if null error
-    if(dest == NULL){
+    if(dest == NULL) {
         return die("error: no such file or directory", ERR_NO_FILE_OR_DIRECTORY);
     }
     
     //if it has child you can't mount
-    if(dest->childreen_count){
+    if(dest->childreen_count){ 
         return die("error: not empty", ERR_NOT_EMPTY);
     }
 
     //if it used we can't mount
-    if(dest->ref_count != 1){
+    if(dest->ref_count != 1) {
         return die("unknown error", ERR_UNKNOW);
     }
     

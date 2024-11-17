@@ -4,7 +4,7 @@
 #include <strings.h>
 #include <util.h>
 
-bool debug_mode = false;
+extern bool debug_mode;
 
 void putc(char c)
 {
@@ -198,7 +198,7 @@ int * printf_number(int* argp, int length, uint8_t sign, int radix)
 
 void debugf(const char* fmt, ...)
 {
-	//if we aren't in debug mode GO OUT !
+	//if we aren't in debug mode GET OUT !
 	if(!debug_mode) return;
 	int* argp = (int*) &fmt;
 	int state = PRINTF_STATE_START;

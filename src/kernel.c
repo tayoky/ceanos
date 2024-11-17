@@ -58,6 +58,12 @@ void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "# ";
 int safe_mode = 0;
 
+bool debug_mode;
+
+#ifdef DEBUG
+debug_mode = true;
+#endif
+
 void check_boot_params(struct multiboot_info *mbi)
 {
 	if (mbi->flags & 0x00000002) {
@@ -66,10 +72,6 @@ void check_boot_params(struct multiboot_info *mbi)
 			safe_mode = 1;
 		}
 	}
-
-	#ifdef DEBUG
-	debug_mode = true;
-	#endif
 }
 
 
