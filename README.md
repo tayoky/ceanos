@@ -10,12 +10,6 @@
   > CeanOS is a UNIX-like operating system . The goal is to create a lightweight, efficient OS with a custom kernel and a user-friendly interface. This project is built with C and assembly using no standard libraries . 
 
 <br>
-` III  IIIII  III  II  I  III   III   <br>
-I   I I     I   I I I I I   I I    <br>  
-I     IIIII IIIII I I I I   I  III   <br>
-I   I I     I   I I I I I   I     I  <br>
- III  IIIII I   I I  II  III   III `<br>
-
 ![image](res/screenshot.png)
 
 ## Kernel Status
