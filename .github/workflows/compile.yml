@@ -1,4 +1,8 @@
 name: build ceanos iso
+on:
+  push:
+    branches:
+      -master
 jobs:
   build-image:
     runs-on: ubuntu-latest
