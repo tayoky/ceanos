@@ -3,7 +3,6 @@ on: [push]
 jobs:
   build-image:
     runs-on: ubuntu-latest
-
     steps:
       - name: check code
       uses: actions/checkout@v2
