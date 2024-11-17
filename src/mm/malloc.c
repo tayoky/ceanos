@@ -67,7 +67,7 @@ void* kmalloc(size_t size)
         //search until find and good segment or find last segment
         kmalloc_header *current_segment = first_memory_segment;
 
-        while ((current_segment->flag  == TYPE_ALLOCATED ) || (current_segment->length > size)) {
+        while ((current_segment->flag  == TYPE_ALLOCATED ) || (current_segment->length < size)) {
 
             //if last segment we need to make kernel space bigger
             //TODO implent this for the moment let just say there isn't enought memory
@@ -88,12 +88,18 @@ void* kmalloc(size_t size)
             new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
             current_segment->length = size;
 
+            //mark the new segment as free
+            new_segment->flag = TYPE_FREE;
+
             //set pointer
             new_segment->prev = current_segment;
             new_segment->next = current_segment->next;
             current_segment->next = new_segment;
-            if(new_segment->next)       new_segment->next->prev = current_segment;
+            if(new_segment->next) new_segment->next->prev = new_segment;
         }
+
+        //now mark as used
+        current_segment->flag = TYPE_ALLOCATED;
 
         //now return the pointer
         return current_segment + sizeof(kmalloc_header);    
@@ -105,13 +111,21 @@ void kfree(void* ptr){
     
     //mark as free
     header->flag = TYPE_FREE;
+
+    //if next free merge
+    if(header->next && header->next->flag == TYPE_FREE){
+        //merge
+        header->length += header->next->length + sizeof(kmalloc_header);
+        header->next = header->next->next;
+        if(header->next) header->next->prev = header;
+
+    }
     
     if(header->prev && header->prev->flag == TYPE_FREE){
         //merge
-        if(header->next){
-            header->next->prev = header->prev;
-    }
-    header->prev->next = header->next;
-    header->prev->length = header->length + sizeof(kmalloc_header);
+        header->prev->length += header->length + sizeof(kmalloc_header);
+        if(header->next) header->next->prev = header->prev;
+        header->prev->next = header->next;
+        
     }
 }
