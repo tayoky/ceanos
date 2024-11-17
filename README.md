@@ -1,4 +1,4 @@
-# CeanOS
+# CeanOS 
 ![GitHub top language](https://img.shields.io/github/languages/top/ceanvalds/CeanOS)
 ![Contributors](https://img.shields.io/github/contributors/ceanvalds/CeanOS)
 ![Commits](https://img.shields.io/github/commit-activity/m/ceanvalds/CeanOS)
@@ -50,7 +50,6 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
   - [ ] cwm (cean windows manager) (maybe WIP)
 
 ## Compiling
-clone the `master` branch not the `deploy` branch
 Everything about it can be found in `docs/build.md` or [here](docs/build.md)
 
 ## License

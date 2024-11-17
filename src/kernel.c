@@ -49,11 +49,18 @@
 #include <io.h>
 #include <strings.h>
 
+/* OPTIONS */
+#include <config.h>
+
 // actual code
 
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "# ";
 int safe_mode = 0;
+
+bool debug_mode;
+
+
 
 void check_boot_params(struct multiboot_info *mbi)
 {
@@ -63,6 +70,10 @@ void check_boot_params(struct multiboot_info *mbi)
 			safe_mode = 1;
 		}
 	}
+
+	#ifdef DEBUG
+	debug_mode = true;
+	#endif
 }
 
 
@@ -74,25 +85,26 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
-	kmallocInit(0x1000);
-	init_heap((int*)KERNEL_MALLOC, 0x600000);
+	kmallocInit(0x4000);
         debugf("[mm] memory done!\n");
 }
 
 static void init_all(struct multiboot_info* boot)
 {
-                vga_disable_cursor();
+	vga_disable_cursor();
 	gdt_init();
-	        idt_init();
+	idt_init();
 	timer_init();
-	        keyboard_init();
-        init_mm(boot);
-		vfs_init();
-		printf("try open root : %d\n", kopen("/"));
+	keyboard_init();
+	init_mm(boot);
+	vfs_init();
 	init_tmpfs();
-                debugf("[ceanos] everything done ! booting shortly...\n");
-        sleep(60000);
-	        Reset();
+	vfs_node *open_folder = kopen("/");
+	vfs_mkdir(open_folder,"test",0777);
+	vfs_close(open_folder);
+	debugf("[ceanos] everything done ! booting shortly...\n");
+	sleep(6000);
+	Reset();
 }
 
 void enable_default(struct multiboot_info* boot)
@@ -132,4 +144,3 @@ void main(uint32_t magic, struct multiboot_info* boot)
                 
 	while(1);
 }
-

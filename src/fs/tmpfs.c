@@ -1,6 +1,7 @@
 #include <mm/malloc.h>
 #include <errno.h>
 #include <strings.h>
+#include <stdlib/stdio.h>
 
 struct inode_struct;
 typedef struct inode_struct{
@@ -26,9 +27,7 @@ int init_tmpfs(){
     vfs_node *root;
     root = new_tmpfs();
     //mount as root
-    int return_value = vfs_mount("/", root);
-
-    printf("%d\n", return_value);
+    printf("[tmpfs] mounting as root : %d\n",vfs_mount("/", root));
 }
 
 vfs_node *new_tmpfs(){
@@ -44,8 +43,10 @@ int tmpfs_mkdir(vfs_node *node, char *name, mode_t perm){
     folder_inode->type = TMPFS_TYPE_DIRECTORY;
     folder_inode->parent = node->inode;
     folder_inode->brother = node->inode->child;
+    strcpy(folder_inode->name,name);
     node->inode->child = folder_inode;
     node->inode->childreen_count ++;
+    debugf("[tmpfs] mkdir with name \"%s\" at address %p in directory node[%p] inode[%p]\n",name,node->inode->child,node,node->inode);
     return 0;
 }
 
@@ -66,6 +67,13 @@ int tmpfs_close(vfs_node *node){
     return 0;
 }
 
+void tmpfs_debug_inode(inode *node){
+    printf("[tmpfs] inode [%p] :\n",node);
+    printf("    child : node[%p]\n",node->child);
+    printf("    childreen count : %d\n",node->childreen_count);
+    printf("    name : %s\n",node->name);
+}
+
 struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     //first the . path
     if(index == 0){
@@ -82,7 +90,12 @@ struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     }
 
     index -= 2;
+
+    //out of range
+    if(index > node->inode->childreen_count) return NULL;
+
     inode *current = node->inode->child;
+    tmpfs_debug_inode(node->inode);
     for(uint32_t i=0;i<index;i++){
         if(current == NULL) return NULL;
         current = current->brother;
@@ -90,6 +103,7 @@ struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
 
     struct dirrent *ret = kmalloc(sizeof(struct dirrent));
     strcpy(ret->name,current->name);
+    return ret;
 }
 
 vfs_node *tmpfs_finddir(vfs_node *node,char *name){
@@ -108,13 +122,12 @@ vfs_node *tmpfs_inode_to_node(inode *og_inode){
     vfs_node *node = kmalloc(sizeof(vfs_node));
     
     node->inode = og_inode;
-    node->permmision = 0777;
+    node->permission = 0777;
     node->childreen_count = 0;
-    
+    node->open = tmpfs_open;
+    node->close = tmpfs_close;
     if(og_inode->type == TMPFS_TYPE_FILE){
         node->type= VFS_NODE_TYPE_FILE;
-        node->open = tmpfs_open;
-        node->close = tmpfs_close;
     } else if(og_inode->type == TMPFS_TYPE_DIRECTORY){
         node->type = VFS_NODE_TYPE_FOLDER;
         node->readdir = tmpsfs_readdir;

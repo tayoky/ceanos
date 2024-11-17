@@ -4,6 +4,8 @@
 #include <strings.h>
 #include <util.h>
 
+extern bool debug_mode;
+
 void putc(char c)
 {
 	char buffer[2] = {c, '\0'};
@@ -196,6 +198,8 @@ int * printf_number(int* argp, int length, uint8_t sign, int radix)
 
 void debugf(const char* fmt, ...)
 {
+	//if we aren't in debug mode GET OUT !
+	if(!debug_mode) return;
 	int* argp = (int*) &fmt;
 	int state = PRINTF_STATE_START;
 	int length = PRINTF_LENGTH_START;
