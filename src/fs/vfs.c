@@ -276,10 +276,10 @@ int vfs_mount(char *path, vfs_node *node) {
     //now close the old node
     vfs_close(dest);
     debugf("[vfs mount] succefuly close node [%p]\n",dest);
-
+    
     //special case we set root
-    if(path[1] == '/0'){
-        debugf("[vfs mount] mounting node [%p] as root\n",node);
+    if(path[1] == '\0'){
+       debugf("[vfs mount] mounting node [%p] as root\n",node);
        vfs_root_node = node;
        return 0;
     }
