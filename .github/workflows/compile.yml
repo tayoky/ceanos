@@ -15,3 +15,10 @@ jobs:
 
       - name: compile
         run: make ceanos.iso
+
+      - name: Upload Image
+        uses: actions/upload-artifact@v2
+        with:
+          name: build
+          path: |
+            ceanos.iso
