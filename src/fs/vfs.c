@@ -5,11 +5,11 @@
 #include <stdlib/stdio.h>
 #include <mm/malloc.h>
 #include <errno.h>
-
-vfs_node *vfs_root_node = NULL;
+    
+vfs_node *vfs_root_node;
 
 int vfs_init(){
-    if(vfs_root_node !=NULL){
+    if(vfs_root_node != NULL) {
         printf("vfs aready INIT !!!!\n");
         return -1;
     }
@@ -17,7 +17,12 @@ int vfs_init(){
     //allocate space for the root node
     vfs_root_node = kmalloc(sizeof(vfs_node));
 
-    //i don't belive there are any kind of time in this kernel for the moment so
+    if (vfs_root_node == NULL) {
+        debugf("the vfs node 'vfs_root_node' is NULL !!!\n");
+        return -1;
+    }
+
+    //i don't belive there is any kind of time in the kernel for the moment so
     vfs_root_node->create_time = 0;
     vfs_root_node->acces_time = 0;
     vfs_root_node->modify_time = 0;
@@ -50,10 +55,12 @@ int vfs_init(){
     vfs_root_node->chown = NULL;
     vfs_root_node->chmod = NULL;
 
-    strcmp("root",vfs_root_node->name);
+    strcmp("root", vfs_root_node->name);
+    
+    return SUCCESS;
 }
 
-struct dirrent *vfs_readdir(vfs_node *node,uint32_t index){
+struct dirrent *vfs_readdir(vfs_node *node ,uint32_t index){
     if(node->readdir){
         return node->readdir(node,index);
     } else {
@@ -61,7 +68,7 @@ struct dirrent *vfs_readdir(vfs_node *node,uint32_t index){
     }
 }
 
-struct vfs_node_struct *vfs_finddir(vfs_node *node, char *name) {
+struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
     //first check for special path
     //the self path
     if(!strcmp(name,VFS_SPECIAL_PATH_SELF)){
@@ -120,12 +127,9 @@ ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
 }
 
 int vfs_open(vfs_node *node){
-    if(!node)
-    return ERR_BAD_INPUT ;
-    if(node->ref_count != -1)
-    node->ref_count ++;
-    if(node->open)
-    return node->open(node);
+    if(!node)     return ERR_BAD_INPUT ;
+    if(node->ref_count != -1)    node->ref_count ++;
+    if(node->open)    return node->open(node);
 }
 
 int vfs_close(vfs_node *node){
@@ -152,6 +156,7 @@ int vfs_close(vfs_node *node){
         kfree(node);
     }
 }
+
 int vfs_create(vfs_node *node,char *name,mode_t permission){
     if(node->mkdir){
         return node->create(node,name,permission);
@@ -159,6 +164,7 @@ int vfs_create(vfs_node *node,char *name,mode_t permission){
         return ERR_NOT_A_DIRECTORY;
     }
 }
+
 int vfs_mkdir(vfs_node *node,char *name,mode_t permission){
     if(node->mkdir){
         return node->mkdir(node,name,permission);
@@ -166,6 +172,7 @@ int vfs_mkdir(vfs_node *node,char *name,mode_t permission){
         return ERR_NOT_A_DIRECTORY;
     }
 }
+
 int vfs_unlink(vfs_node *node,char *name);
 int vfs_set_size(vfs_node *node,size_t new_size);
 int vfs_chown(vfs_node *node,uid_t user,gid_t group);
@@ -179,7 +186,7 @@ char **parse_path(char *path){
         if(path[i] != '/'){
             continue;
         }
-        path[i] == '/0';
+        path[i] = '/0';
         if(path[i+1]){
             path_depth ++;
         }
@@ -200,29 +207,35 @@ char **parse_path(char *path){
 }
 
 vfs_node *kopen(char *path){
-    //let open any file
-    //check open is an abosulte path
-    if(path[1] != '/'){
-        //not an abosulte path
-        return NULL;
-    }
-    //parse the path
-    char **path_array = parse_path(path);
-    
-    vfs_node *current = vfs_root_node;
-    for(int i=0;path_array[i]!=NULL;i++){
-        //if null it's an error
-        if(current == NULL){
-            kfree(path_array);
+        //let open any file
+        //check open is an abosulte path
+        if(path[0] != '/'){
+            //not an abosulte path
             return NULL;
         }
-        current = vfs_finddir(current,path_array[i]);
-    }
-    kfree(path_array);
-    if(current != NULL){
-        vfs_open(current);
-    }
-    return current;
+
+        if (path == NULL) {
+            printf("path is NULL!\n");
+            return NULL;
+        }
+
+        //parse the path
+        char **path_array = parse_path(path);
+        
+        vfs_node *current = vfs_root_node;
+        for(int i=0;path_array[i]!=NULL;i++){
+            //if null it's an error
+            if(current == NULL){
+                kfree(path_array);
+                return NULL;
+            }
+            current = vfs_finddir(current,path_array[i]);
+        }
+        kfree(path_array);
+        if(current != NULL){
+            vfs_open(current);
+        }
+        return current;
 }
    
 int vfs_mount(char *path,vfs_node *node){
@@ -251,22 +264,22 @@ int vfs_mount(char *path,vfs_node *node){
     node->ref_count = -1;
     node->type |= VFS_NODE_TYPE_MOUNT_POINT;
 
-   //now close the old node
-   vfs_close(dest);
+    //now close the old node
+    vfs_close(dest);
    
 
-   //special case we set root
-   if(path[1] == '/0'){
+    //special case we set root
+    if(path[1] == '/0'){
        vfs_root_node = node;
        return 0;
-   }
+    }
 
-   //now make the last child pint to us
-   vfs_node *current_node = node->parent->child;
-   while(current_node != NULL){
+    //now make the last child point to us
+    vfs_node *current_node = node->parent->child;
+    while(current_node != NULL){
        current_node = current_node->brother;
     }
     current_node->brother = node;
 
-   return 0;
+    return 0;
 }

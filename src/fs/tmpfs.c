@@ -26,7 +26,9 @@ int init_tmpfs(){
     vfs_node *root;
     root = new_tmpfs();
     //mount as root
-    vfs_mount("/",root);
+    int return_value = vfs_mount("/", root);
+
+    printf("%d\n", return_value);
 }
 
 vfs_node *new_tmpfs(){
@@ -35,7 +37,7 @@ vfs_node *new_tmpfs(){
     return tmpfs_inode_to_node(root_inode);
 }
 
-int tmpfs_mkdir(vfs_node *node,char *name,mode_t perm){
+int tmpfs_mkdir(vfs_node *node, char *name, mode_t perm){
     //TODO: check if aready exist
     
     inode *folder_inode = tmpfs_new_inode();

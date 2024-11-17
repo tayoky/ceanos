@@ -4,7 +4,7 @@
 //@brief error macro
 //@author tayoky
 
-
+#define SUCCESS 0
 #define ERR_UNKNOW -1
 #define ERR_NO_EVAL -2
 #define ERR_PERMISSION -3
@@ -27,4 +27,4 @@
 #define ERR_READONLY -19
 #define ERR_AREADY_MOUNT -20
 #define ERR_FATAL -21
-#define ERR_NOT_EMPTY
+#define ERR_NOT_EMPTY -22
