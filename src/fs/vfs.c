@@ -226,6 +226,11 @@ vfs_node *kopen(char *path){
             return NULL;
         }
 
+        //first duplicate the path
+        char *new_path = kmalloc(strlen(path) + 1);
+        strcpy(new_path,path);
+        path = new_path;
+
         //parse the path
         char **path_array = parse_path(path);
         
@@ -233,12 +238,14 @@ vfs_node *kopen(char *path){
         for(int i=0;path_array[i]!=NULL;i++){
             //if null it's an error
             if(current == NULL){
+                kfree(new_path);
                 kfree(path_array);
                 die("path_array is null\n", ERR_UNKNOW);
                 return NULL;
             }
             current = vfs_finddir(current, path_array[i]);
         }
+        kfree(new_path);
         kfree(path_array);
         if(current != NULL){
             vfs_open(current);
@@ -276,7 +283,7 @@ int vfs_mount(char *path, vfs_node *node) {
     //now close the old node
     vfs_close(dest);
     debugf("[vfs mount] succefuly close node [%p]\n",dest);
-    
+
     //special case we set root
     if(path[1] == '\0'){
        debugf("[vfs mount] mounting node [%p] as root\n",node);
