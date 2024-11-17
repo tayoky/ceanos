@@ -9,5 +9,5 @@ uint16_t die(const char *die_msg)
 void panic(const char *panic) 
 {
         printf("panic: %s\n", panic);
-        for(;;)
+        for(;;){}
 }
