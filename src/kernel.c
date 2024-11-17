@@ -49,6 +49,9 @@
 #include <io.h>
 #include <strings.h>
 
+/* OPTIONS */
+#include <config.h>
+
 // actual code
 
 void main(uint32_t magic, struct multiboot_info* boot);
@@ -63,6 +66,10 @@ void check_boot_params(struct multiboot_info *mbi)
 			safe_mode = 1;
 		}
 	}
+
+	#ifdef DEBUG
+	debug_mode = true;
+	#endif
 }
 
 

@@ -11,13 +11,13 @@ vfs_node *vfs_root_node;
 
 int vfs_init(){
     if(vfs_root_node != NULL) {
-        printf("vfs is already initialized !\n");
+        debugf("[vfs] vfs is already initialized !\n");
         return -1;
     }
 
     //allocate space for the root node
     vfs_root_node = kmalloc(sizeof(vfs_node));
-    printf("[vfs] allocated space for 'vfs_root_node'!\n");
+    debugf("[vfs] allocated space for 'vfs_root_node'!\n");
     sleep(300);
 
     //i don't belive there is any kind of time in the kernel for the moment so
@@ -55,7 +55,7 @@ int vfs_init(){
 
     strcmp("root", vfs_root_node->name);
     
-    printf("[vfs] done!\n");
+    debugf("[vfs] done!\n");
     sleep(100);
     return SUCCESS;
 }
@@ -217,12 +217,12 @@ vfs_node *kopen(char *path){
         //check open is an abosulte path
         if(path[0] != '/'){
             //not an abosulte path
-            printf("not an absolute path!\n");
+            debugf("[kopen] not an absolute path!\n");
             return NULL;
         }
 
         if (path == NULL) {
-            printf("path is NULL!\n");
+            printf("[kopen] path is NULL!\n");
             return NULL;
         }
 
@@ -249,7 +249,7 @@ vfs_node *kopen(char *path){
 int vfs_mount(char *path, vfs_node *node) {
     //first let open the folder
     vfs_node *dest = kopen(path);
-    printf("[vfs mount] node [%p] succesfully opened!\n",dest);
+    debugf("[vfs mount] node [%p] succesfully opened!\n",dest);
 
     //if null error
     if(dest == NULL){
@@ -275,10 +275,11 @@ int vfs_mount(char *path, vfs_node *node) {
 
     //now close the old node
     vfs_close(dest);
-    printf("[vfs mount] succefuly close node [%p]\n",dest);
+    debugf("[vfs mount] succefuly close node [%p]\n",dest);
 
     //special case we set root
     if(path[1] == '/0'){
+        debugf("[vfs mount] mounting node [%p] as root\n",node);
        vfs_root_node = node;
        return 0;
     }
