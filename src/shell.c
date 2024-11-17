@@ -61,9 +61,9 @@ static inline void process_cmd(const char *tex)
 		vfs_node *open_folder = kopen("/");
 		
 		if (open_folder == NULL) {
-                	printf("error: could not open the root folder\n");
-                	return;
-            	}
+            printf("Error: Could not open the root folder\n");
+            return;
+		}
 
 		printf("%d", open_folder->ref_count);
 		vfs_close(open_folder);

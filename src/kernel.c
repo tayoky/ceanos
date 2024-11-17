@@ -83,7 +83,7 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t mod1 = *(uint32_t*)(boot->mods_addr + 4);
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
-	kmallocInit(0x1000);
+	kmallocInit(0x4000);
         debugf("[mm] memory done!\n");
 }
 
@@ -98,7 +98,7 @@ static void init_all(struct multiboot_info* boot)
 		vfs_init();
 	init_tmpfs();
                 debugf("[ceanos] everything done ! booting shortly...\n");
-        sleep(60000);
+        sleep(300);
 	        Reset();
 }
 
