@@ -87,7 +87,6 @@ static void init_all(struct multiboot_info* boot)
 	        keyboard_init();
         init_mm(boot);
 		vfs_init();
-		printf("try open root : %d\n", kopen("/"));
 	init_tmpfs();
                 debugf("[ceanos] everything done ! booting shortly...\n");
         sleep(60000);
