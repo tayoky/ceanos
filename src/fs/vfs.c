@@ -53,7 +53,7 @@ int vfs_init(){
     vfs_root_node->chown = NULL;
     vfs_root_node->chmod = NULL;
 
-    strcmp("root", vfs_root_node->name);
+    strcpy(vfs_root_node->name,"root");
     
     debugf("[vfs] done!\n");
     sleep(100);
