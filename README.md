@@ -10,6 +10,7 @@
   > CeanOS is a UNIX-like operating system . The goal is to create a lightweight, efficient OS with a custom kernel and a user-friendly interface. This project is built with C and assembly using no standard libraries . 
 
 <br>
+
 ![image](res/screenshot.png)
 
 ## Kernel Status
@@ -49,7 +50,6 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
   - [ ] cwm (cean windows manager) (maybe WIP)
 
 ## Compiling
-clone the `master` branch not the `deploy` branch
 Everything about it can be found in `docs/build.md` or [here](docs/build.md)
 
 ## License
