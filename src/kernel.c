@@ -75,7 +75,6 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x1000);
-	init_heap((int*)KERNEL_MALLOC, 0x600000);
         debugf("[mm] memory done!\n");
 }
 
@@ -132,4 +131,3 @@ void main(uint32_t magic, struct multiboot_info* boot)
                 
 	while(1);
 }
-
