@@ -38,7 +38,7 @@ ceanos.iso : ceanos/boot/kernel/vmcean
 
 ceanos/boot/kernel/vmcean : ${OBJ}
 	ld -m elf_i386 -o vmcean -T linker.ld ${OBJ}
-	mv vmcean ceanos/boot/kernel
+	mv vmcean ceanos/boot/kernel/vmcean
 clean:
 	rm -f **/*.o **/**/*.o
 	sudo losetup -d /dev/${LOOPDEV}

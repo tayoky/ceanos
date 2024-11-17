@@ -249,21 +249,21 @@ vfs_node *kopen(char *path){
 int vfs_mount(char *path, vfs_node *node) {
     //first let open the folder
     vfs_node *dest = kopen(path);
-    printf("[vfs mount] node succesfully opened!\n");
+    printf("[vfs mount] node [%p] succesfully opened!\n",dest);
 
     //if null error
     if(dest == NULL){
-        die("error: no such file or directory", ERR_NO_FILE_OR_DIRECTORY);
+        return die("error: no such file or directory", ERR_NO_FILE_OR_DIRECTORY);
     }
     
     //if it has child you can't mount
     if(dest->childreen_count){
-        die("error: not empty", ERR_NOT_EMPTY);
+        return die("error: not empty", ERR_NOT_EMPTY);
     }
 
     //if it used we can't mount
     if(dest->ref_count != 1){
-        die("unknown error", ERR_UNKNOW);
+        return die("unknown error", ERR_UNKNOW);
     }
     
     //set the new node
@@ -275,7 +275,7 @@ int vfs_mount(char *path, vfs_node *node) {
 
     //now close the old node
     vfs_close(dest);
-   
+    printf("[vfs mount] succefuly close node [%p]\n",dest);
 
     //special case we set root
     if(path[1] == '/0'){

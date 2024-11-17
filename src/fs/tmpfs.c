@@ -26,10 +26,7 @@ int init_tmpfs(){
     vfs_node *root;
     root = new_tmpfs();
     //mount as root
-    printf("[tmpfs] mounting as root\n");
-    int return_value = vfs_mount("/", root);
-
-    printf("%d\n", return_value);
+    printf("[tmpfs] mounting as root : %d\n",vfs_mount("/", root));
 }
 
 vfs_node *new_tmpfs(){
