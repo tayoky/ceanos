@@ -3,7 +3,7 @@ CC = gcc
 LDFLAGS = -m elf_i386 
 NASM = nasm
 NASMFLAGS = -f elf32
-LOOPDEV = loop0
+LOOPDEV = loop4
 
 #get all c files
 C_SRC = $(shell find . -type f -name "*.c")
