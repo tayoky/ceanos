@@ -60,9 +60,7 @@ int safe_mode = 0;
 
 bool debug_mode;
 
-#ifdef DEBUG
-debug_mode = true;
-#endif
+
 
 void check_boot_params(struct multiboot_info *mbi)
 {
@@ -72,6 +70,10 @@ void check_boot_params(struct multiboot_info *mbi)
 			safe_mode = 1;
 		}
 	}
+
+	#ifdef DEBUG
+	debug_mode = true;
+	#endif
 }
 
 
