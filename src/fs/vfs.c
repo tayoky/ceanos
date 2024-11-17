@@ -238,7 +238,7 @@ vfs_node *kopen(char *path){
         return current;
 }
    
-int vfs_mount(char *path,vfs_node *node){
+int vfs_mount(char *path, vfs_node *node){
     //first let open the folder
     vfs_node *dest = kopen(path);
     
