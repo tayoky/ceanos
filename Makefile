@@ -1,9 +1,16 @@
 CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -w -g -I src/
 CC = gcc
 LDFLAGS = -m elf_i386 
-NASM = nasm
-NASMFLAGS = -f elf32
+ASM = nasm 
+ASMFLAGS = -f elf32 
 LOOPDEV = loop4
+
+VERSION = 0
+PATCH = 0
+SUBLEVEL = 4
+EXTRAVERSION = alpha
+
+VERSTRING = $(VERSION).$(PATCH).$(SUBLEVEL)-$(EXTRAVERSION)
 
 #get all c files
 C_SRC = $(shell find . -type f -name "*.c")
@@ -52,4 +59,4 @@ clean:
 
 # for asm files
 %.o : %.s
-	${NASM} $< ${NASMFLAGS} -o $@
+	${ASM} $< ${ASMFLAGS} -o $@

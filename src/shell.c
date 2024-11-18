@@ -11,6 +11,9 @@
 #include <stdlib/stdio.h>
 #include <fs/vfs.h>
 #include <fs/fat.h>
+#include <kernel.h>
+#include <fs/tmpfs.h>
+#include <mm/malloc.h>
 
 static inline void trigger_test_panic()
 {
@@ -29,7 +32,7 @@ static inline void process_cmd(const char *tex)
 	}
         else if (strcmp("version", tex) != 0 || strcmp("ver", tex) != 0) 
         {
-		print("CeanOS version: 0.0.3-alpha\n");
+		printf("ceanos %s", VERSION);
 	}
         else if (strcmp("fetch", tex) != 0) 
         {
@@ -55,13 +58,15 @@ static inline void process_cmd(const char *tex)
         else if (strcmp("testpanic", tex) != 0) 
         {
 		trigger_test_panic();
+	}else if (strcmp("memseg", tex) != 0) {
+		debug_mem_graph();
 	}
 	else if(strcmp("ls", tex) != 0) {
 		vfs_node *open_folder = kopen("/");
 		
 		if (open_folder == NULL) {
-            printf("Error: Could not open the root folder\n");
-            return;
+			printf("Error: Could not open the root folder\n");
+			return;
 		}
 
 		uint32_t index = 0;
