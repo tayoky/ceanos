@@ -98,10 +98,9 @@ struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     index -= 2;
 
     //out of range
-    if(index > node->inode->children_count) return NULL;
+    if(index >= node->inode->children_count) return NULL;
 
     inode *current = node->inode->child;
-    tmpfs_debug_inode(node->inode);
     for(uint32_t i=0;i<index;i++){
         if(current == NULL) return NULL;
         current = current->brother;

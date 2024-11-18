@@ -68,7 +68,7 @@ static inline void process_cmd(const char *tex)
 			printf("Error: Could not open the root folder\n");
 			return;
 		}
-		debug_mem_graph();
+
 		uint32_t index = 0;
 		struct dirrent *ret;
 		do

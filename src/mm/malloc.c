@@ -109,7 +109,6 @@ void* kmalloc(size_t size)
         current_segment->next = new_segment;
         if(new_segment->next) new_segment->next->prev = new_segment;
     }
-    debugf("[kmalloc] alocating %d byte of memory at location %p prev[%p] \n",current_segment->length,current_segment,current_segment->prev);
     //mark as used
     current_segment->flag = TYPE_ALLOCATED;
 
@@ -125,7 +124,6 @@ void kfree(void* ptr){
     
     //mark as free
     header->flag = TYPE_FREE;
-    debugf("[kfree] free %d byte of memory at location %p\n",header->length,header);
 
     //if next free merge
     if(header->next && header->next->flag == TYPE_FREE){
