@@ -2,7 +2,7 @@
 //@brief entry point of ceanos kernel
 //@author ceanvalds
 
-/* SYS */
+/* SYSTEM */
 
 #include <sys/syscall.h>
 #include <sys/process.h>
@@ -31,7 +31,7 @@
 #include <mm/paging.h>
 #include <mm/mem.h>
 
-/* FILE SYSTEMS*/
+/* FILE SYSTEMS */
 
 #include <fs/fat.h>
 #include <fs/vfs.h>
@@ -59,8 +59,6 @@ char prompt[2] = "# ";
 int safe_mode = 0;
 
 bool debug_mode;
-
-
 
 void check_boot_params(struct multiboot_info *mbi)
 {
@@ -100,10 +98,10 @@ static void init_all(struct multiboot_info* boot)
 	vfs_init();
 	init_tmpfs();
 	vfs_node *open_folder = kopen("/");
-	vfs_mkdir(open_folder,"test",0777);
+	vfs_mkdir(open_folder, "test", 0777);
 	vfs_close(open_folder);
 	debugf("[ceanos] everything done ! booting shortly...\n");
-	sleep(6000);
+	sleep(60000);
 	Reset();
 }
 
