@@ -106,6 +106,8 @@ void* kmalloc(size_t size)
 void kfree(void* ptr){
     if(!ptr)return;
     kmalloc_header *header = (uintptr_t)((uintptr_t) ptr - (uintptr_t)sizeof(kmalloc_header));
+    //if not alloacted do nothing
+    if(header->flag != TYPE_ALLOCATED)return;
     
     //mark as free
     header->flag = TYPE_FREE;
