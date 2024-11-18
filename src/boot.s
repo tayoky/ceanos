@@ -49,7 +49,8 @@ _start:
 section .text
 
 higher_half:
-    MOV esp, kernel_stack_top
+    mov ebp, kernel_stack_top
+    mov esp, ebp
     PUSH ebx
     PUSH eax
     XOR ebp, ebp

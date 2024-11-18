@@ -9,7 +9,7 @@ typedef struct inode_struct{
     struct inode_struct *parent;
     struct inode_struct *child;
     struct inode_struct *brother;
-    uint32_t childreen_count;
+    uint32_t children_count;
     int size;
     int type;
 }inode;
@@ -27,7 +27,7 @@ int init_tmpfs(){
     vfs_node *root;
     root = new_tmpfs();
     //mount as root
-    printf("[tmpfs] mounting as root : %d\n",vfs_mount("/", root));
+    printf("[tmpfs] mounting as root : %d\n", vfs_mount("/", root));
 }
 
 vfs_node *new_tmpfs(){
@@ -45,7 +45,7 @@ int tmpfs_mkdir(vfs_node *node, char *name, mode_t perm){
     folder_inode->brother = node->inode->child;
     strcpy(folder_inode->name,name);
     node->inode->child = folder_inode;
-    node->inode->childreen_count ++;
+    node->inode->children_count ++;
     debugf("[tmpfs] mkdir with name \"%s\" at address %p in directory node[%p] inode[%p]\n",name,node->inode->child,node,node->inode);
     return 0;
 }
@@ -56,7 +56,7 @@ int tmpfs_create(vfs_node *node,char name,mode_t perm){
     file_inode->parent = node->inode;
     file_inode->brother = node->inode->child;
     node->inode->child = file_inode;
-    node->inode->childreen_count ++;
+    node->inode->children_count ++;
 }
 
 int tmpfs_open(vfs_node *node){
@@ -68,10 +68,10 @@ int tmpfs_close(vfs_node *node){
 }
 
 void tmpfs_debug_inode(inode *node){
-    printf("[tmpfs] inode [%p] :\n",node);
-    printf("    child : node[%p]\n",node->child);
-    printf("    childreen count : %d\n",node->childreen_count);
-    printf("    name : %s\n",node->name);
+    printf("[tmpfs] inode [%p] :\n", node);
+    printf("    child : node[%p]\n", node->child);
+    printf("    children count : %d\n", node->children_count);
+    printf("    name : %s\n", node->name);
 }
 
 struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
@@ -92,7 +92,7 @@ struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     index -= 2;
 
     //out of range
-    if(index > node->inode->childreen_count) return NULL;
+    if(index > node->inode->children_count) return NULL;
 
     inode *current = node->inode->child;
     tmpfs_debug_inode(node->inode);
@@ -143,6 +143,6 @@ inode *tmpfs_new_inode(){
     node->child = NULL;
     node->parent = NULL;
     node->name[0] = '\0';
-    node->childreen_count = 0;
+    node->children_count = 0;
     return node;
 }
