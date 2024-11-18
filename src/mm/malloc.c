@@ -4,6 +4,21 @@
 #include "malloc.h"
 #include <errno.h>
 
+struct inode_struct;
+typedef struct inode_struct{
+    char name[256];
+    struct inode_struct *parent;
+    struct inode_struct *child;
+    struct inode_struct *brother;
+    uint32_t children_count;
+    int size;
+    int type;
+}inode;
+
+#define VFS_DRIVER
+#include <fs/tmpfs.h>
+#include <fs/vfs.h>
+
 static uint32_t heapStart;
 static uint32_t heapSize;
 static uint32_t threshold;
@@ -62,45 +77,43 @@ void changeHeapSize(int newSize) {
 
 void* kmalloc(size_t size)
 {
-        //search until find and good segment or find last segment
-        kmalloc_header *current_segment = first_memory_segment;
+    //search until find and good segment or find last segment
+    kmalloc_header *current_segment = first_memory_segment;
 
-        while ((current_segment->flag  == TYPE_ALLOCATED ) || (current_segment->length < size)) {
-
-            //if last segment we need to make kernel space bigger
-            //TODO: implement this
-            //for the moment lets just say there isn't enought memory
-            if(!current_segment->next) {
-                die("not enough memory ! todo: make kernel space bigger", ERR_NOT_ENOUGH_MEMORY);
-            }
-            current_segment = current_segment->next;
+    while ((current_segment->flag  != TYPE_FREE ) || (current_segment->length < size)) {
+        //if last segment we need to make kernel space bigger
+        //TODO: implement this
+        //for the moment lets just say there isn't enought memory
+        if(!current_segment->next) {
+            die("not enough memory ! todo: make kernel space bigger", ERR_NOT_ENOUGH_MEMORY);
         }
+        current_segment = current_segment->next;
+    }
 
-        //now we have found a good segement
-        //if the segment is big then we cut it
-        if(current_segment->length > size + sizeof(kmalloc_header)){
-            kmalloc_header *new_segment;
-            new_segment = (kmalloc_header *)((uintptr_t)current_segment + size + sizeof(kmalloc_header));
+    //now we have found a good segement
+    //if the segment is big then we cut it
+    if(current_segment->length > size + sizeof(kmalloc_header)){
+        kmalloc_header *new_segment;
+        new_segment = (kmalloc_header *)((uintptr_t)current_segment + size + sizeof(kmalloc_header));
 
-            //set the lenght
-            new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
-            current_segment->length = size;
+        //set the lenght
+        new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
 
-            //mark the new segment as free
-            new_segment->flag = TYPE_FREE;
+        current_segment->length = size;
+        //mark the new segment as free
+        new_segment->flag = TYPE_FREE;
 
-            //set pointer
-            new_segment->prev = current_segment;
-            new_segment->next = current_segment->next;
-            current_segment->next = new_segment;
-            if(new_segment->next) new_segment->next->prev = new_segment;
-        }
+        //set pointer
+        new_segment->prev = current_segment;
+        new_segment->next = current_segment->next;
+        current_segment->next = new_segment;
+        if(new_segment->next) new_segment->next->prev = new_segment;
+    }
+    //mark as used
+    current_segment->flag = TYPE_ALLOCATED;
 
-        //mark as used
-        current_segment->flag = TYPE_ALLOCATED;
-
-        //now return the pointer
-        return current_segment + sizeof(kmalloc_header);    
+    //now return the pointer
+    return current_segment + sizeof(kmalloc_header);    
 }
 
 void kfree(void* ptr){
@@ -128,4 +141,20 @@ void kfree(void* ptr){
         header->prev->next = header->next;
         
     }
+}
+
+void debug_mem_graph(){
+    kmalloc_header *current = first_memory_segment;
+    while (current)
+    {
+        if(current->length == sizeof(vfs_node)){
+            debugf("[mem] seg[%p] lenght=%d free=%d this seg is an vfs_node\n",current,current->length,current->flag==TYPE_FREE);
+        } else if(current->length == sizeof(inode)){
+            debugf("[mem] seg[%p] lenght=%d free=%d this seg is an tmpfs inode\n",current,current->length,current->flag==TYPE_FREE);
+        } else {
+            debugf("[mem] seg[%p] lenght=%d free=%d \n",current,current->length,current->flag==TYPE_FREE);
+        }
+        current = current->next;
+    }
+    
 }

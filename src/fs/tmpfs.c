@@ -22,12 +22,15 @@ typedef struct inode_struct{
 #include "tmpfs.h"
 #include <fs/vfs.h>
 
+bool init = false;
+
 int init_tmpfs(){
     // create node
     vfs_node *root;
     root = new_tmpfs();
     //mount as root
     printf("[tmpfs] mounting as root : %d\n", vfs_mount("/", root));
+    init = true;
 }
 
 vfs_node *new_tmpfs(){
@@ -47,6 +50,8 @@ int tmpfs_mkdir(vfs_node *node, char *name, mode_t perm){
     node->inode->child = folder_inode;
     node->inode->children_count ++;
     debugf("[tmpfs] mkdir with name \"%s\" at address %p in directory node[%p] inode[%p]\n",name,node->inode->child,node,node->inode);
+    tmpfs_debug_inode(node->inode);
+    tmpfs_debug_inode(node->inode->child);
     return 0;
 }
 
@@ -68,6 +73,7 @@ int tmpfs_close(vfs_node *node){
 }
 
 void tmpfs_debug_inode(inode *node){
+    if(!init) return;
     printf("[tmpfs] inode [%p] :\n", node);
     printf("    child : node[%p]\n", node->child);
     printf("    children count : %d\n", node->children_count);
@@ -92,10 +98,9 @@ struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     index -= 2;
 
     //out of range
-    if(index > node->inode->children_count) return NULL;
+    if(index >= node->inode->children_count) return NULL;
 
     inode *current = node->inode->child;
-    tmpfs_debug_inode(node->inode);
     for(uint32_t i=0;i<index;i++){
         if(current == NULL) return NULL;
         current = current->brother;
@@ -138,7 +143,7 @@ vfs_node *tmpfs_inode_to_node(inode *og_inode){
 }
 
 inode *tmpfs_new_inode(){
-    inode *node = kmalloc(sizeof(node));
+    inode *node = kmalloc(sizeof(inode));
     node->brother = NULL;
     node->child = NULL;
     node->parent = NULL;

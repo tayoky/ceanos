@@ -84,7 +84,7 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x4000);
-        debugf("[mm] memory done!\n");
+    debugf("[mm] memory done!\n");
 }
 
 static void init_all(struct multiboot_info* boot)
@@ -101,7 +101,7 @@ static void init_all(struct multiboot_info* boot)
 	vfs_mkdir(open_folder, "test", 0777);
 	vfs_close(open_folder);
 	debugf("[ceanos] everything done ! booting shortly...\n");
-	sleep(60000);
+	sleep(300);
 	Reset();
 }
 

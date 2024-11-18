@@ -12,6 +12,8 @@
 #include <fs/vfs.h>
 #include <fs/fat.h>
 #include <kernel.h>
+#include <fs/tmpfs.h>
+#include <mm/malloc.h>
 
 static inline void trigger_test_panic()
 {
@@ -56,6 +58,8 @@ static inline void process_cmd(const char *tex)
         else if (strcmp("testpanic", tex) != 0) 
         {
 		trigger_test_panic();
+	}else if (strcmp("memseg", tex) != 0) {
+		debug_mem_graph();
 	}
 	else if(strcmp("ls", tex) != 0) {
 		vfs_node *open_folder = kopen("/");
