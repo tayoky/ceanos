@@ -20,7 +20,7 @@ int init_serial_dev(){
             kfree(dev_COM1);
         }
     }
-    kclose(dev);
+    vfs_close(dev);
 }
 
 int serial_open(vfs_node *node){
@@ -45,15 +45,15 @@ ssize_t serial_write(vfs_node *node,off_t offset, size_t count, char *buffer){
 
 vfs_node *serial_create_device(uint16_t port){
     //init the serial port
-    outportB(port + 1, 0x00);
-    outportB(port + 3, 0x80);
-    outportB(port + 0, 0x03);
-    outportB(port + 1, 0x00);
-    outportB(port + 3, 0x03);
-    outportB(port + 2, 0xC7);
-    outportB(port + 4, 0x0B);
-    outportB(port + 4, 0x1E);
-    outportB(port + 0, 0xAE);
+    outPortB(port + 1, 0x00);
+    outPortB(port + 3, 0x80);
+    outPortB(port + 0, 0x03);
+    outPortB(port + 1, 0x00);
+    outPortB(port + 3, 0x03);
+    outPortB(port + 2, 0xC7);
+    outPortB(port + 4, 0x0B);
+    outPortB(port + 4, 0x1E);
+    outPortB(port + 0, 0xAE);
     if(inPortB(port + 0) != 0xAE) {
        return NULL;
     }
