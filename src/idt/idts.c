@@ -4,6 +4,7 @@
 #include <stdlib/stdio.h>
 #include <timer.h>
 #include "idt.h"
+#include <kernel.h>
 
 struct idt_entry_struct idt_entries[256];
 struct idt_ptr_struct idt_ptr;
@@ -141,9 +142,9 @@ char* exception_messages[] = {
 void page_fault_handler(struct InterruptRegisters* regs)
 {
 	uint32_t faulting_address;
-	__asm__ volatile("mov %%cr2, %0" : "=r"(faulting_address));
-
+	asm volatile("mov %%cr2, %0" : "=r"(faulting_address));
 	printf("page fault at address: %p\n", (void*)faulting_address);
+	for(;;);
 }
 
 void isr_handler(struct InterruptRegisters* regs)
@@ -151,10 +152,7 @@ void isr_handler(struct InterruptRegisters* regs)
         if (regs->int_no == 14) {
 		printf("error code/type: %s\n", exception_messages[regs->int_no]);
                 page_fault_handler(regs);
-		dump_registers();
 	} else if (regs->int_no < 32) {
-		Reset();
-		set_screen_color(1);
 		printf("error code/type: %s\n", exception_messages[regs->int_no]);
 		dump_registers();
 		asm("cli\n hlt");

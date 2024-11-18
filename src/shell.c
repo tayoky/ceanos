@@ -56,16 +56,16 @@ static inline void process_cmd(const char *tex)
         {
 		trigger_test_panic();
 	}
-	else if(strcmp("ls",tex) != 0) {
+	else if(strcmp("ls", tex) != 0) {
 		uint32_t index = 0;
 		vfs_node *open_folder = kopen("/");
 		
 		if (open_folder == NULL) {
-                	printf("Error: Could not open the root folder\n");
-                	return;
-            	}
+            printf("Error: Could not open the root folder\n");
+            return;
+		}
 
-		printf("%d",open_folder->ref_count);
+		printf("%d", open_folder->ref_count);
 		vfs_close(open_folder);
 	}
         else {

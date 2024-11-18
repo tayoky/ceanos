@@ -7,31 +7,41 @@
 static uint32_t heapStart;
 static uint32_t heapSize;
 static uint32_t threshold;
-static bool kmallocInitalized = false;
+static bool kmallocInitialized = false;
 
-typedef struct memory_block {
-    bool free;                
-    uint64_t size;            
-    struct memory_block *next; 
-} memory_block;
+#define TYPE_FREE 56
+#define TYPE_ALLOCATED 87
 
-static memory_block *free_list = NULL;
+struct kmalloc_header_struct;
 
-void init_heap(void *heap_start, size_t heap_size) {
-    free_list = (memory_block *)heap_start;
-    free_list->free = true;
-    free_list->size = heap_size;
-    free_list->next = NULL;
-}
+typedef struct kmalloc_header_struct {
+    size_t length;
+    struct kmalloc_header_struct *prev;
+    struct kmalloc_header_struct *next;
+    char flag;
+} kmalloc_header;
+
+kmalloc_header* first_memory_segment;
 
 void kmallocInit(uint32_t initialHeapSize) {
+    kmalloc_header first_header;
+    first_memory_segment = &first_header;
+
+
     heapStart = KERNEL_MALLOC;   
+
     heapSize = 0;
     threshold = 0;
-    kmallocInitalized = true;
 
     changeHeapSize(initialHeapSize);
-    *((uint32_t*)heapStart) = 0; 
+
+    first_memory_segment = KERNEL_MALLOC;
+    first_memory_segment->next = NULL;
+    first_memory_segment->length = heapSize - sizeof(kmalloc_header);
+    first_memory_segment->prev = NULL;
+    first_memory_segment->flag = TYPE_FREE;
+
+    kmallocInitialized = true;
 }
 
 void changeHeapSize(int newSize) {
@@ -50,67 +60,70 @@ void changeHeapSize(int newSize) {
     heapSize = newSize; 
 }
 
-void* kmalloc(size_t size) {
-    memory_block *current = free_list;
-    while (current) {
-        if (current->free && current->size >= size) {
-            if (current->size > size + sizeof(memory_block)) {
-                memory_block *new_block = (memory_block *)((uint32_t)(current + 1) + size);
-                new_block->free = true;
-                new_block->size = current->size - size - sizeof(memory_block); 
-                new_block->next = current->next;
+void* kmalloc(size_t size)
+{
+        //search until find and good segment or find last segment
+        kmalloc_header *current_segment = first_memory_segment;
 
-                current->size = size;
-                current->next = new_block;
+        while ((current_segment->flag  == TYPE_ALLOCATED ) || (current_segment->length < size)) {
+
+            //if last segment we need to make kernel space bigger
+            //TODO: implement this
+            //for the moment lets just say there isn't enought memory
+            if(!current_segment->next) {
+                die("not enough memory ! todo: make kernel space bigger", ERR_NOT_ENOUGH_MEMORY);
             }
-
-            current->free = false;
-            
-            uint32_t requiredPages = CEIL_DIV(size, 0x1000);
-            uint32_t currentAddr = (uint32_t)(current + 1);
-
-            for (uint32_t i = 0; i < requiredPages; i++) {
-                uint32_t physAddr = pmmAllocPageFrame();  
-                memMapPage(currentAddr + (i * 0x1000), physAddr, PAGE_FLAG_WRITE);
-            }
-
-            return (void *)(current + 1); 
+            current_segment = current_segment->next;
         }
-        current = current->next;
-    }
-    return NULL; 
+
+        //now we have found a good segement
+        //if the segment is big then we cut it
+        if(current_segment->length > size + sizeof(kmalloc_header)){
+            kmalloc_header *new_segment;
+            new_segment = (kmalloc_header *)((uintptr_t)current_segment + size + sizeof(kmalloc_header));
+
+            //set the lenght
+            new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
+            current_segment->length = size;
+
+            //mark the new segment as free
+            new_segment->flag = TYPE_FREE;
+
+            //set pointer
+            new_segment->prev = current_segment;
+            new_segment->next = current_segment->next;
+            current_segment->next = new_segment;
+            if(new_segment->next) new_segment->next->prev = new_segment;
+        }
+
+        //mark as used
+        current_segment->flag = TYPE_ALLOCATED;
+
+        //now return the pointer
+        return current_segment + sizeof(kmalloc_header);    
 }
 
-void kfree(void* ptr) {
-    if (!ptr) return;
+void kfree(void* ptr){
+    if(!ptr)return;
+    kmalloc_header *header = (uintptr_t)((uintptr_t) ptr - (uintptr_t)sizeof(kmalloc_header));
     
-    memory_block *block = (memory_block *)ptr - 1;
-    block->free = true;
+    //mark as free
+    header->flag = TYPE_FREE;
 
-    uint32_t totalPages = CEIL_DIV(block->size, 0x1000);
-    uint32_t currentAddr = (uint32_t)(block + 1);
+    //if next free merge
+    if(header->next && header->next->flag == TYPE_FREE){
+        //merge
+        header->length += header->next->length + sizeof(kmalloc_header);
+        header->next = header->next->next;
+        if(header->next) header->next->prev = header;
 
-    for (uint32_t i = 0; i < totalPages; i++) {
-        uint32_t physAddr = currentAddr + (i * 0x1000);
-        memUnmapPage(currentAddr + (i * 0x1000)); 
     }
-
-    memory_block *current = free_list;
-    while (current && current->next) {
-        if (current->free && current->next->free) {
-            current->size += current->next->size + sizeof(memory_block);  
-            current->next = current->next->next;
-        }
-        current = current->next;
+    
+    if(header->prev && header->prev->flag == TYPE_FREE){
+        //merge
+        header->prev->length += header->length + sizeof(kmalloc_header);
+        if(header->next) header->next->prev = header->prev;
+        header->prev->next = header->next;
+        
     }
-}
-
-void memUnmapPage(uint32_t virtualAddr) {
-    uint32_t* pageDir = memGetCurrentPageDir();
-    uint32_t pdIndex = virtualAddr >> 22;
-    uint32_t ptIndex = (virtualAddr >> 12) & 0x3FF;
-
-    uint32_t* pt = REC_PAGETABLE(pdIndex);
-    pt[ptIndex] = 0;
-    invalidate(virtualAddr); 
 }

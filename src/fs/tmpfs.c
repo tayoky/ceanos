@@ -26,9 +26,7 @@ int init_tmpfs(){
     vfs_node *root;
     root = new_tmpfs();
     //mount as root
-    int return_value = vfs_mount("/", root);
-
-    printf("%d\n", return_value);
+    printf("[tmpfs] mounting as root : %d\n",vfs_mount("/", root));
 }
 
 vfs_node *new_tmpfs(){
@@ -108,7 +106,7 @@ vfs_node *tmpfs_inode_to_node(inode *og_inode){
     vfs_node *node = kmalloc(sizeof(vfs_node));
     
     node->inode = og_inode;
-    node->permmision = 0777;
+    node->permission = 0777;
     node->childreen_count = 0;
     
     if(og_inode->type == TMPFS_TYPE_FILE){

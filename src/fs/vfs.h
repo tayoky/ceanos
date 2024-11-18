@@ -76,7 +76,7 @@ typedef struct vfs_node_struct {
     chmod_type_t chmod;
     readdir_type_t readdir;
     finddir_type_t finddir;
-    mode_t permmision;
+    mode_t permission;
     uint8_t type;
 } vfs_node;
 
