@@ -57,7 +57,6 @@ static inline void process_cmd(const char *tex)
 		trigger_test_panic();
 	}
 	else if(strcmp("ls", tex) != 0) {
-		uint32_t index = 0;
 		vfs_node *open_folder = kopen("/");
 		
 		if (open_folder == NULL) {
@@ -65,7 +64,17 @@ static inline void process_cmd(const char *tex)
             return;
 		}
 
-		printf("%d", open_folder->ref_count);
+		uint32_t index = 0;
+		struct dirrent *ret;
+		do
+		{
+			ret = vfs_readdir(open_folder,index);
+			if(ret != NULL)printf("%s\n",ret->name);
+			kfree(ret);
+			index++;
+		} while (ret != NULL);
+		
+		
 		vfs_close(open_folder);
 	}
         else {

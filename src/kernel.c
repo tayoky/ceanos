@@ -91,17 +91,20 @@ static void init_mm(struct multiboot_info* boot)
 
 static void init_all(struct multiboot_info* boot)
 {
-                vga_disable_cursor();
+	vga_disable_cursor();
 	gdt_init();
-	        idt_init();
+	idt_init();
 	timer_init();
-	        keyboard_init();
-        init_mm(boot);
-		vfs_init();
+	keyboard_init();
+	init_mm(boot);
+	vfs_init();
 	init_tmpfs();
-                debugf("[ceanos] everything done ! booting shortly...\n");
-        sleep(300);
-	        Reset();
+	vfs_node *open_folder = kopen("/");
+	vfs_mkdir(open_folder,"test",0777);
+	vfs_close(open_folder);
+	debugf("[ceanos] everything done ! booting shortly...\n");
+	sleep(6000);
+	Reset();
 }
 
 void enable_default(struct multiboot_info* boot)
