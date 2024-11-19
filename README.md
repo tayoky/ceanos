@@ -62,13 +62,21 @@ C:
 / (root)
 
 |- bin
+
 |- usr
+
 |- home
+
 |- sys
+
 |- proc
+
 |- sys
+
 |- proc
+
 |- dev
+
 |- boot
 
 ## Compiling
