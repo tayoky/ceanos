@@ -41,7 +41,8 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
   - [ ] ext2 read
   - [ ] FAT32 write
   - [ ] ext2 write
-  - [ ] VFS
+  - [x] VFS
+  - [x] tmpfs (WIP)
 - **Device Drivers**
   - [x] Generic: Keyboard, VGA, PIT
   - [ ] Storage: SSD, USB, HDD, AHCI
