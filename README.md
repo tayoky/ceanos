@@ -13,6 +13,11 @@
 
 ![image](res/screenshot.png)
 
+#### warning -> i took `rc` versioning instead of `alpha` and `beta` because it sounds more professional and cooler <img src="res/cool.png" alt="cool" style="width: 5%;"/>
+
+
+
+
 ## Kernel Status
 The CeanOS kernel is a monolithic x86 one. I am also planning to port it to x86_64 and arm after im done with x86 .
 

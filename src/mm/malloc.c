@@ -158,11 +158,11 @@ void debug_mem_graph(){
     while (current)
     {
         if(current->length == sizeof(vfs_node)) {
-            printf("[mem] seg[%p] lenght=%d free=%d type=vfs_node\n", current,current->length, current->flag==TYPE_FREE);
+            printf("[mem] seg[%p] length=%d free=%d type=vfs_node\n", current,current->length, current->flag==TYPE_FREE);
         } else if(current->length == sizeof(inode)) {
-            printf("[mem] seg[%p] lenght=%d free=%d type=tmpfs inode\n", current, current->length, current->flag==TYPE_FREE);
+            printf("[mem] seg[%p] length=%d free=%d type=tmpfs inode\n", current, current->length, current->flag==TYPE_FREE);
         } else {
-            printf("[mem] seg[%p] lenght=%d free=%d \n", current, current->length, current->flag==TYPE_FREE);
+            printf("[mem] seg[%p] length=%d free=%d \n", current, current->length, current->flag==TYPE_FREE);
         }
         current = current->next;
     }

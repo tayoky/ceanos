@@ -109,6 +109,7 @@ static void init_all(struct multiboot_info* boot)
 void enable_default(struct multiboot_info* boot)
 {
 	init_all(boot);
+
 	printf("##welcome to ceanos##\n");            // This part will probably be cleared and replaced with something
 	printf("current os version: %s\n", VERSION);  // else in the future, like loading a shell executable, but for now
 	printf("ceanos%s", prompt);		      // it will just print a message and initialize the "shell"
