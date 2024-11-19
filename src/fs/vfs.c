@@ -9,7 +9,8 @@
 
 vfs_node *vfs_root_node;
 
-int vfs_init(){
+int vfs_init()
+{ 
     if(vfs_root_node != NULL) {
         debugf("[vfs] vfs is already initialized !\n");
         return -1;
@@ -20,21 +21,21 @@ int vfs_init(){
     debugf("[vfs] allocated space for 'vfs_root_node'!\n");
     sleep(300);
 
-    //i don't belive there is any kind of time in the kernel for the moment so
+    //there isn't any kind of time in the kernel for the moment so
     vfs_root_node->create_time = 0;
-    vfs_root_node->acces_time = 0;
+    vfs_root_node->access_time = 0;
     vfs_root_node->modify_time = 0;
 
     //set all propreties
-    vfs_root_node->owner =0;
+    vfs_root_node->owner = 0;
     vfs_root_node->group_owner = 0;
 
-    vfs_root_node->childreen_count = 0;
+    vfs_root_node->children_count = 0;
 
     vfs_root_node->driver = 0;
 
-    vfs_root_node->permission = 0777;
-    vfs_root_node->type =0;
+    vfs_root_node->permission = 0777;   //0777 = everyone can read and write
+    vfs_root_node->type = 0;
     
     //weird but on unix-like OS's the parent of root is root
     //if you're on linux try cd / and cd ..
@@ -60,7 +61,20 @@ int vfs_init(){
     return SUCCESS;
 }
 
-struct dirrent *vfs_readdir(vfs_node *node ,uint32_t index){
+/**
+ * Reads a directory entry from a VFS node.
+ * 
+ * @param node A pointer to the VFS node representing a directory.
+ * @param index The index of the directory entry to read (typically the offset in the directory).
+ * 
+ * @return A pointer to a struct dirrent representing the directory entry at the given index, or
+ *         NULL if no directory entry is found or the node does not have a readdir function.
+ * 
+ * @note This function uses the readdir function pointer of the VFS node if it is set. 
+ *       If not set, it returns NULL.
+ */
+
+struct dirrent *vfs_readdir(vfs_node *node, uint32_t index){
     if(node->readdir){
         return node->readdir(node,index);
     } else {
@@ -68,20 +82,33 @@ struct dirrent *vfs_readdir(vfs_node *node ,uint32_t index){
     }
 }
 
+/**
+ * Finds a directory node by name within a VFS node.
+ * 
+ * @param node A pointer to the parent VFS node under which the search will be performed.
+ * @param name A string representing the name of the directory to search for.
+ * 
+ * @return A pointer to the found vfs_node, or NULL if the directory cannot be found.
+ * 
+ * @note This function checks for special paths like "self" and "parent", and if the node is not found in memory, 
+ *       it tries to find it using the node's finddir function if available. If a node is found via finddir, 
+ *       it is added to the in-memory structure as a child of the parent node.
+ */
+
 struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
     //first check for special path
     //the self path
-    if(!strcmp(name,VFS_SPECIAL_PATH_SELF)){
+    if(!strcmp(name, VFS_SPECIAL_PATH_SELF)){
         return node;
     }
     //the parent path
-    if(!strcmp(name,VFS_SPECIAL_PATH_PARENT)){
+    if(!strcmp(name, VFS_SPECIAL_PATH_PARENT)){
         return node->parent;
     }
-    //let check if node is adready in memory
 
+    //lets check if node is adready in memory
     vfs_node *current_node = node->child;
-    for(uint32_t i=0;i < node->childreen_count;i++){
+    for(uint32_t i=0;i < node->children_count;i++){
         //check the name
         if(!strcmp(current_node->name,name)){
             //we found it ! just return it
@@ -99,7 +126,7 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
 
     vfs_node *ret = node->finddir(node,name);
     if((ret != NULL )&& (node->ref_count != -1)){
-        node->childreen_count ++;
+        node->children_count++;
         ret->parent = node;
         ret->brother = node->child;
         node->child = ret;
@@ -110,17 +137,17 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
     return ret;
 }
 
-ssize_t vfs_read(vfs_node *node,off_t offset,size_t count,void *buffer){
+ssize_t vfs_read(vfs_node *node, off_t offset, size_t count, void *buffer) {
     if(node->read){
-        return node->read(node,offset,count,buffer);
+        return node->read(node, offset, count, buffer);
     } else  {
         return ERR_CANT_READ;
     }
 }
 
-ssize_t vfs_write(vfs_node *node,off_t offset,size_t count,void *buffer){
+ssize_t vfs_write(vfs_node *node, off_t offset, size_t count, void *buffer) {
     if(node->write){
-        return node->write(node,offset,count,buffer);
+        return node->write(node, offset, count, buffer);
     } else  {
         return ERR_CANT_WRITE;
     }
@@ -188,7 +215,7 @@ char **parse_path(char *path){
     //first count the number of depth
     uint32_t path_depth = 0;
     for(int i = 0; path[i] ; i++){
-        //only if its a path separator
+        //only if it's a path separator
         if(path[i] != '/') {
             continue;
         }
@@ -263,12 +290,12 @@ int vfs_mount(char *path, vfs_node *node) {
         return die("error: no such file or directory", ERR_NO_FILE_OR_DIRECTORY);
     }
     
-    //if it has child you can't mount
-    if(dest->childreen_count){ 
+    //if it has children then you can't mount
+    if(dest->children_count){ 
         return die("error: not empty", ERR_NOT_EMPTY);
     }
 
-    //if it used we can't mount
+    //if it's used we can't mount
     if(dest->ref_count != 1) {
         return die("unknown error", ERR_UNKNOW);
     }

@@ -5,13 +5,6 @@ ASM = nasm
 ASMFLAGS = -f elf32 
 LOOPDEV = loop4
 
-VERSION = 0
-PATCH = 0
-SUBLEVEL = 4
-EXTRAVERSION = alpha
-
-VERSTRING = $(VERSION).$(PATCH).$(SUBLEVEL)-$(EXTRAVERSION)
-
 #get all c files
 C_SRC = $(shell find . -type f -name "*.c")
 
