@@ -35,8 +35,7 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
   - [ ] x86_64
   - [ ] ARM
 - **Filesystems**
-  - [ ] FAT32
-  - [ ] ext2
+  - [ ] FAT32 boot sector
   - [ ] FAT32 read
   - [ ] ext2 read
   - [ ] FAT32 write
