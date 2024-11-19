@@ -54,6 +54,23 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
   - [ ] Framebuffer, GUI, idk?
   - [ ] cwm (cean windows manager) (maybe WIP)
 
+## File System Structure Plan
+
+NT-like volumes with Unix-like directory structure.
+
+C:
+/ (root)
+
+|- bin
+|- usr
+|- home
+|- sys
+|- proc
+|- sys
+|- proc
+|- dev
+|- boot
+
 ## Compiling
 Everything about it can be found in `docs/build.md` or [here](docs/build.md)
 
