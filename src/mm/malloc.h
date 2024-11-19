@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 void kmallocInit(uint32_t heapSize);
-void changeHeapSize(int newSize);
+uint32_t changeHeapSize(int newSize);
 void* kmalloc(size_t size);
 void kfree(void* ptr);
 void debug_mem_graph();

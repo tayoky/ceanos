@@ -114,9 +114,8 @@ struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
 vfs_node *tmpfs_finddir(vfs_node *node,char *name){
     //first let find the good inode
     inode *current = node->inode->child;
-    while (strcmp(current->name,name))
-    {
-        if(current = NULL) return NULL;
+    for(uint32_t i = 0; i < node->inode->children_count; i++) {
+        if(!strcmp(name, current->name))return current;
         current = current->brother;
     }
 
@@ -128,7 +127,7 @@ vfs_node *tmpfs_inode_to_node(inode *og_inode){
     
     node->inode = og_inode;
     node->permission = 0777;
-    node->childreen_count = 0;
+    node->children_count = 0;
     node->open = tmpfs_open;
     node->close = tmpfs_close;
     if(og_inode->type == TMPFS_TYPE_FILE){

@@ -18,6 +18,13 @@ find ../src/ -type f | wc -l
 echo
 
 echo "Untracked Files:"
-git ls-files --others --exclude-standard
+untracked_files=$(git ls-files --others --exclude-standard)
+
+if [ -z "$untracked_files" ]; then
+    echo "none"
+else
+    echo "$untracked_files"
+fi
+
 
 echo

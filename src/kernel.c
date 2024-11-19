@@ -9,6 +9,7 @@
 #include <sys/scheduler.h>
 #include <multiboot.h>
 #include <timer.h>
+#include <kernel.h>
 
 /* DESCRIPTOR TABLES */
 
@@ -55,7 +56,7 @@
 // actual code
 
 void main(uint32_t magic, struct multiboot_info* boot);
-char prompt[2] = "# ";
+char prompt[2] = "$ ";
 int safe_mode = 0;
 
 bool debug_mode;
@@ -68,14 +69,10 @@ void check_boot_params(struct multiboot_info *mbi)
 			safe_mode = 1;
 		}
 	}
-
-	#ifdef DEBUG
-	debug_mode = true;
-	#endif
 }
 
 
-// initialize all important stuff, like idt, gdt, etc
+// Initialize all the important stuff, like idt, gdt, etc
 
 static void init_mm(struct multiboot_info* boot)
 {
@@ -84,11 +81,15 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x4000);
-    debugf("[mm] memory done!\n");
+    	debugf("[mm] memory done!\n");
 }
 
 static void init_all(struct multiboot_info* boot)
 {
+	#ifdef DEBUG
+	debug_mode = true;
+	#endif
+
 	vga_disable_cursor();
 	gdt_init();
 	idt_init();
@@ -108,9 +109,10 @@ static void init_all(struct multiboot_info* boot)
 void enable_default(struct multiboot_info* boot)
 {
 	init_all(boot);
-	printf("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
-	printf("current os version: v0.0.3-alpha\n"); // else in the future, for now it will just print a message and
-	printf("ceanos%s", prompt);                   // initialize the shell
+
+	printf("##welcome to ceanos##\n");            // This part will probably be cleared and replaced with something
+	printf("current os version: %s\n", VERSION);  // else in the future, like loading a shell executable, but for now
+	printf("ceanos%s", prompt);		      // it will just print a message and initialize the "shell"
 
 	set_screen_color(0x0F);
 }
@@ -121,7 +123,7 @@ void enable_safe(struct multiboot_info* boot)
 
 	printf("##welcome to ceanos##\n");
 	printf("SAFE MODE\n");
-	printf("current os version: v0.0.3-alpha\n");
+	printf("current os version: %s\n", VERSION);
 	printf("safemode%s", prompt);
 
 	set_screen_color(0x0F);
@@ -140,5 +142,7 @@ void main(uint32_t magic, struct multiboot_info* boot)
 		enable_default(boot);
 	}
                 
-	while(1);
+	while(1) {
+		// TODO: Add way to check for stack overflows and other errors that the ISR can't handle
+	};
 }

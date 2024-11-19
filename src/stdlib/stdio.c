@@ -61,10 +61,12 @@ void printf(const char* fmt, ...)
 			break;
 
 		case PRINTF_STATE_LONG:
-			if (*fmt == 'l') {
+			if (*fmt == 'l') 
+			{
 				length = PRINTF_LENGTH_LONG_LONG;
 				state = PRINTF_STATE_SPEC;
-			} else {
+			} 
+			else {
 				goto PRINTF_STATE_SPEC_;
 			}
 			break;
@@ -101,6 +103,10 @@ PRINTF_STATE_SPEC_:
 				break;
 			case 'X':
 			case 'x':
+				radix = 16;
+				sign = false;
+				argp = printf_number(argp, length, sign, radix);
+				break;
 			case 'p':
 				radix = 16;
 				sign = false;
@@ -278,6 +284,10 @@ PRINTF_STATE_SPEC_:
 				break;
 			case 'X':
 			case 'x':
+				radix = 16;
+				sign = false;
+				argp = printf_number(argp, length, sign, radix);
+				break;
 			case 'p':
 				radix = 16;
 				sign = false;
@@ -301,4 +311,3 @@ PRINTF_STATE_SPEC_:
 		fmt++;
 	}
 }
-

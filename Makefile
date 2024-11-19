@@ -1,16 +1,9 @@
 CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -w -g -I src/
 CC = gcc
 LDFLAGS = -m elf_i386 
-ASM = nasm 
+ASM = nasm
 ASMFLAGS = -f elf32 
 LOOPDEV = loop4
-
-VERSION = 0
-PATCH = 0
-SUBLEVEL = 4
-EXTRAVERSION = alpha
-
-VERSTRING = $(VERSION).$(PATCH).$(SUBLEVEL)-$(EXTRAVERSION)
 
 #get all c files
 C_SRC = $(shell find . -type f -name "*.c")
@@ -25,7 +18,7 @@ all: ceanos.iso
 	qemu-system-x86_64 -drive format=raw,file=ceanos.iso
 
 ceanos.iso : ceanos/boot/kernel/vmcean
-	dd if=/dev/zero of=ceanos.iso bs=1M count=100
+	dd if=/dev/zero of=ceanos.iso bs=1M count=10
 	mkfs.fat -F32 ceanos.iso
 	sudo losetup /dev/${LOOPDEV} ceanos.iso
 	sudo mkdir -p /mnt/disk
