@@ -15,11 +15,6 @@
 #include <fs/tmpfs.h>
 #include <mm/malloc.h>
 
-static inline void trigger_test_panic()
-{
-	asm volatile ("ud2");
-}
-
 static inline void process_cmd(const char *tex)
 {
 	if (strcmp("clear", tex) != 0 || strcmp("cls", tex) != 0) 
@@ -40,25 +35,20 @@ static inline void process_cmd(const char *tex)
 	}
         else if (strcmp("exit", tex) != 0) 
         {
+		printf("halting...");
+		sleep(1);
 		halt();
 	}
         else if (strcmp("shutdown", tex) != 0 ) 
         {
-		print("shutting down...\n");
-		print("not actually doing that\n");
+		printf("shutting down...\n");
+		printf("not actually doing that because ACPI does not exist yet\n");
 	}
         else if (strcmp("compdate", tex) != 0 ) 
         {
 		printf("date: " __DATE__ "\nat: " __TIME__);
 	}
-        else if (strcmp("dumpreg", tex) != 0) 
-        {
-		dump_registers();
-	}
-        else if (strcmp("testpanic", tex) != 0) 
-        {
-		trigger_test_panic();
-	}else if (strcmp("memseg", tex) != 0) {
+	else if (strcmp("memseg", tex) != 0) {
 		debug_mem_graph();
 	}
 	else if(strcmp("ls", tex) != 0) {

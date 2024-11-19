@@ -22,21 +22,20 @@ void _term_help()
 	printf("  version   - displays os version\n");
 	printf("  exit      - exits the operating system\n");
 	printf("  shutdown  - shuts down the system.\n");
+	printf("  compdate  - displays the compilation date.\n");
+	printf("  fetch     - display system information\n");
 
 	printf("====================\n");
 	printf("=     DEBUG        =\n");
 	printf("====================\n");
 
-	printf("  compdate  - displays the compilation date.\n");
-	printf("  fetch     - display system information\n");
-	printf("  dumpreg   - dump current state of the registers\n");
-	printf("  testpanic - invalid opcode test panic ");
+	printf("  memseg    - display mm debug info");
 }
 
 inline void _get_sysinfo()
 {
 	printf("\nOS: CeanOS\n");
-	printf("Kernel version: 0xFDF4E3 \n");
+	printf("Kernel version: 0x0000004 \n");
 	printf("shell: bosh (bobo shell)\n");
 	printf("os bosh version: v0.1 \n");
 

@@ -59,7 +59,7 @@ void kmallocInit(uint32_t initialHeapSize) {
     kmallocInitialized = true;
 }
 
-void changeHeapSize(int newSize) {
+uint32_t changeHeapSize(int newSize) {
     int oldPageTop = CEIL_DIV(heapSize, 0x1000); 
     int newPageTop = CEIL_DIV(newSize, 0x1000);
 
@@ -72,7 +72,14 @@ void changeHeapSize(int newSize) {
         }
     }
 
-    heapSize = newSize; 
+    heapSize = newSize;
+
+    if (heapSize != newSize) {
+       panic("failed to change heap size!");
+       return ERR_UNKNOW; 
+    }
+
+    return SUCCESS; 
 }
 
 void* kmalloc(size_t size)
@@ -81,11 +88,15 @@ void* kmalloc(size_t size)
     kmalloc_header *current_segment = first_memory_segment;
 
     while ((current_segment->flag  != TYPE_FREE ) || (current_segment->length < size)) {
-        //if last segment we need to make kernel space bigger
-        //TODO: implement this
-        //for the moment lets just say there isn't enought memory
+        //try to make kernel space bigger
         if(!current_segment->next) {
-            die("not enough memory ! todo: make kernel space bigger", ERR_NOT_ENOUGH_MEMORY);
+            if(changeHeapSize(size - current_segment->length + sizeof(kmalloc_header)) != 0)
+            {
+                die("failed to change heap size", ERR_FAILED_TO_CHANGE_HEAP_SIZE);
+            }
+            debugf("\nheap expanded: new size %u\n", size - current_segment->length + sizeof(kmalloc_header));
+
+            current_segment->length = size + sizeof(kmalloc_header);
         }
         current_segment = current_segment->next;
     }
@@ -116,11 +127,12 @@ void* kmalloc(size_t size)
     return current_segment + sizeof(kmalloc_header);    
 }
 
-void kfree(void* ptr){
+void kfree(void* ptr) 
+{
     if(!ptr)return;
     kmalloc_header *header = (uintptr_t)((uintptr_t) ptr - (uintptr_t)sizeof(kmalloc_header));
     //if not alloacted do nothing
-    if(header->flag != TYPE_ALLOCATED)return;
+    if(header->flag != TYPE_ALLOCATED) return;
     
     //mark as free
     header->flag = TYPE_FREE;
@@ -131,7 +143,6 @@ void kfree(void* ptr){
         header->length += header->next->length + sizeof(kmalloc_header);
         header->next = header->next->next;
         if(header->next) header->next->prev = header;
-
     }
     
     if(header->prev && header->prev->flag == TYPE_FREE){
@@ -139,7 +150,6 @@ void kfree(void* ptr){
         header->prev->length += header->length + sizeof(kmalloc_header);
         if(header->next) header->next->prev = header->prev;
         header->prev->next = header->next;
-        
     }
 }
 
@@ -147,14 +157,13 @@ void debug_mem_graph(){
     kmalloc_header *current = first_memory_segment;
     while (current)
     {
-        if(current->length == sizeof(vfs_node)){
-            debugf("[mem] seg[%p] lenght=%d free=%d this seg is an vfs_node\n",current,current->length,current->flag==TYPE_FREE);
-        } else if(current->length == sizeof(inode)){
-            debugf("[mem] seg[%p] lenght=%d free=%d this seg is an tmpfs inode\n",current,current->length,current->flag==TYPE_FREE);
+        if(current->length == sizeof(vfs_node)) {
+            printf("[mem] seg[%p] lenght=%d free=%d type=vfs_node\n", current,current->length, current->flag==TYPE_FREE);
+        } else if(current->length == sizeof(inode)) {
+            printf("[mem] seg[%p] lenght=%d free=%d type=tmpfs inode\n", current, current->length, current->flag==TYPE_FREE);
         } else {
-            debugf("[mem] seg[%p] lenght=%d free=%d \n",current,current->length,current->flag==TYPE_FREE);
+            printf("[mem] seg[%p] lenght=%d free=%d \n", current, current->length, current->flag==TYPE_FREE);
         }
         current = current->next;
     }
-    
 }
