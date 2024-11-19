@@ -69,14 +69,10 @@ void check_boot_params(struct multiboot_info *mbi)
 			safe_mode = 1;
 		}
 	}
-
-	#ifdef DEBUG
-	debug_mode = true;
-	#endif
 }
 
 
-// initialize all important stuff, like idt, gdt, etc
+// Initialize all the important stuff, like idt, gdt, etc
 
 static void init_mm(struct multiboot_info* boot)
 {
@@ -85,11 +81,15 @@ static void init_mm(struct multiboot_info* boot)
 	uint32_t physicalAllocStart = (mod1 + 0xFFF) & ~0xFFF;
 	initMemory(boot->mem_upper * 1024, physicalAllocStart);
 	kmallocInit(0x4000);
-    debugf("[mm] memory done!\n");
+    	debugf("[mm] memory done!\n");
 }
 
 static void init_all(struct multiboot_info* boot)
 {
+	#ifdef DEBUG
+	debug_mode = true;
+	#endif
+
 	vga_disable_cursor();
 	gdt_init();
 	idt_init();
@@ -109,7 +109,7 @@ static void init_all(struct multiboot_info* boot)
 void enable_default(struct multiboot_info* boot)
 {
 	init_all(boot);
-	printf("##welcome to ceanos##\n");            // this part will probably be cleared and replaced with something
+	printf("##welcome to ceanos##\n");            // This part will probably be cleared and replaced with something
 	printf("current os version: %s\n", VERSION);  // else in the future, like loading a shell executable, but for now
 	printf("ceanos%s", prompt);		      // it will just print a message and initialize the "shell"
 
@@ -141,5 +141,7 @@ void main(uint32_t magic, struct multiboot_info* boot)
 		enable_default(boot);
 	}
                 
-	while(1);
+	while(1) {
+		// TODO: Add way to check for stack overflows and other errors that the ISR can't handle
+	};
 }
