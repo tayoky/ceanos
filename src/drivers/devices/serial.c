@@ -7,13 +7,13 @@
 
 int init_serial_dev(){
     vfs_node *dev = kopen("/dev");
-    if(!dev){
+    if(!dev) {
         debugf("[serial] can't open /dev\n");
         return ERR_CANT_OPEN;
     }
     vfs_node *dev_COM1; 
     dev_COM1 = serial_create_device(COM1);
-    if(dev_COM1 != NULL){
+    if(dev_COM1 != NULL) {
         debugf("[serial] COM1 serial port exist try to mount");
         if(!vfs_mount("/dev/COM1",dev_COM1)){
             debugf("[serial] failed to mount COM1");
@@ -69,8 +69,8 @@ vfs_node *serial_create_device(uint16_t port){
     node->inode = port;
 }
 
-void serial_write_char(char ch,uint16_t port){
+void serial_write_char(char ch, uint16_t port){
     //wait
     while(inPortB(port + 5) & 0x20 == 0);
-    outPortB(port,ch);
+    outPortB(port, ch);
 }

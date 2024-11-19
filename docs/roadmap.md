@@ -3,10 +3,10 @@
 1. File system (FAT32 and ext2)
 2. Drivers (i need ACPI, PCI, and a few more)
 3. ELF loader
-4. Processes 
-5. Scheduler 
+4. Processes
+5. Scheduler
 6. Userland
-7. Syscalls 
+7. Syscalls
 8. Fun stuff
 9. DE / GUI
 10. Installing ceanos on a real hdd/ssd

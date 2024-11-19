@@ -2,12 +2,12 @@
 
 The **CeanOS** kernel is designed as a **monolithic kernel**, meaning that all core system functionalities such as process management, memory management, file system management, device drivers, and system calls are tightly integrated into a single unit.
 
-The `docs/kernel/` folder contains documentation about the functions and files of CeanOS.
+The `docs/kernel/` folder contains documentation about CeanOS.
 
 ---
 
 #### **Key Features of CeanOS Kernel**:
-1. **Unified Architecture**: All essential services (scheduling, interrupt handling, device management, etc.) are part of the kernel, making it faster but also less modular than microkernels.
+1. **Unified Architecture**: All essential services (interrupt handling, device management, etc.) are part of the kernel, making it faster but also less modular than microkernels.
 2. **Memory Management**: CeanOS’s kernel is responsible for managing physical and virtual memory.
 3. **Device Drivers**: The kernel directly interacts with hardware devices (e.g., VGA, keyboard, and disk).
 
