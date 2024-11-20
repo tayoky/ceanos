@@ -1,4 +1,4 @@
-CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -w -g -I src/
+CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -nostdinc -w -g -I src/
 CC = gcc
 LDFLAGS = -m elf_i386 
 ASM = nasm

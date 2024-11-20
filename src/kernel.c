@@ -23,6 +23,9 @@
 #include <drivers/kb/kbps2.h>
 #include <drivers/video/vga/vga_types.h>
 
+#include <drivers/devices/serial.h>
+#include <drivers/devices/dev.h>
+
 //#include <drivers/generic/acpi.h> 
 //#include <drivers/generic/pci.h>
 
@@ -41,6 +44,7 @@
 /* STDLIB */
 
 #include <stdlib/stdio.h>
+#include <stdlib/string.h>
 
 /* UTILS */
 
@@ -48,7 +52,6 @@
 #include <util.h>
 #include <osfunc.h>
 #include <io.h>
-#include <strings.h>
 
 /* OPTIONS */
 #include <config.h>
@@ -107,9 +110,13 @@ static void init_all(struct multiboot_info* boot)
 
 	vfs_init();
 	init_tmpfs();
+
+	init_devices();
+
 	vfs_node *open_folder = kopen("/");
 	vfs_mkdir(open_folder, "test", 0777);
 	vfs_close(open_folder);
+
 	debugf("[ceanos] everything done ! booting shortly...\n");
 	
 	sleep(30000000);
