@@ -1,8 +1,14 @@
 #include "ata.h"
 #include <io.h>
+#include <stdint.h>
 
 #define VFS_DRIVER
 #include <fs/vfs.h>
+
+struct inode_struct;
+typedef struct inode_struct{
+    uint8_t device;
+}inode;
 
 // Ata pio driver
 // Copyright (C) 2023 Panagiotis
