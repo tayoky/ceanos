@@ -64,7 +64,7 @@ static inline void process_cmd(const char *tex)
 		do
 		{
 			ret = vfs_readdir(open_folder,index);
-			if(ret != NULL)printf("%s\n",ret->name);
+			if(ret != NULL)printf("%s\n", ret->name);
 			kfree(ret);
 			index++;
 		} while (ret != NULL);

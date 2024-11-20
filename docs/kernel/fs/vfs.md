@@ -1,3 +1,9 @@
+## WARNING !
+
+### *THIS ARTICLE IS A WORK IN PROGRESS.*
+
+### > As a result, it may not contain all the information you need. 
+
 # Ceanos VFS
 
 The CeanOS VFS works just like a regular UNIX-like vfs.  
@@ -38,7 +44,7 @@ Contains:
 - **Permissions** (`mode_t`)
 - **Type** (`uint8_t`)
 
-### dirrent struct
+### dirrent struct (defined in `types.h`)
 
 Contains:
 
@@ -74,6 +80,10 @@ Execute read of the specifed node
 
 #### *NOTE* : read isn't available on all nodes, if the node is a directory it will return `ERR_CANT_READ` or `ERR_NOT_A_FILE` (Defined in `errno.h`)
 
+### `ssize_t vfs_write(vfs_node *node, off_t offset, size_t count, void *buffer)`
+
+#### work i progress article
+
 ### `struct dirrent *vfs_readdir(vfs_node *node, uint32_t index)`
 
 Read a directory entry from a specified VFS node. It uses the readdir function pointer of the node to fetch the directory entry at the given index. If the node does not have a readdir function, the function will return NULL.
@@ -88,20 +98,3 @@ Read a directory entry from a specified VFS node. It uses the readdir function p
 - If node->readdir is set it will return a dirrent(directory entry) pointer for the specified index.
 
 - If node->readdir is NULL, it returns NULL (reading the directory entry isn't supported by the node).
-
-### `ssize_t vfs_read(vfs_node *node, off_t offset, size_t count, void *buffer)`
-
-#### Description:
-This function attempts to read data from the given VFS node (which represents a file or device). It uses the `read` function pointer of the node to perform the read operation. If the read function is not implemented for the node, the function returns an error code.
-
-#### Parameters:
-
-- node: A pointer to the VFS node representing the file or device to read from.
-- offset: The position in the file or device from which to start reading. Typically, this is an offset in bytes from the beginning of the file.
-- count: The number of bytes to read from the file or device.
-- buffer: A pointer to the buffer where the read data will be stored.
-
-#### Return:
-
-On success, the number of bytes actually read is returned.
-On failure (e.g., the node cannot be read), an error code such as ERR_CANT_READ is returned.
