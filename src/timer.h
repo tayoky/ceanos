@@ -1,5 +1,8 @@
-#ifndef TIMER_H
-#define TIMER_H
+#ifndef __timer__
+#define __timer__
+
+#include <util.h>
+#include <stdint.h> 
 
 void timer_init();
 void onIrq0(struct InterruptRegisters *regs);

@@ -1,5 +1,7 @@
 #include <stdint.h>
 #include <util.h>
+#include <stdlib/stdio.h>
+
 #include "mem.h"
 #include "malloc.h"
 #include <errno.h>
@@ -18,6 +20,8 @@ typedef struct inode_struct{
 #define VFS_DRIVER
 #include <fs/tmpfs.h>
 #include <fs/vfs.h>
+
+#include <kernel.h>
 
 static uint32_t heapStart;
 static uint32_t heapSize;

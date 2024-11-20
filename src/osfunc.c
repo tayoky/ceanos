@@ -1,6 +1,6 @@
 #include <osfunc.h>
 #include <stdint.h>
-#include <drivers/keyboard/keyboard.h>
+#include <drivers/kb/kbps2.h>
 #include <cpuinfo.h>
 #include <util.h>
 #include <stdlib/stdio.h>

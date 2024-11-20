@@ -20,7 +20,7 @@
 
 #include <drivers/ata.h>
 #include <drivers/video/vga/vga.h>
-#include <drivers/keyboard/keyboard.h>
+#include <drivers/kb/kbps2.h>
 #include <drivers/video/vga/vga_types.h>
 
 //#include <drivers/generic/acpi.h> 
@@ -61,12 +61,17 @@ int safe_mode = 0;
 
 bool debug_mode;
 
-void check_boot_params(struct multiboot_info *mbi)
+void check_boot_params(struct multiboot_info *boot)
 {
+	struct multiboot_info *mbi = (struct multiboot_info *) boot;
+
 	if (mbi->flags & 0x00000002) {
 		char *cmdline = (char *) mbi->cmdline;
 		if (strstr(cmdline, "safe_mode=1")) {
+			debugf("[boot] safe_mode=1\n");
 			safe_mode = 1;
+		} else {
+			debugf("[boot] safe_mode=0\n");
 		}
 	}
 }
@@ -93,16 +98,21 @@ static void init_all(struct multiboot_info* boot)
 	vga_disable_cursor();
 	gdt_init();
 	idt_init();
+
+	check_boot_params(boot);
+
 	timer_init();
 	keyboard_init();
 	init_mm(boot);
+
 	vfs_init();
 	init_tmpfs();
 	vfs_node *open_folder = kopen("/");
 	vfs_mkdir(open_folder, "test", 0777);
 	vfs_close(open_folder);
 	debugf("[ceanos] everything done ! booting shortly...\n");
-	sleep(300);
+	
+	sleep(30000000);
 	Reset();
 }
 
@@ -131,10 +141,6 @@ void enable_safe(struct multiboot_info* boot)
 
 void main(uint32_t magic, struct multiboot_info* boot)
 {
-	struct multiboot_info *mbi = (struct multiboot_info *) boot;
-
-	check_boot_params(mbi);
-
 	if (safe_mode == 1) {
 		printf("safe mode is enabled !\n");
 		enable_safe(boot);

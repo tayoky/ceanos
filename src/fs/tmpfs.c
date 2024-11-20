@@ -115,7 +115,7 @@ vfs_node *tmpfs_finddir(vfs_node *node,char *name){
     //first let find the good inode
     inode *current = node->inode->child;
     for(uint32_t i = 0; i < node->inode->children_count; i++) {
-        if(!strcmp(name, current->name))return current;
+        if(!strcmp(name, current->name)) return (vfs_node *)current;
         current = current->brother;
     }
 
@@ -129,7 +129,7 @@ vfs_node *tmpfs_inode_to_node(inode *og_inode){
     node->permission = 0777;
     node->children_count = 0;
     node->open = tmpfs_open;
-    node->close = tmpfs_close;
+    node->close = (vfs_node *)tmpfs_close;
     if(og_inode->type == TMPFS_TYPE_FILE){
         node->type= VFS_NODE_TYPE_FILE;
     } else if(og_inode->type == TMPFS_TYPE_DIRECTORY){

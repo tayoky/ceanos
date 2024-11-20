@@ -1,5 +1,5 @@
-#ifndef __SYS__
-#define __SYS__
+#ifndef __ceanos__
+#define __ceanos__
 
 #include <stdint.h>
 

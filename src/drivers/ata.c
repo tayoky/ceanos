@@ -1,9 +1,13 @@
 #include "ata.h"
 #include <io.h>
 
+#define VFS_DRIVER
+#include <fs/vfs.h>
+
 // Ata pio driver
 // Copyright (C) 2023 Panagiotis
 //
+
 #define STATUS_BSY 0x80
 #define STATUS_RDY 0x40
 #define STATUS_DRQ 0x08
@@ -34,6 +38,7 @@ static void ATA_wait_DRQ();
 #define ATA_REG_CONTROL 0x0C
 #define ATA_REG_ALTSTATUS 0x0C
 #define ATA_REG_DEVADDRESS 0x0D
+
 void read_sectors_ATA_PIO(uint8_t *target_address, uint32_t LBA,
                           uint8_t sector_count)
 {

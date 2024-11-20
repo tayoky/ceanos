@@ -7,13 +7,14 @@
 #include <cpuinfo.h>
 #include <util.h>
 #include <strings.h>
-#include <drivers/keyboard/keyboard.h>
+#include <drivers/kb/kbps2.h>
 #include <stdlib/stdio.h>
 #include <fs/vfs.h>
 #include <fs/fat.h>
 #include <kernel.h>
 #include <fs/tmpfs.h>
 #include <mm/malloc.h>
+#include <timer.h>
 
 static inline void process_cmd(const char *tex)
 {

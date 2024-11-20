@@ -6,6 +6,7 @@
 #include <mm/malloc.h>
 #include <errno.h>
 #include <kernel.h>
+#include <timer.h>
 
 vfs_node *vfs_root_node;
 
@@ -75,8 +76,8 @@ int vfs_init()
  */
 
 struct dirrent *vfs_readdir(vfs_node *node, uint32_t index){
-    if(node->readdir){
-        return node->readdir(node,index);
+    if(node->readdir) {
+        return node->readdir(node, index);
     } else {
         return NULL;
     }
@@ -219,7 +220,7 @@ char **parse_path(char *path){
         if(path[i] != '/') {
             continue;
         }
-        path[i] = '/0';
+        path[i] = '\0';
         if(path[i + 1]) {
             path_depth++;
         }
@@ -234,7 +235,7 @@ char **parse_path(char *path){
         while(path[j]){
             j++;
         }
-        path_array[i] = j + 1;
+        path_array[i] = (char *)j + 1;
     }
     return path_array;
 }
