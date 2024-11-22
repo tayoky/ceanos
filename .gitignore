@@ -3,4 +3,5 @@
 *.iso
 *.swo
 *.orig
+./.github
 ./ceanos/kernel/vmcean

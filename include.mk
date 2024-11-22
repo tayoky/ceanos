@@ -1,0 +1,10 @@
+CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -nostdinc -w -g -I ./ -I ./lib
+CFLAGS += -I ./sys
+CFLAGS += -I ./drivers
+CFLAGS += -I ./mm
+CFLAGS += -I ./kernel
+CFLAGS += -I ./fs 
+CFLAGS += -I ./arch
+CFLAGS += -I ./lib/stdlib
+CFLAGS += -I ./kernel/cpu/idt -I ./kernel/cpu/gdt
+CFLAGS += -I ./kernel/cfgs/

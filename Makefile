@@ -1,4 +1,5 @@
-CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -nostdinc -w -g -I src/
+include include.mk
+
 CC = gcc
 LDFLAGS = -m elf_i386 
 ASM = nasm
@@ -25,20 +26,20 @@ ceanos.iso : ceanos/boot/kernel/vmcean
 	sudo mount /dev/${LOOPDEV} /mnt/disk
 	sudo mkdir -p /mnt/disk/boot/kernel/
 	sudo mkdir -p /mnt/disk/boot/grub
-	sudo cp ceanos/boot/kernel/vmcean /mnt/disk/boot/kernel/
-	sudo cp ceanos/boot/grub/grub.cfg /mnt/disk/boot/grub
+	sudo cp iso/boot/kernel/vmcean /mnt/disk/boot/kernel/
+	sudo cp iso/boot/grub/grub.cfg /mnt/disk/boot/grub
 	sudo grub-install --force --target=i386-pc --boot-directory=/mnt/disk/boot/ /dev/${LOOPDEV}
 	sudo mkdir -p /mnt/disk/usr
 	sudo mkdir -p /mnt/disk/bin
-	sudo cp -r ceanos/test.txt /mnt/disk/usr
-	sudo cp -r ceanos/test.txt /mnt/disk/
+	sudo cp -r iso/test.txt /mnt/disk/usr
+	sudo cp -r iso/test.txt /mnt/disk/
 	sudo umount /mnt/disk
 	sudo losetup -d /dev/${LOOPDEV}
 	sudo rm -rf /mnt/disk
 
 ceanos/boot/kernel/vmcean : ${OBJ}
 	ld -m elf_i386 -o vmcean -T linker.ld ${OBJ}
-	mv vmcean ceanos/boot/kernel/vmcean
+	mv vmcean iso/boot/kernel/vmcean
 clean:
 	rm -f **/*.o **/**/*.o
 	sudo losetup -d /dev/${LOOPDEV}
