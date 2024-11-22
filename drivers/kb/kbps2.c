@@ -1,16 +1,17 @@
 #include <stdint.h>
 #include <util.h>
-#include <idt/idt.h>
-#include <stdlib/stdio.h>
+#include <idt.h>
+#include <stdio.h>
 #include "kbps2.h"
 #include <drivers/video/vga/vga.h>
-#include <fs/vfs.h>
+#include <vfs.h>
 
 extern int safe_mode;
 
 bool capsOn;
 bool capsLock;
 const uint32_t KEY_COUNT = 128;
+extern char prompt[2];
 
 char text[512];
 
@@ -132,9 +133,9 @@ static void updateTextBuffer(uint8_t code, uint8_t press)
 			run_term(text);
 			clear();
 			if (safe_mode) {
-				printf("\nsafemode$ ");
+				printf("\nsafemode%s", prompt);
 			} else {
-				printf("\nceanos$ ");
+				printf("\nceanos%s", prompt);
 			}
 		} else {
 			printf("%c", charToAdd);

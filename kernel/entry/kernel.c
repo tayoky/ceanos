@@ -50,7 +50,6 @@
 
 #include <stdint.h>
 #include <util.h>
-#include <osfunc.h>
 #include <io.h>
 
 /* OPTIONS */
@@ -59,7 +58,7 @@
 // actual code
 
 void main(uint32_t magic, struct multiboot_info* boot);
-char prompt[2] = "$ ";
+char prompt[2] = "% ";
 int safe_mode = 0;
 
 bool debug_mode;
@@ -118,7 +117,7 @@ static void init_all(struct multiboot_info* boot)
 
 	debugf("[ceanos] everything done ! booting shortly...\n");
 	
-	sleep(30000000);
+	sleep(300);
 	Reset();
 }
 
