@@ -11,7 +11,7 @@
 #include <stdlib/stdio.h>
 #include <fs/vfs.h>
 #include <fs/fat.h>
-#include <kernel.h>
+#include <kernel/kernel.h>
 #include <fs/tmpfs.h>
 #include <mm/malloc.h>
 #include <timer.h>

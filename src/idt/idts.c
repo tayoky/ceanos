@@ -4,7 +4,7 @@
 #include <stdlib/stdio.h>
 #include <timer.h>
 #include "idt.h"
-#include <kernel.h>
+#include <kernel/kernel.h>
 
 struct idt_entry_struct idt_entries[256];
 struct idt_ptr_struct idt_ptr;

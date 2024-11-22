@@ -5,7 +5,7 @@
 #include <stdlib/stdio.h>
 #include <mm/malloc.h>
 #include <errno.h>
-#include <kernel.h>
+#include <kernel/kernel.h>
 #include <timer.h>
 
 vfs_node *vfs_root_node;
@@ -231,7 +231,7 @@ char **parse_path(char *path){
     path_array[path_depth] = NULL;
 
     int j = 0;
-    for(int i = 0;i < path_depth; i++){
+    for(int i = 0; i < path_depth; i++){
         while(path[j]){
             j++;
         }

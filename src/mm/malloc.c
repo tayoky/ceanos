@@ -21,7 +21,7 @@ typedef struct inode_struct{
 #include <fs/tmpfs.h>
 #include <fs/vfs.h>
 
-#include <kernel.h>
+#include <kernel/kernel.h>
 
 static uint32_t heapStart;
 static uint32_t heapSize;

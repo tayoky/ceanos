@@ -2,7 +2,7 @@
 #include "math.h"
 #include "stdio.h"
 #include <drivers/video/vga/vga.h>
-#include <kernel.h>
+#include <kernel/kernel.h>
 
 inline double fmod(double x, double y)
 {

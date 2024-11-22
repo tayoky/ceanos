@@ -1,5 +1,3 @@
-/* UTILS FOR CEANOS */
-
 #include <stdint.h>
 #include <util.h>
 #include <timer.h>
@@ -18,14 +16,14 @@ void dump_registers()
 	        "mov %%edi, %[edi]\n\t"
 	        "mov %%ebp, %[ebp]\n\t"
 	        "mov %%esp, %[esp]\n\t"
-	        "pushf\n\t"               // Push flags onto the stack
-	        "pop %[eflags]\n\t"       // Pop into eflags variable
-	        "mov %%cs, %[cs]\n\t"     // This may require special handling
-	        "mov %%ds, %[ds]\n\t"     // This may require special handling
-	        "mov %%es, %[es]\n\t"     // This may require special handling
-	        "mov %%fs, %[fs]\n\t"     // This may require special handling
-	        "mov %%gs, %[gs]\n\t"     // This may require special handling
-	        "mov %%ss, %[ss]\n\t"     // This may require special handling
+	        "pushf\n\t"              
+	        "pop %[eflags]\n\t"      
+	        "mov %%cs, %[cs]\n\t"    
+	        "mov %%ds, %[ds]\n\t"    
+	        "mov %%es, %[es]\n\t"    
+	        "mov %%fs, %[fs]\n\t"    
+	        "mov %%gs, %[gs]\n\t"    
+	        "mov %%ss, %[ss]\n\t"    
 	        :
 	        [eax] "=g" (regs.eax),
 	        [ebx] "=g" (regs.ebx),
