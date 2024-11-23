@@ -13,7 +13,7 @@ char *strchr(const char *str, int c);
 
 char *strrchr(const char *str, int c);
 char *strdup(const char *str);
-int strcmp(const char *str1, const char *str2);
+int strcmp(char *s, char *t); 
 
 int strncmp(const char *str1, const char *str2, size_t n);
 char *strstr(const char *haystack, const char *needle);

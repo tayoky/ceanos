@@ -2,25 +2,15 @@
 #include "string.h"
 #include <mm/malloc.h>
 
-int strcmp(const char *x, const char *y)
+int strcmp(char *s, char *t) 
 {
-	uint8_t i = 0;
-	uint8_t j = 0;
+        int i;
 
-	while (x[i] != '\0') {
-		i++;
-	}
-	while (y[j] != '\0') {
-		if (y[j] != x[j]) {
-			return 0;
-		}
-		j++;
-	}
-	if (i == j) {
-		return 1;
-	} else {
-		return 0;
-	}
+        for (i = 0; s[i] == t[i]; i++) {
+                if (s[i] == '\0') return 0;
+        }
+        
+        return s[i] - t[i];
 }
 
 char *strstr(const char *haystack, const char *needle)
@@ -49,7 +39,7 @@ char *strstr(const char *haystack, const char *needle)
 // 0 is true
 // -1 is false
 
-int strncmp(const char* str1,const char* str2, size_t n ){
+int strncmp(const char* str1, const char* str2, size_t n){
         int val=0;
 	
 	if (*str1+n > *str2+n) {
