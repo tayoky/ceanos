@@ -92,6 +92,12 @@ static void init_mm(struct multiboot_info* boot)
     	debugf("[mm] memory done!\n");
 }
 
+static void init_tables()
+{
+	gdt_init();
+	idt_init();
+}
+
 static void init_all(struct multiboot_info* boot)
 {
 	#ifdef DEBUG
@@ -99,8 +105,8 @@ static void init_all(struct multiboot_info* boot)
 	#endif
 
 	vga_disable_cursor();
-	gdt_init();
-	idt_init();
+        
+        init_tables();
 
 	check_boot_params(boot);
 
@@ -111,11 +117,13 @@ static void init_all(struct multiboot_info* boot)
 	vfs_init();
 	init_tmpfs();
 
-	vfs_node *open_folder = kopen("/");
-	vfs_mkdir(open_folder, "test", 0777);
-	vfs_close(open_folder);
+        /* init_devices(); */
 
-	debugf("[ceanos] everything done ! booting shortly...\n");
+	/* vfs_node *open_folder = kopen("/");
+	vfs_mkdir(open_folder, "test", 0777);
+	vfs_close(open_folder); */
+
+	printf("[ceanos] everything done ! booting shortly...\n");
 	
 	sleep(300);
 	Reset();

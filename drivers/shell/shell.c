@@ -1,6 +1,3 @@
-/* SHELL.C */
-/* Copyright (c) @asdasda3456 2024 - 2024 */
-
 #include <drivers/video/vga/vga.h>
 #include <stdint.h>
 #include <cpuinfo.h>
@@ -16,43 +13,43 @@
 
 static inline void process_cmd(const char *tex)
 {
-	if (strcmp("clear", tex) != 0 || strcmp("cls", tex) != 0) 
+	if (strcmp("clear", tex) == 0 || strcmp("cls", tex) == 0 || strcmp("clear;", tex) == 0)  
         {
 		Reset();
 	}
-        else if (strcmp("help", tex) != 0) 
+        else if (strcmp("help", tex) == 0) 
         {
 		_term_help();
 	}
-        else if (strcmp("version", tex) != 0 || strcmp("ver", tex) != 0) 
+        else if (strcmp("version", tex) == 0 || strcmp("ver", tex) == 0) 
         {
 		printf("ceanos %s", VERSION);
 	}
-        else if (strcmp("fetch", tex) != 0) 
+        else if (strcmp("fetch", tex) == 0) 
         {
 		_get_sysinfo();
 	}
-        else if (strcmp("exit", tex) != 0) 
+        else if (strcmp("exit", tex) == 0) 
         {
 		printf("halting...");
 		sleep(1);
 		asm("hlt");
 	}
-        else if (strcmp("shutdown", tex) != 0 ) 
+        else if (strcmp("shutdown", tex) == 0 ) 
         {
 		printf("shutting down...\n");
 		printf("not actually doing that because ACPI does not exist yet\n");
 	}
-        else if (strcmp("compdate", tex) != 0 ) 
+        else if (strcmp("compdate", tex) == 0 ) 
         {
 		printf("date: " __DATE__ "\nat: " __TIME__);
 	}
-	else if (strcmp("memseg", tex) != 0) {
+	else if (strcmp("memseg", tex) == 0) {
 		debug_mem_graph();
 	}
-	else if(strcmp("ls", tex) != 0) {
+	else if(strcmp("ls", tex) == 0 || strcmp("Dir;", tex) == 0 || strcmp("dir", tex) == 0) {
 		vfs_node *open_folder = kopen("/");
-		
+
 		if (open_folder == NULL) {
 			printf("Error: Could not open the root folder\n");
 			return;
@@ -67,8 +64,7 @@ static inline void process_cmd(const char *tex)
 			kfree(ret);
 			index++;
 		} while (ret != NULL);
-		
-		
+
 		vfs_close(open_folder);
 	}
         else {

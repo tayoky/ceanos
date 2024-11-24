@@ -16,15 +16,21 @@
 #### warning -> i took `rc` versioning instead of `alpha` and `beta` because it sounds more professional and cooler <img src="res/cool.png" alt="cool" style="width: 5%;"/>
 
 
-
-
 ## Kernel Status
 The CeanOS kernel is a monolithic x86 one. I am also planning to port it to x86_64 and arm after im done with x86 .
+
+## Userland Status
+
+There is no userland yet lol.
 
 ## Other Information
 The file `vga_types.h` contains macros taken from the Linux source code, which can be found [here](https://github.com/torvalds/linux/blob/42f7652d3eb527d03665b09edac47f85fb600924/include/video/vga.h).
 
 The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepad/cavOS/blob/2ad71233123bf610188cc6d4d3cda30d8e275909/src/kernel/drivers/) location(malwarepad/cavOS) with some modifications to integrate into CeanOS . 
+
+## Kernel archive
+
+[CeanOS Kernel Site](https://ceanvalds.github.io/ceanos-kernel-site/)
 
 ## Goals
 - **Kernel**
@@ -45,6 +51,7 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
 - **Device Drivers**
   - [x] Generic: Keyboard, VGA, PIT
   - [ ] Storage: SSD, USB, HDD, AHCI
+  - [ ] PCI
   - [ ] ACPI and others
 - **Networking**
   - [ ] Drivers: idk
@@ -53,31 +60,6 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
   - [x] VGA text mode
   - [ ] Framebuffer, GUI, idk?
   - [ ] cwm (cean windows manager) (maybe WIP)
-
-## File System Structure Plan
-
-NT-like volumes with Unix-like directory structure.
-
-C:
-/ (root)
-
-|- bin
-
-|- usr
-
-|- home
-
-|- sys
-
-|- proc
-
-|- sys
-
-|- proc
-
-|- dev
-
-|- boot
 
 ## Compiling
 Everything about it can be found in `docs/build.md` or [here](docs/build.md)
