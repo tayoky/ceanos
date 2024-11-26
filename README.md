@@ -36,6 +36,7 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
 - **Kernel**
   - [x] Basic kernel operations
   - [ ] Usable terminal
+  - [ ] ELF loader
 - **Architecture**
   - [x] x86 (WIP)
   - [ ] x86_64
