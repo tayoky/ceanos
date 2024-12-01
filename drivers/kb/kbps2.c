@@ -133,12 +133,12 @@ static void updateTextBuffer(uint8_t code, uint8_t press)
 			run_term(text);
 			clear();
 			if (safe_mode) {
-				printf("\nsafemode%s", prompt);
+				__printf("\nsafemode%s", prompt);
 			} else {
-				printf("\nceanos%s", prompt);
+				__printf("\nceanos%s", prompt);
 			}
 		} else {
-			printf("%c", charToAdd);
+			__printf("%c", charToAdd);
 			append(&charToAdd);
 		}
 	}
@@ -182,7 +182,7 @@ void keyboard_init()
 	capsLock = false;
 	idt_install(1, &keyboardHandler);
 	clear();
-	print("keyboard enabled\n");
+	__printf("keyboard enabled\n");
 }
 
 

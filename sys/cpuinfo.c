@@ -31,5 +31,5 @@ inline void print_cpuinfo()
 	CPUinfo cpu_info;
 	get_cpu_info(&cpu_info);
 
-	printf("CPU: %s | M: %u | F: %u\n", cpu_info.vendor, cpu_info.model, cpu_info.family);
+	__printf("CPU: %s | M: %u | F: %u\n", cpu_info.vendor, cpu_info.model, cpu_info.family);
 }

@@ -62,25 +62,12 @@ int vfs_init()
     vfs_root_node->chown = NULL;
     vfs_root_node->chmod = NULL;
 
-    strcpy(vfs_root_node->name,"root");
+    __strcpy(vfs_root_node->name,"root");
     
-    debugf("[vfs] done!\n");
+    __printf("[vfs] OK\n");
     sleep(100);
     return SUCCESS;
 }
-
-/**
- * Reads a directory entry from a VFS node.
- * 
- * @param node A pointer to the VFS node representing a directory.
- * @param index The index of the directory entry to read (typically the offset in the directory).
- * 
- * @return A pointer to a struct dirrent representing the directory entry at the given index, or
- *         NULL if no directory entry is found or the node does not have a readdir function.
- * 
- * @note This function uses the readdir function pointer of the VFS node if it is set. 
- *       If not set, it returns NULL.
- */
 
 struct dirrent *vfs_readdir(vfs_node *node, uint32_t index){
     if(node->readdir) {
@@ -90,27 +77,14 @@ struct dirrent *vfs_readdir(vfs_node *node, uint32_t index){
     }
 }
 
-/**
- * Finds a directory node by name within a VFS node.
- * 
- * @param node A pointer to the parent VFS node under which the search will be performed.
- * @param name A string representing the name of the directory to search for.
- * 
- * @return A pointer to the found vfs_node, or NULL if the directory cannot be found.
- * 
- * @note This function checks for special paths like "self" and "parent", and if the node is not found in memory, 
- *       it tries to find it using the node's finddir function if available. If a node is found via finddir, 
- *       it is added to the in-memory structure as a child of the parent node.
- */
-
 struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
     //first check for special path
     //the self path
-    if(!strcmp(name, VFS_SPECIAL_PATH_SELF)){
+    if(!__strcmp(name, VFS_SPECIAL_PATH_SELF)){
         return node;
     }
     //the parent path
-    if(!strcmp(name, VFS_SPECIAL_PATH_PARENT)){
+    if(!__strcmp(name, VFS_SPECIAL_PATH_PARENT)){
         return node->parent;
     }
 
@@ -118,7 +92,7 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
     vfs_node *current_node = node->child;
     for(uint32_t i=0;i < node->children_count;i++){
         //check the name
-        if(!strcmp(current_node->name,name)){
+        if(!__strcmp(current_node->name,name)){
             //we found it ! just return it
             return current_node;
         }
@@ -163,7 +137,7 @@ ssize_t vfs_write(vfs_node *node, off_t offset, size_t count, void *buffer) {
 
 int vfs_open(vfs_node *node){
     if(!node)     return ERR_BAD_INPUT ;
-    if(node->ref_count != -1)    node->ref_count ++;
+    if(node->ref_count != -1)    node->ref_count++;
     if(node->open)    return node->open(node);
 }
 
@@ -233,7 +207,6 @@ char **parse_path(char *path){
         }
     }
 
-    //alocate space for the array
     char **path_array = kmalloc(sizeof(char) *( path_depth + 1));
     path_array[path_depth] = NULL;
 
@@ -257,13 +230,13 @@ vfs_node *kopen(char *path){
         }
 
         if (path == NULL) {
-            printf("[kopen] path is NULL!\n");
+            debugf("[kopen] path is NULL!\n");
             return NULL;
         }
 
         //first duplicate the path
-        char *new_path = kmalloc(strlen(path) + 1);
-        strcpy(new_path,path);
+        char *new_path = kmalloc(__strlen(path) + 1);
+        __strcpy(new_path,path);
         path = new_path;
 
         //parse the path
@@ -309,7 +282,7 @@ int vfs_mount(char *path, vfs_node *node) {
     }
     
     //set the new node
-    strcpy(node->name,dest->name);
+    __strcpy(node->name,dest->name);
     node->parent = dest->parent;
     node->brother = NULL;
     node->ref_count = -1;

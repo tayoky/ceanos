@@ -6,22 +6,22 @@
 
 extern bool debug_mode;
 
-void putc(char c)
+void __putc(char c)
 {
 	char buffer[2] = {c, '\0'};
 	print(buffer);
 }
 
-void puts(const char* s)
+void __puts(const char* s)
 {
 	while (*s) {
-		putc(*s);
+		__putc(*s);
 		s++;
 	}
 }
 
 
-void printf(const char* fmt, ...)
+void __printf(const char* fmt, ...)
 {
 	int* argp = (int*) &fmt;
 	int state = PRINTF_STATE_START;
@@ -36,7 +36,7 @@ void printf(const char* fmt, ...)
 			if (*fmt == '%') {
 				state = PRINTF_STATE_LENGTH;
 			} else {
-				putc(*fmt);
+				__putc(*fmt);
 			}
 			break;
 		case PRINTF_STATE_LENGTH:
@@ -75,20 +75,20 @@ void printf(const char* fmt, ...)
 PRINTF_STATE_SPEC_:
 			switch(*fmt) {
 			case 'c':
-				putc((char)*argp);
+				__putc((char)*argp);
 				argp++;
 				break;
 			case 's':
 				if (length == PRINTF_LENGTH_LONG || length == PRINTF_LENGTH_LONG_LONG) {
-					puts(*(const char **)argp);
+					__puts(*(const char **)argp);
 					argp += 2;
 				} else {
-					puts(*(const char **)argp);
+					__puts(*(const char **)argp);
 					argp++;
 				}
 				break;
 			case '%':
-				putc('%');
+				__putc('%');
 				break;
 			case 'd':
 			case 'i':
@@ -196,7 +196,7 @@ int * printf_number(int* argp, int length, uint8_t sign, int radix)
 	}
 
 	while (--pos >= 0) {
-		putc(buffer[pos]);
+		__putc(buffer[pos]);
 	}
 
 	return argp;
@@ -219,7 +219,7 @@ void debugf(const char* fmt, ...)
 			if (*fmt == '%') {
 				state = PRINTF_STATE_LENGTH;
 			} else {
-				putc(*fmt);
+				__putc(*fmt);
 			}
 			break;
 		case PRINTF_STATE_LENGTH:
@@ -256,20 +256,20 @@ void debugf(const char* fmt, ...)
 PRINTF_STATE_SPEC_:
 			switch(*fmt) {
 			case 'c':
-				putc((char)*argp);
+				__putc((char)*argp);
 				argp++;
 				break;
 			case 's':
 				if (length == PRINTF_LENGTH_LONG || length == PRINTF_LENGTH_LONG_LONG) {
-					puts(*(const char **)argp);
+					__puts(*(const char **)argp);
 					argp += 2;
 				} else {
-					puts(*(const char **)argp);
+					__puts(*(const char **)argp);
 					argp++;
 				}
 				break;
 			case '%':
-				putc('%');
+				__putc('%');
 				break;
 			case 'd':
 			case 'i':

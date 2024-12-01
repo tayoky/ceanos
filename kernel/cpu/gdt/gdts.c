@@ -22,9 +22,9 @@ void gdt_init()
 	writeTSS(5,0x10, 0x0);
 
 	gdt_flush((uint32_t)&gdt_ptr);
-	printf("[gdt] done!\n");
+	__printf("[gdt] OK\n");
 	tss_flush();
-	printf("[tss] done!\n");
+	__printf("[tss] OK\n");
 }
 
 
@@ -46,7 +46,6 @@ void writeTSS(uint32_t num, uint16_t ss0, uint32_t esp0)
 
 void setGdtGate(uint32_t num, uint32_t base, uint32_t limit, uint8_t access, uint8_t gran)
 {
-
 	gdt_entries[num].base_low = (base & 0xFFFF);
 	gdt_entries[num].base_middle = (base >> 16) & 0xFF;
 	gdt_entries[num].base_high = (base >> 24) & 0xFF;
@@ -56,7 +55,6 @@ void setGdtGate(uint32_t num, uint32_t base, uint32_t limit, uint8_t access, uin
 	gdt_entries[num].flags |= (gran & 0xF0);
 
 	gdt_entries[num].access = access;
-
 }
 
 

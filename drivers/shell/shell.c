@@ -13,45 +13,45 @@
 
 static inline void process_cmd(const char *tex)
 {
-	if (strcmp("clear", tex) == 0 || strcmp("cls", tex) == 0 || strcmp("clear;", tex) == 0)  
+	if (__strcmp("clear", tex) == 0 || __strcmp("cls", tex) == 0 || __strcmp("clear;", tex) == 0)  
         {
 		Reset();
 	}
-        else if (strcmp("help", tex) == 0) 
+        else if (__strcmp("help", tex) == 0) 
         {
 		_term_help();
 	}
-        else if (strcmp("version", tex) == 0 || strcmp("ver", tex) == 0) 
+        else if (__strcmp("version", tex) == 0 || __strcmp("ver", tex) == 0) 
         {
-		printf("ceanos %s", VERSION);
+		__printf("ceanos %s", VERSION);
 	}
-        else if (strcmp("fetch", tex) == 0) 
+        else if (__strcmp("fetch", tex) == 0) 
         {
 		_get_sysinfo();
 	}
-        else if (strcmp("exit", tex) == 0) 
+        else if (__strcmp("exit", tex) == 0) 
         {
-		printf("halting...");
+		__printf("halting...");
 		sleep(1);
 		asm("hlt");
 	}
-        else if (strcmp("shutdown", tex) == 0 ) 
+        else if (__strcmp("shutdown", tex) == 0 ) 
         {
-		printf("shutting down...\n");
-		printf("not actually doing that because ACPI does not exist yet\n");
+		__printf("shutting down...\n");
+		__printf("not actually doing that because ACPI does not exist yet\n");
 	}
-        else if (strcmp("compdate", tex) == 0 ) 
+        else if (__strcmp("compdate", tex) == 0 ) 
         {
-		printf("date: " __DATE__ "\nat: " __TIME__);
+		__printf("date: " __DATE__ "\nat: " __TIME__);
 	}
-	else if (strcmp("memseg", tex) == 0) {
+	else if (__strcmp("memseg", tex) == 0) {
 		debug_mem_graph();
 	}
-	else if(strcmp("ls", tex) == 0 || strcmp("Dir;", tex) == 0 || strcmp("dir", tex) == 0) {
+	else if(__strcmp("ls", tex) == 0 || __strcmp("Dir;", tex) == 0 || __strcmp("dir", tex) == 0) {
 		vfs_node *open_folder = kopen("/");
 
 		if (open_folder == NULL) {
-			printf("Error: Could not open the root folder\n");
+			__printf("error: could not open the root (/) folder\n");
 			return;
 		}
 
@@ -60,7 +60,7 @@ static inline void process_cmd(const char *tex)
 		do
 		{
 			ret = vfs_readdir(open_folder,index);
-			if(ret != NULL)printf("%s\n", ret->name);
+			if(ret != NULL)__printf("%s\n", ret->name);
 			kfree(ret);
 			index++;
 		} while (ret != NULL);
@@ -68,7 +68,7 @@ static inline void process_cmd(const char *tex)
 		vfs_close(open_folder);
 	}
         else {
-		printf("%s isn't a valid command", tex);
+		__printf("%s isn't a valid command", tex);
 	}
 }
 
@@ -95,38 +95,38 @@ void run_term(const char *tex)
 
 void _term_help()
 {
-	printf("commands:\n");
+	__printf("commands:\n");
 
-	printf("====================\n");
-	printf("=     GENERIC      =\n");
-	printf("====================\n");
+	__printf("====================\n");
+	__printf("=     GENERIC      =\n");
+	__printf("====================\n");
 
-	printf("  clear     - clears the screen\n");
-        printf("  cls       - same as 'clear'\n");
-	printf("  help      - prints this message\n");
-	printf("  version   - displays os version\n");
-	printf("  exit      - exits the operating system\n");
-	printf("  shutdown  - shuts down the system.\n");
-	printf("  compdate  - displays the compilation date.\n");
-	printf("  fetch     - display system information\n");
+	__printf("  clear     - clears the screen\n");
+        __printf("  cls       - same as 'clear'\n");
+	__printf("  help      - prints this message\n");
+	__printf("  version   - displays os version\n");
+	__printf("  exit      - exits the operating system\n");
+	__printf("  shutdown  - shuts down the system.\n");
+	__printf("  compdate  - displays the compilation date.\n");
+	__printf("  fetch     - display system information\n");
 
-	printf("====================\n");
-	printf("=     DEBUG        =\n");
-	printf("====================\n");
+	__printf("====================\n");
+	__printf("=     DEBUG        =\n");
+	__printf("====================\n");
 
-	printf("  memseg    - display mm debug info");
+	__printf("  memseg    - display mm debug info");
 }
 
 inline void _get_sysinfo()
 {
-	printf("\nOS: CeanOS\n");
-	printf("Kernel version: 0x0000004 \n");
-	printf("shell: bosh (bobo shell)\n");
-	printf("os bosh version: v0.1 \n");
+	__printf("\nOS: CeanOS\n");
+	__printf("Kernel version: 0x0000004 \n");
+	__printf("shell: bosh (bobo shell)\n");
+	__printf("os bosh version: v0.1 \n");
 
-	printf("build date: ");
-	printf(__DATE__);
-	printf("\n");
+	__printf("build date: ");
+	__printf(__DATE__);
+	__printf("\n");
 
 	print_cpuinfo();
 }

@@ -44,23 +44,23 @@ void dump_registers()
 	        : "memory"
 	);
 
-	printf("\ndumping registers:\n");
-	printf("\teax: 0x%d\n", regs.eax);
-	printf("\tebx: 0x%d\n", regs.ebx);
-	printf("\tecx: 0x%d\n", regs.ecx);
-	printf("\tedx: 0x%d\n", regs.edx);
-	printf("\tesi: 0x%d\n", regs.esi);
-	printf("\tedi: 0x%d\n", regs.edi);
-	printf("\tebp: 0x%d\n", regs.ebp);
-	printf("\tesp: 0x%d\n", regs.esp);
-	printf("\teip: unavailable\n");
-	printf("\teflags: 0x%d\n", regs.eflags);
-	printf("\ts: 0x%d\n", regs.cs);
-	printf("\tds: 0x%d\n", regs.ds);
-	printf("\tes: 0x%d\n", regs.es);
-	printf("\tfs: 0x%d\n", regs.fs);
-	printf("\tgs: 0x%d\n", regs.gs);
-	printf("\tss: 0x%d\n", regs.ss);
+	__printf("\ndumping registers:\n");
+	__printf("\teax: 0x%d\n", regs.eax);
+	__printf("\tebx: 0x%d\n", regs.ebx);
+	__printf("\tecx: 0x%d\n", regs.ecx);
+	__printf("\tedx: 0x%d\n", regs.edx);
+	__printf("\tesi: 0x%d\n", regs.esi);
+	__printf("\tedi: 0x%d\n", regs.edi);
+	__printf("\tebp: 0x%d\n", regs.ebp);
+	__printf("\tesp: 0x%d\n", regs.esp);
+	__printf("\teip: unavailable\n");
+	__printf("\teflags: 0x%d\n", regs.eflags);
+	__printf("\ts: 0x%d\n", regs.cs);
+	__printf("\tds: 0x%d\n", regs.ds);
+	__printf("\tes: 0x%d\n", regs.es);
+	__printf("\tfs: 0x%d\n", regs.fs);
+	__printf("\tgs: 0x%d\n", regs.gs);
+	__printf("\tss: 0x%d\n", regs.ss);
 }
 
 uint32_t get_eip()

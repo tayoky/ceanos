@@ -35,7 +35,7 @@ int init_tmpfs(){
     vfs_node *root;
     root = new_tmpfs();
     //mount as root
-    printf("[tmpfs] mounting as root : %d\n", vfs_mount("/", root));
+    __printf("[tmpfs] mounting as root : %d\n", vfs_mount("/", root));
     init = true;
 }
 
@@ -52,7 +52,7 @@ int tmpfs_mkdir(vfs_node *node, char *name, mode_t perm){
     folder_inode->type = TMPFS_TYPE_DIRECTORY;
     folder_inode->parent = node->inode;
     folder_inode->brother = node->inode->child;
-    strcpy(folder_inode->name,name);
+    __strcpy(folder_inode->name,name);
     node->inode->child = folder_inode;
     node->inode->children_count ++;
     debugf("[tmpfs] mkdir with name \"%s\" at address %p in directory node[%p] inode[%p]\n",name,node->inode->child,node,node->inode);
@@ -80,24 +80,24 @@ int tmpfs_close(vfs_node *node){
 
 void tmpfs_debug_inode(inode *node){
     if(!init) return;
-    printf("[tmpfs] inode [%p] :\n", node);
-    printf("    child : node[%p]\n", node->child);
-    printf("    children count : %d\n", node->children_count);
-    printf("    name : %s\n", node->name);
+    debugf("[tmpfs] inode [%p] :\n", node);
+    debugf("    child : node[%p]\n", node->child);
+    debugf("    children count : %d\n", node->children_count);
+    debugf("    name : %s\n", node->name);
 }
 
 struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     //first the . path
     if(index == 0){
         struct dirrent *ret = kmalloc(sizeof(struct dirrent));
-        strcpy(ret->name,VFS_SPECIAL_PATH_SELF);
+        __strcpy(ret->name,VFS_SPECIAL_PATH_SELF);
         return ret;
     }
 
     //first the .. path
     if(index == 1){
         struct dirrent *ret = kmalloc(sizeof(struct dirrent));
-        strcpy(ret->name,VFS_SPECIAL_PATH_PARENT);
+        __strcpy(ret->name,VFS_SPECIAL_PATH_PARENT);
         return ret;
     }
 
@@ -113,7 +113,7 @@ struct dirrent *tmpsfs_readdir(vfs_node *node,uint32_t index){
     }
 
     struct dirrent *ret = kmalloc(sizeof(struct dirrent));
-    strcpy(ret->name,current->name);
+    __strcpy(ret->name,current->name);
     return ret;
 }
 
@@ -121,7 +121,7 @@ vfs_node *tmpfs_finddir(vfs_node *node,char *name){
     //first let find the good inode
     inode *current = node->inode->child;
     for(uint32_t i = 0; i < node->inode->children_count; i++) {
-        if(!strcmp(name, current->name)) return (vfs_node *)current;
+        if(!__strcmp(name, current->name)) return (vfs_node *)current;
         current = current->brother;
     }
 

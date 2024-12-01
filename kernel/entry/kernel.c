@@ -69,7 +69,7 @@ void check_boot_params(struct multiboot_info *boot)
 
 	if (mbi->flags & 0x00000002) {
 		char *cmdline = (char *) mbi->cmdline;
-		if (strstr(cmdline, "safe_mode=1")) {
+		if (__strstr(cmdline, "safe_mode=1")) {
 			debugf("[boot] safe_mode=1\n");
 			safe_mode = 1;
 		} else {
@@ -77,8 +77,6 @@ void check_boot_params(struct multiboot_info *boot)
 		}
 	}
 }
-
-#define __ceanos__
 
 // Initialize all the important stuff, like idt, gdt, etc
 
@@ -123,7 +121,7 @@ static void init_all(struct multiboot_info* boot)
 	vfs_mkdir(open_folder, "test", 0777);
 	vfs_close(open_folder); 
 
-	printf("[ceanos] everything done ! booting shortly...\n");
+	__printf("[ceanos] everything done ! booting shortly...\n");
 	
 	sleep(30000000000000000000000);
 	Reset();
@@ -133,9 +131,9 @@ void enable_default(struct multiboot_info* boot)
 {
 	init_all(boot);
 
-	printf("##welcome to ceanos##\n");            // This part will probably be cleared and replaced with something
-	printf("current os version: %s\n", VERSION);  // else in the future, like loading a shell executable, but for now
-	printf("ceanos%s", prompt);		      // it will just print a message and initialize the "shell"
+	__printf("##welcome to ceanos##\n");            // This part will probably be cleared and replaced with something
+	__printf("current os version: %s\n", VERSION);  // else in the future, like loading a shell executable, but for now
+	__printf("ceanos%s", prompt);		      // it will just print a message and initialize the "shell"
 
 	set_screen_color(0x0F);
 }
@@ -144,18 +142,19 @@ void enable_safe(struct multiboot_info* boot)
 {
 	init_all(boot);
 
-	printf("##welcome to ceanos##\n");
-	printf("SAFE MODE\n");
-	printf("current os version: %s\n", VERSION);
-	printf("safemode%s", prompt);
+	__printf("##welcome to ceanos##\n");
+	__printf("SAFE MODE\n");
+	__printf("current os version: %s\n", VERSION);
+	__printf("safemode%s", prompt);
 
 	set_screen_color(0x0F);
 }
 
 void main(uint32_t magic, struct multiboot_info* boot)
 {
+        #define __ceanos__
 	if (safe_mode == 1) {
-		printf("safe mode is enabled !\n");
+		__printf("safe mode is enabled !\n");
 		enable_safe(boot);
 	} else {
 		enable_default(boot);

@@ -12,12 +12,12 @@ void init_syscalls()
 int sys_write(char *str)
 {
         if(!str) return -1;
-        printf("%s", str);
+        __printf("%s", str);
         return 0; 
 }
 
 int invalid_syscall()
 {
-        printf("\ninvalid syscall!\n");
+        __printf("\ninvalid syscall!\n");
         return ERR_BAD_SYSCALL;
 }

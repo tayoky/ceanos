@@ -5,14 +5,15 @@
 
 uint16_t die(const char *die_msg, uint16_t return_value)
 {
-        printf("%s\n", die_msg);
+        __printf("%s\n", die_msg);
         return return_value;
 }
 
 void panic(const char *panic) 
 {
-        printf("kernel panic: %s\n", panic);
+        __printf("kernel panic: %s\n", panic);
         for(;;){
                 asm("hlt");
         }
 }
+

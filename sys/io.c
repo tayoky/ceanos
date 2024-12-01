@@ -24,3 +24,22 @@ volatile void outl(uint16_t port, uint32_t data)
 {
 	__asm__ volatile("outl %0, %1" : : "a"(data), "dN"(port));
 }
+
+void outw(unsigned short port, unsigned short value)
+{
+	asm volatile (
+	        "outw %0, %1"
+	        :
+	        : "a"(value), "Nd"(port)
+	);
+}
+
+void insl(uint16_t port, void* addr, int count)
+{
+	asm volatile ("cld; rep insl"
+	              : "=D" (addr), "=c" (count)
+	              : "d" (port), "0" (addr), "1" (count)
+	              : "memory");
+}
+
+

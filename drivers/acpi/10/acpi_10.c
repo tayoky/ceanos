@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <util.h>
 #include <stdio.h>
+#include <io.h>
 
 #include "acpi_10.h"
 
@@ -14,6 +15,8 @@ uint16_t SLP_TYPb;
 uint16_t SLP_EN;  
 uint16_t SCI_EN; 
 uint8_t PM1_CNT_LEN;     
+
+extern inline void outw(unsigned short port, unsigned short value);
 
 uint32_t *acpiCheckRSDPtr(uint32_t *ptr) 
 {
@@ -35,10 +38,10 @@ uint32_t *acpiCheckRSDPtr(uint32_t *ptr)
 		// found valid rsdp 
 		if (check == 0) {
 			if (rsdp->Revision == 0) {
-				printf("[acpi] ACPI version 1.0 \n");
+				__printf("[acpi] ACPI version 1.0 \n");
                         }
 			else {
-				printf("[acpi] unknown ACPI version \n");
+				__printf("[acpi] unknown ACPI version \n");
                         }
 
 			return (unsigned int *) rsdp->RsdtAddress;
@@ -126,14 +129,14 @@ int acpiEnable(void)
 				}
                         }
 			if (i<300) {
-				printf("[acpi] enabled acpi.\n");
+				__printf("[acpi] enabled acpi.\n");
 				return 0;
 			} else {
-				printf("[acpi] couldn't enable acpi.\n");
+				__printf("[acpi] couldn't enable acpi.\n");
 				return -1;
 			}
 		} else {
-		        printf("[acpi] no known way to enable acpi.\n");
+		        __printf("[acpi] no known way to enable acpi.\n");
 			return -1;
 		}
 	} else {
@@ -204,20 +207,20 @@ int initAcpi(void)
 
 							return 0;
 						} else {
-							printf("[acpi] \\_S5 parse error.\n");
+							__printf("[acpi] \\_S5 parse error.\n");
 						}
 					} else {
-						printf("[acpi] \\_S5 not present.\n");
+						__printf("[acpi] \\_S5 not present.\n");
 					}
 				} else {
-				        printf("[acpi] DSDT invalid.\n");
+				        __printf("[acpi] DSDT invalid.\n");
 				}
 			}
 			ptr++;
 		}
-		printf("[acpi] no valid FACP present.\n");
+		__printf("[acpi] no valid FACP present.\n");
 	} else {
-		printf("[acpi] warning: no acpi.\n");
+		__printf("[acpi] warning: no acpi.\n");
 	}
 
 	return -1;
@@ -238,5 +241,5 @@ void acpiPowerOff(void)
 	if ( PM1b_CNT != 0 )
 		outw((unsigned int) PM1b_CNT, SLP_TYPb | SLP_EN );
 
-	printf("[acpi] error: poweroff failed.\n");
+	__printf("[acpi] error: poweroff failed.\n");
 }

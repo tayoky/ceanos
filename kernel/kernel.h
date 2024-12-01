@@ -1,5 +1,5 @@
-#ifndef __ceanos__
-#define __ceanos__
+#ifndef __cean__
+#define __cean__
 
 #include <stdint.h>
 

@@ -91,7 +91,7 @@ void idt_init()
 	setIdtGate(177, (uint32_t)isr177, 0x08, 0x8E); //system calls (0xB1)
 
 	idt_flush((uint32_t)&idt_ptr);
-	printf("[idt] done!\n");
+	__printf("[idt] OK\n");
 }
 
 void setIdtGate(uint8_t num, uint32_t base, uint16_t sel, uint8_t flags)
@@ -143,17 +143,17 @@ void page_fault_handler(struct InterruptRegisters* regs)
 {
 	uint32_t faulting_address;
 	asm volatile("mov %%cr2, %0" : "=r"(faulting_address));
-	printf("page fault at address: %p\n", (void*)faulting_address);
+	__printf("page fault at address: %p\n", (void*)faulting_address);
 	for(;;);
 }
 
 void isr_handler(struct InterruptRegisters* regs)
 {
         if (regs->int_no == 14) {
-		printf("error code/type: %s\n", exception_messages[regs->int_no]);
+		__printf("error code/type: %s\n", exception_messages[regs->int_no]);
                 page_fault_handler(regs);
 	} else if (regs->int_no < 32) {
-		printf("error code/type: %s\n", exception_messages[regs->int_no]);
+		__printf("error code/type: %s\n", exception_messages[regs->int_no]);
 		dump_registers();
 		asm("cli\n hlt");
 	}

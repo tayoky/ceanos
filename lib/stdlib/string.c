@@ -128,7 +128,7 @@ char *__strchr(const char *str, int c) {
 }
 
 char *__strdup(const char *str) {
-    size_t len = strlen(str) + 1; 
+    size_t len = __strlen(str) + 1; 
     char *copy = (char *)kmalloc(len);  
     if (copy) {
         __memcpy(copy, str, len);  

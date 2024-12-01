@@ -134,10 +134,11 @@ void kfree(void* ptr)
 {
     if(!ptr)return;
     kmalloc_header *header = (uintptr_t)((uintptr_t) ptr - (uintptr_t)sizeof(kmalloc_header));
+
+    __printf("[kfree] Flag: %d\n", header->flag);
+
     //if not allocated do nothing
     if(header->flag != TYPE_ALLOCATED) return;
-        
-    printf("[kfree] Flag: %d\n", header->flag);
 
     //mark as free
     header->flag = TYPE_FREE;
@@ -163,11 +164,11 @@ void debug_mem_graph(){
     while (current)
     {
         if(current->length == sizeof(vfs_node)) {
-            printf("[mem] seg[%p] length=%d free=%d type=vfs_node\n", current,current->length, current->flag==TYPE_FREE);
+            __printf("[mem] seg[%p] length=%d free=%d type=vfs_node\n", current,current->length, current->flag==TYPE_FREE);
         } else if(current->length == sizeof(inode)) {
-            printf("[mem] seg[%p] length=%d free=%d type=tmpfs inode\n", current, current->length, current->flag==TYPE_FREE);
+            __printf("[mem] seg[%p] length=%d free=%d type=tmpfs inode\n", current, current->length, current->flag==TYPE_FREE);
         } else {
-            printf("[mem] seg[%p] length=%d free=%d \n", current, current->length, current->flag==TYPE_FREE);
+            __printf("[mem] seg[%p] length=%d free=%d \n", current, current->length, current->flag==TYPE_FREE);
         }
         current = current->next;
     }
