@@ -7,6 +7,7 @@
  * HERE: https://github.com/torvalds/linux/blob/42f7652d3eb527d03665b09edac47f85fb600924/include/video/vga.h# 
  *
  */
+
 #define VGA_FB_PHYS_BASE	0xA0000 /* VGA framebuffer I/O base */
 #define VGA_FB_PHYS_SIZE	65536	/* VGA framebuffer I/O size */
 

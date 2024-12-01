@@ -18,7 +18,7 @@
 
 /* DRIVERS  */
 
-#include <drivers/ata.h>
+#include <drivers/storage/ata.h>
 #include <drivers/video/vga/vga.h>
 #include <drivers/kb/kbps2.h>
 #include <drivers/video/vga/vga_types.h>
@@ -26,7 +26,7 @@
 #include <drivers/devices/serial.h>
 #include <drivers/devices/dev.h>
 
-//#include <drivers/generic/acpi.h> 
+#include <drivers/acpi/10/acpi_10.h> 
 //#include <drivers/generic/pci.h>
 
 /* MEMORY */
@@ -119,13 +119,13 @@ static void init_all(struct multiboot_info* boot)
 
         /* init_devices(); */
 
-	/* vfs_node *open_folder = kopen("/");
+	vfs_node *open_folder = kopen("/");
 	vfs_mkdir(open_folder, "test", 0777);
-	vfs_close(open_folder); */
+	vfs_close(open_folder); 
 
 	printf("[ceanos] everything done ! booting shortly...\n");
 	
-	sleep(300);
+	sleep(30000000000000000000000);
 	Reset();
 }
 

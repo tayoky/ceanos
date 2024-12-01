@@ -17,7 +17,7 @@ void idt_init()
 	idt_ptr.limit = sizeof(struct idt_entry_struct) * 256 - 1;
 	idt_ptr.base = (uint32_t) &idt_entries;
 
-	memset(&idt_entries, 0, sizeof(struct idt_entry_struct) * 256);
+	__memset(&idt_entries, 0, sizeof(struct idt_entry_struct) * 256);
 
 	//0x20 commands and 0x21 data
 	//0xA0 commands and 0xA1 data

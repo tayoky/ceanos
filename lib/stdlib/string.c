@@ -2,7 +2,7 @@
 #include "string.h"
 #include <mm/malloc.h>
 
-int strcmp(char *s, char *t) 
+int __strcmp(char *s, char *t) 
 {
         int i;
 
@@ -13,7 +13,7 @@ int strcmp(char *s, char *t)
         return s[i] - t[i];
 }
 
-char *strstr(const char *haystack, const char *needle)
+char *__strstr(const char *haystack, const char *needle)
 {
 	if (*needle == '\0') {
 		return (char *)haystack;
@@ -39,7 +39,7 @@ char *strstr(const char *haystack, const char *needle)
 // 0 is true
 // -1 is false
 
-int strncmp(const char* str1, const char* str2, size_t n){
+int __strncmp(const char* str1, const char* str2, size_t n){
         int val=0;
 	
 	if (*str1+n > *str2+n) {
@@ -56,7 +56,7 @@ int strncmp(const char* str1, const char* str2, size_t n){
 	return val;
 }
 
-char *strncat(char *dest, const char *src, size_t n) {
+char *__strncat(char *dest, const char *src, size_t n) {
     char *dest_ptr = dest;
     while (*dest_ptr) {
         dest_ptr++;  
@@ -72,7 +72,7 @@ char *strncat(char *dest, const char *src, size_t n) {
     return dest;
 }
 
-char* strncpy(char* dest, const char* src, size_t n)
+char* __strncpy(char* dest, const char* src, size_t n)
 {
 	size_t i;
 	for (i = 0; i < n && src[i] != '\0'; i++) {
@@ -86,7 +86,7 @@ char* strncpy(char* dest, const char* src, size_t n)
 	return dest;
 }
 
-size_t strlen(const char* str)
+size_t __strlen(const char* str)
 {
 	size_t length = 0;
 
@@ -97,7 +97,7 @@ size_t strlen(const char* str)
 	return length;
 }
 
-void strcpy(char *dest, const char* src)
+void __strcpy(char *dest, const char* src)
 {
 	while (*src) {
 		*dest++ = *src++;
@@ -105,14 +105,14 @@ void strcpy(char *dest, const char* src)
 	*dest = '\0';
 }
 
-void strcat(char* dest, const char* src)
+void __strcat(char* dest, const char* src)
 {
 	while (*dest) dest++;
 	while (*src) *dest++ = *src++;
 	*dest = '\0';
 }
 
-char *strchr(const char *str, int c) {
+char *__strchr(const char *str, int c) {
     while (*str != '\0') {
         if (*str == (char)c) {
             return (char *)str;
@@ -127,11 +127,11 @@ char *strchr(const char *str, int c) {
     return NULL;
 }
 
-char *strdup(const char *str) {
+char *__strdup(const char *str) {
     size_t len = strlen(str) + 1; 
     char *copy = (char *)kmalloc(len);  
     if (copy) {
-        memcpy(copy, str, len);  
+        __memcpy(copy, str, len);  
     }
     return copy;  
 }

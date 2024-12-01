@@ -1,5 +1,5 @@
-#include "../util.h"
-#include "mem.h"
+#include <util.h>
+#include <mem.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <timer.h>
@@ -25,7 +25,7 @@ void pmm_init(uint32_t memLow, uint32_t memHigh)
 	totalAlloc = 0;
 
 	//clears the bitmap
-	memset(physicalMemoryBitmap, 0, sizeof(physicalMemoryBitmap));
+	__memset(physicalMemoryBitmap, 0, sizeof(physicalMemoryBitmap));
 
 	printf("[pmm] done!");
 }
@@ -145,8 +145,8 @@ void initMemory(uint32_t memHigh, uint32_t physicalAllocStart)
 	invalidate(0xFFFFF000);
 
 	pmm_init(physicalAllocStart, memHigh);
-	memset(pageDirs, 0, 0x1000 * NUM_PAGES_DIRS);
-	memset(pageDirUsed, 0, NUM_PAGES_DIRS);
+	__memset(pageDirs, 0, 0x1000 * NUM_PAGES_DIRS);
+	__memset(pageDirUsed, 0, NUM_PAGES_DIRS);
 }
 
 

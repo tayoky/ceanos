@@ -1,6 +1,6 @@
 #pragma once
 
-#include <lib/stdint.h>
+#include <stdint.h>
 
 void read_sectors_ATA_PIO(uint8_t *target_address, uint32_t LBA,
                           uint8_t sector_count);

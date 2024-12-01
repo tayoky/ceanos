@@ -79,7 +79,7 @@ uint32_t get_eip()
 	return eip;
 }
 
-void* memcpy(void* dest, const void* src, size_t n) {
+void* __memcpy(void* dest, const void* src, size_t n) {
     unsigned char* d = dest;
     const unsigned char* s = src;
 
@@ -90,7 +90,7 @@ void* memcpy(void* dest, const void* src, size_t n) {
     return dest;
 }
 
-int memcmp(const void *ptr1, const void *ptr2, size_t num)
+int __memcmp(const void *ptr1, const void *ptr2, size_t num)
 {
 	const unsigned char *p = ptr1;
 	const unsigned char *q = ptr2;
@@ -105,7 +105,7 @@ int memcmp(const void *ptr1, const void *ptr2, size_t num)
 	return 0;
 }
 
-void memset(void *dest, char val, uint32_t count)
+void __memset(void *dest, char val, uint32_t count)
 {
 	char *temp = (char*) dest;
 	for (; count != 0; count --) {
@@ -113,7 +113,7 @@ void memset(void *dest, char val, uint32_t count)
 	}
 }
 
-void* memmove(void* dest, const void* src, uint32_t len)
+void* __memmove(void* dest, const void* src, uint32_t len)
 {
 	uint8_t* d = (uint8_t*)dest;
 	const uint8_t* s = (const uint8_t*)src;
@@ -175,32 +175,3 @@ char inPortB(uint16_t port)
 	asm volatile("inb %1, %0": "=a"(rv):"dN"(port));
 	return rv;
 }
-
-inline void outw(unsigned short port, unsigned short value)
-{
-	asm volatile (
-	        "outw %0, %1"
-	        : // no output operands
-	        : "a"(value), "Nd"(port)
-	);
-}
-
-inline uint16_t inw(unsigned short port)
-{
-	uint16_t result;
-	__asm__ volatile (
-	        "inw %1, %0"
-	        : "=a" (result)
-	        : "Nd" (port)
-	);
-	return result;
-}
-
-void insl(uint16_t port, void* addr, int count)
-{
-	asm volatile ("cld; rep insl"
-	              : "=D" (addr), "=c" (count)
-	              : "d" (port), "0" (addr), "1" (count)
-	              : "memory");
-}
-

@@ -1,6 +1,5 @@
 #include <io.h>
 #include <stdint.h>
-#include <stdlib/stdio.h>
 
 volatile uint8_t inb(uint16_t port)
 {

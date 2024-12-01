@@ -3,6 +3,7 @@
 - VGA
 - Keyboard
 - PIT
+- Serial COM1
 
 ## Needed
 

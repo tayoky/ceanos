@@ -34,7 +34,7 @@ void writeTSS(uint32_t num, uint16_t ss0, uint32_t esp0)
     uint32_t limit = base + sizeof(tss_entry);
 
     setGdtGate(num, base, limit, 0xE9, 0x00);  
-    memset(&tss_entry, 0, sizeof(tss_entry));
+    __memset(&tss_entry, 0, sizeof(tss_entry));
 
     tss_entry.ss0 = ss0;
     tss_entry.esp0 = esp0;

@@ -3,9 +3,9 @@
 #ifndef __STDIO_H__
 #define __SDTIO_H__
 
-void putc(char c);
-void puts(const char* str);
-void printf(const char* fmt, ...);
+void __putc(char c);
+void __puts(const char* str);
+void __printf(const char* fmt, ...);
 int * printf_number(int*, int, bool, int);
 void debugf(const char* fmt, ...);
 

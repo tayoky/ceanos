@@ -18,10 +18,10 @@ typedef struct inode_struct{
 }inode;
 
 #define VFS_DRIVER
-#include <fs/tmpfs.h>
-#include <fs/vfs.h>
+#include <tmpfs.h>
+#include <vfs.h>
 
-#include <kernel/kernel.h>
+#include <kernel.h>
 
 static uint32_t heapStart;
 static uint32_t heapSize;
@@ -80,7 +80,6 @@ uint32_t changeHeapSize(int newSize) {
 
     if (heapSize != newSize) {
        panic("failed to change heap size!");
-       return ERR_UNKNOW; 
     }
 
     return SUCCESS; 
@@ -91,7 +90,7 @@ void* kmalloc(size_t size)
     //search until find and good segment or find last segment
     kmalloc_header *current_segment = first_memory_segment;
 
-    while ((current_segment->flag  != TYPE_FREE ) || (current_segment->length < size)) {
+    while ((current_segment->flag != TYPE_FREE ) || (current_segment->length < size)) {
         //try to make kernel space bigger
         if(!current_segment->next) {
             if(changeHeapSize(size - current_segment->length + sizeof(kmalloc_header)) != 0)
@@ -106,8 +105,8 @@ void* kmalloc(size_t size)
     }
 
     //now we have found a good segement
-    //if the segment is big then we cut it
-    if(current_segment->length > size + sizeof(kmalloc_header)){
+    //if the segment is big then we cut it (fragmentation)
+    if(current_segment->length > size + sizeof(kmalloc_header)) {
         kmalloc_header *new_segment;
         new_segment = (kmalloc_header *)((uintptr_t)current_segment + size + sizeof(kmalloc_header));
 
@@ -135,9 +134,11 @@ void kfree(void* ptr)
 {
     if(!ptr)return;
     kmalloc_header *header = (uintptr_t)((uintptr_t) ptr - (uintptr_t)sizeof(kmalloc_header));
-    //if not alloacted do nothing
+    //if not allocated do nothing
     if(header->flag != TYPE_ALLOCATED) return;
-    
+        
+    printf("[kfree] Flag: %d\n", header->flag);
+
     //mark as free
     header->flag = TYPE_FREE;
 

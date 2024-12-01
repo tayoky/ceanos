@@ -71,7 +71,7 @@ If you encounter a bug, create a new issue on the github page, or if you know ho
 
 # Contribuiting
 
-If you are interested in contribuiting to the development of CeanOS, dm me on discord: `asdasda123_` and read [this](docs/CONTRIBUTING.md).
+If you are interested in contribuiting to the development of CeanOS, dm me on discord: `asdasda123_` and read [this](CONTRIBUTING.md).
 
 
 ## License
