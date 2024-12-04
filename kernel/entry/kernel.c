@@ -26,8 +26,7 @@
 #include <drivers/devices/serial.h>
 #include <drivers/devices/dev.h>
 
-#include <drivers/acpi/10/acpi_10.h> 
-//#include <drivers/generic/pci.h>
+// #include <drivers/generic/pci.h>
 
 /* MEMORY */
 
@@ -117,13 +116,13 @@ static void init_all(struct multiboot_info* boot)
 
         /* init_devices(); */
 
-	vfs_node *open_folder = kopen("/");
+	/* vfs_node *open_folder = kopen("/");
 	vfs_mkdir(open_folder, "test", 0777);
-	vfs_close(open_folder); 
+	vfs_close(open_folder); */
 
-	__printf("[ceanos] everything done ! booting shortly...\n");
-	
-	sleep(30000000000000000000000);
+	__printf("[ceanos] OK\n");
+
+	sleep(10000000);
 	Reset();
 }
 
@@ -133,7 +132,7 @@ void enable_default(struct multiboot_info* boot)
 
 	__printf("##welcome to ceanos##\n");            // This part will probably be cleared and replaced with something
 	__printf("current os version: %s\n", VERSION);  // else in the future, like loading a shell executable, but for now
-	__printf("ceanos%s", prompt);		      // it will just print a message and initialize the "shell"
+	__printf("ceanos%s", prompt);		        // it will just print a message and initialize the "shell"
 
 	set_screen_color(0x0F);
 }
