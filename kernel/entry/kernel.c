@@ -52,6 +52,7 @@
 #include <io.h>
 
 /* OPTIONS */
+#include <compiler.h>
 #include "config.h"
 
 // actual code
@@ -145,7 +146,7 @@ void enable_safe(struct multiboot_info* boot)
 	set_screen_color(0x0F);
 }
 
-void main(uint32_t magic, struct multiboot_info* boot)
+public void main(uint32_t magic, struct multiboot_info* boot)
 {
         #define __ceanos__
 	if (safe_mode == 1) {
