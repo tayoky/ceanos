@@ -8,7 +8,8 @@
 int init_devices(){
         //first create /dev directory
         vfs_node *root_node = kopen("/");
-        if(root_node == NULL){
+        if(root_node == NULL) {
+                __printf("[dev] FAIL \n");
                 return ERR_CANT_OPEN;
         }
 
@@ -17,7 +18,7 @@ int init_devices(){
         vfs_mkdir(root_node, "dev", 0777);
         vfs_close(root_node);
 
-        debug_mem_graph();
+        //init_serial_dev();
 
-        init_serial_dev();
+        __printf("[dev] OK\n");
 }

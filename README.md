@@ -60,7 +60,7 @@ The files `ata.c` and `ata.h` are taken from [this](https://github.com/malwarepa
   - [ ] Additional features: idk (still researching)
 - **Graphics**
   - [x] VGA text mode
-  - [ ] Framebuffer, GUI, idk?
+  - [ ] Framebuffer, xorg, idk?
   - [ ] cwm (cean windows manager) (maybe WIP)
 
 ## Compiling

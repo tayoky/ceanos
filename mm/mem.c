@@ -27,7 +27,7 @@ void pmm_init(uint32_t memLow, uint32_t memHigh)
 	//clears the bitmap
 	__memset(physicalMemoryBitmap, 0, sizeof(physicalMemoryBitmap));
 
-	__printf("[pmm] OK");
+	__printf("[pmm] OK\n");
 }
 
 uint32_t* memGetCurrentPageDir()

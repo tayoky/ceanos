@@ -42,6 +42,7 @@ ceanos/boot/kernel/vmcean : ${OBJ}
 	mv vmcean iso/boot/kernel/vmcean
 clean:
 	rm -f **/*.o **/**/*.o
+	rm -f **/*.swp **/**/*.swp
 	sudo losetup -d /dev/${LOOPDEV}
 	sudo umount /mnt/disk
 	sudo rm -rf /mnt/disk

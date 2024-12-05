@@ -114,11 +114,7 @@ static void init_all(struct multiboot_info* boot)
 	vfs_init();
 	init_tmpfs();
 
-        /* init_devices(); */
-
-	/* vfs_node *open_folder = kopen("/");
-	vfs_mkdir(open_folder, "test", 0777);
-	vfs_close(open_folder); */
+        init_devices();
 
 	__printf("[ceanos] OK\n");
 
