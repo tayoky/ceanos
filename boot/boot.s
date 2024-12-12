@@ -34,39 +34,41 @@ kernel_stack_top:
 section .boot
 
 global _start
+                   
 _start:
-    MOV ecx, (initial_page_dir - 0xC0000000)
-    MOV cr3, ecx
+        mov ecx, (initial_page_dir - 0xC0000000)
+        mov cr3, ecx
 
-    MOV ecx, cr4
-    OR ecx, 0x10
-    MOV cr4, ecx
+        mov ecx, cr4
+        or ecx, 0x10
+        mov cr4, ecx
 
-    MOV ecx, cr0
-    OR ecx, 0x80000000
-    MOV cr0, ecx
+        mov ecx, cr0
+        or ecx, 0x80000000
+        mov cr0, ecx
 
-    JMP higher_half
+        jmp higher_half
 
 section .text
 
 higher_half:
-    mov ebp, kernel_stack_top
-    mov esp, ebp
-    PUSH ebx
-    PUSH eax
-    XOR ebp, ebp
-    extern main 
-    CALL main 
+        mov ebp, kernel_stack_top
+        mov esp, ebp
+        push ebx
+        push eax
+        xor ebp, ebp
+        extern main 
+        call main 
 
 halt:
-    hlt
-    JMP halt
+        hlt
+        jmp halt
 
 
 section .data
 align 4096
 global initial_page_dir
+
 initial_page_dir:
     DD 10000011b
     TIMES 768-1 DD 0

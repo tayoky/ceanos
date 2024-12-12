@@ -8,3 +8,4 @@ CFLAGS += -I ./arch
 CFLAGS += -I ./lib/stdlib
 CFLAGS += -I ./kernel/cpu/idt -I ./kernel/cpu/gdt
 CFLAGS += -I ./kernel/cfgs/
+CFLAGS += -I ./boot

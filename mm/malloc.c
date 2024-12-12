@@ -86,46 +86,44 @@ uint32_t changeHeapSize(int newSize) {
 
 void* kmalloc(size_t size)
 {
+        size = (size + 7) & ~7; //align to 8 bytes 
+
         //search until find and good segment or find last segment
         kmalloc_header *current_segment = first_memory_segment;
-
-        while ((current_segment->flag != TYPE_FREE ) && (current_segment->length < size)) {
-            //try to make kernel space bigger
-            if(!current_segment->next) {
-                if(changeHeapSize(size - current_segment->length + sizeof(kmalloc_header)) != 0)
-                {
-                    die("failed to change heap size", ERR_FAILED_TO_CHANGE_HEAP_SIZE);
+        
+        while (current_segment) {
+                if (current_segment->flag == TYPE_FREE && current_segment->length >= size) {
+                        break;
                 }
-                debugf("\nheap expanded: new size %u\n", size - current_segment->length + sizeof(kmalloc_header));
+                current_segment = current_segment->next;
+        }
 
-                current_segment->length = size + sizeof(kmalloc_header);
-            }
-            current_segment = current_segment->next;
+        if (!current_segment) {
+                return NULL;
         }
 
         //now we have found a good segement
         //if the segment is big then we cut it (fragmentation)
-        if(current_segment->length > size + sizeof(kmalloc_header)) {
-            kmalloc_header *new_segment;
-            
-            new_segment = (kmalloc_header *)((uintptr_t)current_segment + size + sizeof(kmalloc_header));
-            //set the lenght
-            new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
-            current_segment->length = size;
-            //mark the new segment as free
-            new_segment->flag = TYPE_FREE;
+        if (current_segment->length > size + sizeof(kmalloc_header)) {
+                kmalloc_header *new_segment = (kmalloc_header *)((uintptr_t)current_segment + sizeof(kmalloc_header) + size);
+                new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
+                new_segment->flag = TYPE_FREE;
+                new_segment->prev = current_segment;
+                new_segment->next = current_segment->next;
 
-            //set pointer
-            new_segment->prev = current_segment;
-            new_segment->next = current_segment->next;
-            current_segment->next = new_segment;
-            if(new_segment->next) new_segment->next->prev = new_segment;
+                if (new_segment->next) {
+                        new_segment->next->prev = new_segment;
+                }
+
+                current_segment->next = new_segment;
+                current_segment->length = size;
         }
+
         //mark as used
         current_segment->flag = TYPE_ALLOCATED;
 
         //now return the pointer
-        return current_segment + sizeof(kmalloc_header);    
+        return (void *)((uintptr_t)current_segment + sizeof(kmalloc_header));
 }
 
 void kfree(void* ptr) 

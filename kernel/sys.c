@@ -12,8 +12,6 @@ uint16_t die(const char *die_msg, uint16_t return_value)
 void panic(const char *panic) 
 {
         __printf("kernel panic: %s\n", panic);
-        for(;;){
-                asm("hlt");
-        }
+        asm("hlt");
 }
 

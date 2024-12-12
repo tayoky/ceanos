@@ -11,13 +11,21 @@
 #include <mm/malloc.h>
 #include <timer.h>
 
+void CeanOSInfo()
+{
+        Reset();
+        __printf("\nWelcome to CeanOS\n");
+        __printf("\nCeanOS is a x86, ring-0, no multi-tasking public domain operating system with\nthe goal of self-hosting.\n");
+	__printf("\nMemory management, malloc and paging are a mess at the moment, hope i can fix\nthem soon.\n\n");
+}
+
 static inline void process_cmd(const char *tex)
 {
 	if (__strcmp("clear", tex) == 0 || __strcmp("cls", tex) == 0 || __strcmp("clear;", tex) == 0)  
         {
 		Reset();
 	}
-        else if (__strcmp("help", tex) == 0) 
+        else if (__strcmp("help", tex) == 0 || __strcmp("Help", tex) == 0) 
         {
 		_term_help();
 	}
@@ -95,7 +103,7 @@ void run_term(const char *tex)
 
 void _term_help()
 {
-	__printf("commands:\n");
+	__printf("\ncommands:\n");
 
 	__printf("====================\n");
 	__printf("=     GENERIC      =\n");
@@ -114,7 +122,7 @@ void _term_help()
 	__printf("=     DEBUG        =\n");
 	__printf("====================\n");
 
-	__printf("  memseg    - display mm debug info");
+	__printf("  memseg    - display mm debug info\n");
 }
 
 inline void _get_sysinfo()

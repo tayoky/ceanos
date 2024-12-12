@@ -13,6 +13,10 @@ bool capsLock;
 const uint32_t KEY_COUNT = 128;
 extern char prompt[2];
 
+bool can_type = true;
+
+#include <compiler.h>
+
 char text[512];
 
 const uint32_t UNKNOWN = 0xFFFFFFFF;
@@ -119,9 +123,9 @@ void parser(uint8_t code)
 
 
 static void updateTextBuffer(uint8_t code, uint8_t press)
-{
+{	
 	char charToAdd;
-	if (capsOn || capsLock) {
+        if (capsOn || capsLock) {
 		charToAdd = uppercase[code];
 	} else {
 		charToAdd = lowercase[code];
@@ -148,7 +152,7 @@ static void updateTextBuffer(uint8_t code, uint8_t press)
 /* main keyboard handler function */
 static void keyboardHandler(struct InterruptRegisters *regs)
 {
-	uint8_t scanCode = inPortB(0x60) & 0x7F;
+        uint8_t scanCode = inPortB(0x60) & 0x7F;
 	uint8_t press = inPortB(0x60) & 0x80;
 
 	switch(scanCode) {
@@ -167,6 +171,10 @@ static void keyboardHandler(struct InterruptRegisters *regs)
 			rm();
 		}
 		break;
+        case 0x3B:
+                CeanOSInfo();
+                __printf("ceanos%s", prompt);
+                break;
 	default:
 		if (press == 0 && scanCode < KEY_COUNT) {
 			updateTextBuffer(scanCode, press);

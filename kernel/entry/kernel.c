@@ -115,11 +115,11 @@ static void init_all(struct multiboot_info* boot)
 	vfs_init();
 	init_tmpfs();
 
-        init_devices();
+        init_devices(); 
 
 	__printf("[ceanos] OK\n");
 
-	sleep(10000000);
+	sleep(750000);
 	Reset();
 }
 
@@ -127,9 +127,11 @@ void enable_default(struct multiboot_info* boot)
 {
 	init_all(boot);
 
-	__printf("##welcome to ceanos##\n");            // This part will probably be cleared and replaced with something
-	__printf("current os version: %s\n", VERSION);  // else in the future, like loading a shell executable, but for now
-	__printf("ceanos%s", prompt);		        // it will just print a message and initialize the "shell"
+	__printf("                               CeanOS V%s\n", VERSION);       // This part will probably be cleared and replaced with something
+	__printf("                        Public Domain Operating System\n\n"); // else in the future, like loading a shell executable, but for now
+        
+        __printf("Do 'help' for more info \n");
+        __printf("ceanos%s", prompt);		                                // it will just print a message and initialize the "shell"
 
 	set_screen_color(0x0F);
 }

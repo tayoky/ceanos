@@ -4,18 +4,18 @@
 #include <drivers/video/vga/vga.h>
 #include <kernel/kernel.h>
 
-inline double fmod(double x, double y)
+inline double __fmod(double x, double y)
 {
         return x - ((int)(x / y)) * y;
 }
 
 
-inline double fabs(double x) 
+inline double __fabs(double x) 
 {
         return (x < 0) ? -x : x;
 }
 
-double sqrt(double n) 
+double __sqrt(double n) 
 {
         double x = n; 
         double root;
