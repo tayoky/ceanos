@@ -67,6 +67,7 @@ vfs_node *serial_create_device(uint16_t port){
     node->write = serial_write;
     node->type = VFS_NODE_TYPE_CHAR_DEVICE;
     node->inode = port;
+    return node;
 }
 
 void serial_write_char(char ch, uint16_t port){

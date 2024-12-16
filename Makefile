@@ -19,7 +19,7 @@ all: ceanos.iso
 	qemu-system-x86_64 -drive format=raw,file=ceanos.iso
 
 ceanos.iso : ceanos/boot/kernel/vmcean
-	dd if=/dev/zero of=ceanos.iso bs=1M count=10
+	dd if=/dev/zero of=ceanos.iso bs=700k count=10
 	mkfs.fat -F32 ceanos.iso
 	sudo losetup /dev/${LOOPDEV} ceanos.iso
 	sudo mkdir -p /mnt/disk
