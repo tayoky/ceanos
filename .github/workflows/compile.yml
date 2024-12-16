@@ -1,8 +1,5 @@
 name: build ceanos iso
-on:
-  push:
-    branches:
-      - deploy
+on: [push , workflow_dispatch]
 jobs:
   build-image:
     runs-on: ubuntu-20.04
