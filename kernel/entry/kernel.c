@@ -54,29 +54,14 @@
 /* OPTIONS */
 #include <compiler.h>
 #include "config.h"
+#include <kernel.h>
 
 // actual code
 
 void main(uint32_t magic, struct multiboot_info* boot);
 char prompt[2] = "% ";
-int safe_mode = 0;
 
 bool debug_mode;
-
-void check_boot_params(struct multiboot_info *boot)
-{
-	struct multiboot_info *mbi = (struct multiboot_info *) boot;
-
-	if (mbi->flags & 0x00000002) {
-		char *cmdline = (char *) mbi->cmdline;
-		if (__strstr(cmdline, "safe_mode=1")) {
-			debugf("[boot] safe_mode=1\n");
-			safe_mode = 1;
-		} else {
-			debugf("[boot] safe_mode=0\n");
-		}
-	}
-}
 
 // Initialize all the important stuff, like idt, gdt, etc
 
@@ -106,8 +91,6 @@ static void init_all(struct multiboot_info* boot)
         
         init_tables();
 
-	check_boot_params(boot);
-
 	timer_init();
 	keyboard_init();
 	init_mm(boot);
@@ -119,7 +102,7 @@ static void init_all(struct multiboot_info* boot)
 
 	__printf("[ceanos] OK\n");
 
-	sleep(750000);
+	sleep(750);
 	Reset();
 }
 
@@ -127,23 +110,11 @@ void enable_default(struct multiboot_info* boot)
 {
 	init_all(boot);
 
-	__printf("                               CeanOS V%s\n", VERSION);       // This part will probably be cleared and replaced with something
-	__printf("                        Public Domain Operating System\n\n"); // else in the future, like loading a shell executable, but for now
+	__printf("                               CeanOS V%s\n", VERSION);       // This part will be replaced with 
+	__printf("                        Public Domain Operating System\n\n"); // a shell executable, but for now
         
         __printf("Do 'help' for more info \n");
-        __printf("ceanos%s", prompt);		                                // it will just print a message and initialize the "shell"
-
-	set_screen_color(0x0F);
-}
-
-void enable_safe(struct multiboot_info* boot)
-{
-	init_all(boot);
-
-	__printf("##welcome to ceanos##\n");
-	__printf("SAFE MODE\n");
-	__printf("current os version: %s\n", VERSION);
-	__printf("safemode%s", prompt);
+        __printf("ceanos%s", prompt);		                                // it will just print a message
 
 	set_screen_color(0x0F);
 }
@@ -151,14 +122,17 @@ void enable_safe(struct multiboot_info* boot)
 public void main(uint32_t magic, struct multiboot_info* boot)
 {
         #define __ceanos__
-	if (safe_mode == 1) {
-		__printf("safe mode is enabled !\n");
-		enable_safe(boot);
-	} else {
-		enable_default(boot);
-	}
-                
+                enable_default(boot);
+
+        extern uint64_t ticks;   
+
 	while(1) {
 		// TODO: Add a way to check for stack overflows and other errors that the ISR can't handle
-	};
+                ticks++;
+        };
 }
+
+char *__terry[] = { "CIA", "nigger", "its", "terry", "a", "is", "glowies", "car", "wtf", "fuck", "cool", "niggerville", "niggertopia", "ethan", "the", "schizophrenia", "chocolate", "ok", "God", "I", "am", "doctors", "fucking", "jedi", "HolyC", "TempleOS", "Terry Davis", "gay", "C", "you're", "gcc", "sucks", "hamburger", "smart", "smartest", "programmer", "that", "has", "ever", "live", "lived", "impossible", "possible", "linus", "torvalds", "mr.", ".", "?", "!", ",", "FBI", "data", "ghost", "default", "no", "yes", "are", "make", "way", "discord", "censers", "deafness", "medea", "windus", "submit", "remorse", "acquaintance", "succeded", "valuable", "fingers", "garden", "ceanos", "linux", "vim", "emacs", "do", "while", "keep", "anti-cia", "perpetuators", "thick", "america", "mafia", "computer", "IBM", "commodore-64", "compiler", "divine", "wisdom", "intellect", "minecraft", "ISS", "Feds", "Diddy", "Oil", "Baby", "war", "peace", "game", "Jesus", "Bible", "spartan", "IRS", "USA", "qwerty", "azerty", "qwertz", "imagine", "using", "windows", "ubuntu", "arch", "alpine", "nixos", "of course", "add", "tcp", "IP", "VPN", "protocol", "hymn", "array", "map", "go", "code", "stop", "wasting", "time", "king", "terrible", "I am King Terry the Terrible", "The CIA", "The CIA will be executed with an A10 gun, the fist of God", "fist", "of", "will", "be", "executed", "mental", "problems", "glow", "in", "dark", "you", "can", "see", "them", "if", "driving", "make", "gun", "half", "life", "chosen", "God's", "proceed", "say" };
+
+const size_t __TERRY_ARRAY_SIZE = sizeof(__terry) / sizeof(__terry[0]);
+

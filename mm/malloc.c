@@ -103,7 +103,7 @@ void* kmalloc(size_t size)
         }
 
         //now we have found a good segement
-        //if the segment is big then we cut it (fragmentation)
+        //if the segment is big then we cut it
         if (current_segment->length > size + sizeof(kmalloc_header)) {
                 kmalloc_header *new_segment = (kmalloc_header *)((uintptr_t)current_segment + sizeof(kmalloc_header) + size);
                 new_segment->length = current_segment->length - (sizeof(kmalloc_header) + size);
@@ -155,6 +155,7 @@ void kfree(void* ptr)
 
 void debug_mem_graph(){
         kmalloc_header *current = first_memory_segment;
+        __printf("\n");
         while (current)
         {
             if(current->length == sizeof(vfs_node)) {

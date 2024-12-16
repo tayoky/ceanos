@@ -6,10 +6,13 @@
 #include <drivers/video/vga/vga.h>
 #include <vfs.h>
 
-extern int safe_mode;
+
 
 bool capsOn;
+
 bool capsLock;
+
+#include <kernel.h>
 const uint32_t KEY_COUNT = 128;
 extern char prompt[2];
 
@@ -136,11 +139,7 @@ static void updateTextBuffer(uint8_t code, uint8_t press)
 			print("\n");
 			run_term(text);
 			clear();
-			if (safe_mode) {
-				__printf("\nsafemode%s", prompt);
-			} else {
 				__printf("\nceanos%s", prompt);
-			}
 		} else {
 			__printf("%c", charToAdd);
 			append(&charToAdd);
@@ -154,6 +153,8 @@ static void keyboardHandler(struct InterruptRegisters *regs)
 {
         uint8_t scanCode = inPortB(0x60) & 0x7F;
 	uint8_t press = inPortB(0x60) & 0x80;
+
+        static bool f7_pressed = false;
 
 	switch(scanCode) {
 	case 0x2A:
@@ -175,14 +176,29 @@ static void keyboardHandler(struct InterruptRegisters *regs)
                 CeanOSInfo();
                 __printf("ceanos%s", prompt);
                 break;
+        case 0x41:
+                if (press == 0 && !f7_pressed) {  
+                    extern uint64_t ticks;
+                    srand(ticks);
+                    uint32_t __terry_size = __TERRY_ARRAY_SIZE;
+
+                    int index = Ticks() % __terry_size;
+                    __printf("%s ", __terry[index]);
+
+                    f7_pressed = true;  
+                }
+                break;
 	default:
 		if (press == 0 && scanCode < KEY_COUNT) {
 			updateTextBuffer(scanCode, press);
 		}
 		break;
 	}
-}
 
+	if (scanCode == 0x41 && press != 0) {
+		f7_pressed = false;
+	}
+}
 
 void keyboard_init()
 {

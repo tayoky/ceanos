@@ -41,7 +41,7 @@ Here’s what I’m working on:
 ### **Kernel**
 - [x] Basic kernel initialization
 - [x] Simple memory management (GDT, IDT, ISRs)
-- [ ] Advanced memory management (paging, virtual memory, heap)
+- [x] Advanced memory management (paging, virtual memory, heap)
 - [ ] Multitasking and process scheduling
 - [ ] Inter-process communication (IPC)
 - [ ] Dynamic module loading/unloading
@@ -56,8 +56,8 @@ Here’s what I’m working on:
 - [ ] FAT32 read/write operations
 - [ ] ext2 read/write operations
 - [ ] Advanced filesystem features (journaling, metadata management)
-- [x] VFS (Virtual Filesystem)
-- [x] tmpfs (Work in Progress)
+- [x] VFS 
+- [x] tmpfs 
 
 ### **Device Drivers**
 - **Input/Output:**
@@ -82,7 +82,8 @@ Here’s what I’m working on:
   - [ ] ACPI implementation
   - [ ] Power states (sleep, hibernate)
   - [ ] Battery management for portable devices
-
+- **Other:**
+  - [ ] PCI (work in progress)
 ### **Userland**
 - [ ] Minimal shell (interactive terminal)
 - [ ] Core utilities (e.g., ls, cd, mkdir, rm, echo)

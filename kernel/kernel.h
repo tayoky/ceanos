@@ -5,6 +5,9 @@
 
 #define VERSION "0.04 RC1"
 
+extern char *__terry[];
+extern const size_t __TERRY_ARRAY_SIZE; 
+
 uint16_t die(const char *die_msg, uint16_t return_value);
 void panic(const char *panic);
 

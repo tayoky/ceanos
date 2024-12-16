@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 
-void run_term(); 
-static inline void process_cmd(const char *tex);
+void *GetRandFromArray(void *array, unsigned element_size, unsigned length);
 
-#endif // shell_h
+#endif 

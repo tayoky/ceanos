@@ -9,13 +9,13 @@ const uint32_t freq = 100;
 
 void onIrq0(struct InterruptRegisters *regs)
 {
-	ticks += 1;
+	ticks++;
 }
 
 void timer_init()
 {
 	ticks = 0;
-	idt_install(0,&onIrq0);
+	idt_install(0, &onIrq0);
 
 	//119318.16666 Mhz
 	uint32_t divisor = 1193180/freq;
@@ -25,8 +25,24 @@ void timer_init()
 	outPortB(0x40,(uint8_t)(divisor & 0xFF));
 	outPortB(0x40,(uint8_t)((divisor >> 8) & 0xFF));
 
-	print("timer enabled\n");
+	print("[timer] ok\n");
 }
+
+#define RAND_MAX (unsigned)0x1FFFFFFF
+
+static unsigned long s_next_rand = 1;
+
+int Rand() {
+        s_next_rand = s_next_rand * ticks + 8374; 
+
+        return ((unsigned)(s_next_rand / ((RAND_MAX + 1) * 2)) % (RAND_MAX + 1));
+}
+
+uint64_t Ticks() {
+        return ticks;
+}
+
+void srand(int seed) { s_next_rand = seed; }
 
 void sleep(uint32_t milliseconds)
 {

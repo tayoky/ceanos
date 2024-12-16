@@ -11,15 +11,18 @@
 #include <mm/malloc.h>
 #include <timer.h>
 
+#include "shell.h"
+#include <multiboot.h>
+
 void CeanOSInfo()
 {
         Reset();
         __printf("\nWelcome to CeanOS\n");
         __printf("\nCeanOS is a x86, ring-0, no multi-tasking public domain operating system with\nthe goal of self-hosting.\n");
-	__printf("\nMemory management, malloc and paging are a mess at the moment, hope i can fix\nthem soon.\n\n");
+	__printf("\nGoing to start writing a PCI driver soon!\n\n");
 }
-
-static inline void process_cmd(const char *tex)
+        
+static void process_cmd(const char *tex)
 {
 	if (__strcmp("clear", tex) == 0 || __strcmp("cls", tex) == 0 || __strcmp("clear;", tex) == 0)  
         {
@@ -51,8 +54,8 @@ static inline void process_cmd(const char *tex)
         else if (__strcmp("compdate", tex) == 0 ) 
         {
 		__printf("date: " __DATE__ "\nat: " __TIME__);
-	}
-	else if (__strcmp("memseg", tex) == 0) {
+	}	
+        else if (__strcmp("memseg", tex) == 0) {
 		debug_mem_graph();
 	}
 	else if(__strcmp("ls", tex) == 0 || __strcmp("Dir;", tex) == 0 || __strcmp("dir", tex) == 0) {
@@ -75,6 +78,20 @@ static inline void process_cmd(const char *tex)
 
 		vfs_close(open_folder);
 	}
+        else if (__strcmp("terry", tex) == 0)
+        {
+                extern uint64_t ticks;
+                srand(ticks);
+               
+                int index = Ticks() % __TERRY_ARRAY_SIZE; 
+
+                __printf("%s", __terry[index]);
+        }
+        else if (__strcmp("ticks", tex) == 0) 
+        {
+                extern uint64_t ticks;
+                __printf("%d", ticks);
+        }
         else {
 		__printf("%s isn't a valid command", tex);
 	}
@@ -110,9 +127,7 @@ void _term_help()
 	__printf("====================\n");
 
 	__printf("  clear     - clears the screen\n");
-        __printf("  cls       - same as 'clear'\n");
 	__printf("  help      - prints this message\n");
-	__printf("  version   - displays os version\n");
 	__printf("  exit      - exits the operating system\n");
 	__printf("  shutdown  - shuts down the system.\n");
 	__printf("  compdate  - displays the compilation date.\n");
@@ -123,19 +138,27 @@ void _term_help()
 	__printf("====================\n");
 
 	__printf("  memseg    - display mm debug info\n");
+        __printf("  ticks     - get current ticks\n");
+
+	__printf("====================\n");
+	__printf("=     OTHER        =\n");
+	__printf("====================\n");
+
+        __printf("  terry(F7) - talk with Terry Davis\n");
+
 }
 
 inline void _get_sysinfo()
 {
-	__printf("\nOS: CeanOS\n");
-	__printf("Kernel version: 0x0000004 \n");
-	__printf("shell: bosh (bobo shell)\n");
-	__printf("os bosh version: v0.1 \n");
+	__printf("\n. . . . . . .\tOS: CeanOS\n");
+	__printf(". .       . .\tKernel version: 0x0000004 \n");
+	__printf(".   . . . . .\tshell: bosh (bobo shell)\n");
+	__printf(".   . . . . .\tos bosh version: v0.2");
+        
+        __printf("\n.   . . . . .\tterminal: tty (not even tty)\n"); 
 
-	__printf("build date: ");
-	__printf(__DATE__);
-	__printf("\n");
-
+        __printf(". .       . .\n");
+        __printf(". . . . . . .\tbuild date: " __DATE__ "\n");
 	print_cpuinfo();
 }
 

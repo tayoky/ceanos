@@ -152,6 +152,7 @@ void isr_handler(struct InterruptRegisters* regs)
         if (regs->int_no == 14) {
 		__printf("error code/type: %s\n", exception_messages[regs->int_no]);
                 page_fault_handler(regs);
+                dump_registers();
 	} else if (regs->int_no < 32) {
 		__printf("error code/type: %s\n", exception_messages[regs->int_no]);
 		dump_registers();
