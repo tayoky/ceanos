@@ -1,10 +1,3 @@
-/*
- 
-  FIX ME
- 
-*/
-
-
 #include "vfs.h"
 #include <mm/mem.h>
 #include <stdint.h>
@@ -111,7 +104,7 @@ struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
     if(ret == NULL) return NULL;
     
     //set all vfs tree related settings
-    //so the driver don't have to
+    //so the driver doesn't have to
     node->children_count++;
     ret->parent = node;
     ret->brother = node->child;
