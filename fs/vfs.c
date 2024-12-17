@@ -7,6 +7,7 @@
 #include <errno.h>
 #include <kernel/kernel.h>
 #include <timer.h>
+#include "debugger.h"
 
 vfs_node *vfs_root_node;
 
@@ -73,13 +74,14 @@ struct dirrent *vfs_readdir(vfs_node *node, uint32_t index){
 struct vfs_node_struct *vfs_finddir(vfs_node *node , char *name) {
     //first check for special path
     //the self path
+    breakpoint
     if(!__strcmp(name, VFS_SPECIAL_PATH_SELF)){
         return node;
     }
     //the parent path
     if(!__strcmp(name, VFS_SPECIAL_PATH_PARENT)){
         return node->parent;
-    }
+    }breakpoint
 
     //lets check if node is adready in memory
     vfs_node *current_node = node->child;
@@ -204,7 +206,7 @@ char **parse_path(char *path){
         }
     }
 
-    char **path_array = kmalloc(sizeof(char) *( path_depth + 1));
+    char **path_array = kmalloc(sizeof(char*) *( path_depth + 1));
     path_array[path_depth] = NULL;
 
     int j = 0;
@@ -212,12 +214,13 @@ char **parse_path(char *path){
         while(path[j]){
             j++;
         }
-        path_array[i] = (char *)j + 1;
+        path_array[i] = (char *) path + j + 1;
     }
     return path_array;
 }
 
-vfs_node *kopen(char *path){
+vfs_node *kopen(const char *path){
+    breakpoint
         //let open any file
         //check open is an abosulte path
         if(path[0] != '/'){
@@ -229,17 +232,17 @@ vfs_node *kopen(char *path){
         if (path == NULL) {
             debugf("[kopen] path is NULL!\n");
             return NULL;
-        }
+        }breakpoint
 
         //first duplicate the path
-        char *new_path = kmalloc(__strlen(path) + 1);
-        __strcpy(new_path,path);
-        path = new_path;
+        char *new_path = kmalloc(__strlen(path) + 1);breakpoint
+        __strcpy(new_path,path);breakpoint
+        path = new_path;breakpoint
 
         //parse the path
-        char **path_array = parse_path(path);
+        char **path_array = parse_path(path);breakpoint
         
-        vfs_node *current = vfs_root_node;
+        vfs_node *current = vfs_root_node;breakpoint
         for(int i=0;path_array[i]!=NULL;i++){
             //if null it's an error
             if(current == NULL){
@@ -247,9 +250,9 @@ vfs_node *kopen(char *path){
                 kfree(path_array);
                 die("path_array is null\n", ERR_UNKNOW);
                 return NULL;
-            }
+            }breakpoint
             current = vfs_finddir(current, path_array[i]);
-        }
+        }breakpoint
         kfree(new_path);
         kfree(path_array);
         if(current != NULL){
