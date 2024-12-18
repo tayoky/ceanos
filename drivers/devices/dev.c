@@ -4,6 +4,7 @@
 #include <fs/vfs.h>
 #include "serial.h"
 #include <mm/malloc.h>
+#include "zero.h"
 
 int init_devices(){
         //first create /dev directory
@@ -19,6 +20,7 @@ int init_devices(){
         vfs_close(root_node);
 
         init_serial_dev();
+	create_zero_dev();
 
         __printf("[dev] OK\n");
 }
