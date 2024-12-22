@@ -1,6 +1,6 @@
 #include "zero.h"
 #include "vfs.h"
-#include "mm/malloc.h"
+#include "malloc.h"
 
 void create_zero_dev(){
     vfs_node *dev = kopen("/dev");
