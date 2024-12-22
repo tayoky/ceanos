@@ -4,7 +4,7 @@
 
 void create_zero_dev(){
     vfs_node *dev = kopen("/dev");
-    create(dev,"zero",777);
+    vfs_create(dev,"zero",777);
     vfs_close(dev);
 
     //create an custom node for it
