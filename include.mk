@@ -1,6 +1,6 @@
 CFLAGS = -m32 -ffreestanding -fno-stack-protector -nostdlib -nostdinc -w -g -I ./ -I ./lib
 CFLAGS += -I ./kernel/sys
-CFLAGS += -I ./drivers
+CFLAGS += -I ./kernel/drivers
 CFLAGS += -I ./kernel/mm
 CFLAGS += -I ./kernel
 CFLAGS += -I ./kernel/fs 
