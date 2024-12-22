@@ -5,6 +5,7 @@
 #include "serial.h"
 #include <mm/malloc.h>
 #include "zero.h"
+#include "stdout.h"
 
 int init_devices(){
         //first create /dev directory
@@ -21,6 +22,7 @@ int init_devices(){
 
         init_serial_dev();
 	create_zero_dev();
+	create_stdout_dev();
 
         __printf("[dev] OK\n");
 }
