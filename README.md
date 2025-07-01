@@ -1,3 +1,7 @@
+# important
+CeanOS is now an old and abandoned project  
+for a newer operating system i'm working on see [stanix](https://github.com/tayoky/stanix)
+
 # CeanOS 
 
 ![GitHub top language](https://img.shields.io/github/languages/top/ceanvalds/CeanOS)
